@@ -8,7 +8,7 @@
   }
   
   body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #000000 0%, #333333 100%);
     min-height: 100vh;
     -webkit-tap-highlight-color: transparent;
   }
@@ -16,15 +16,15 @@
 
 @layer components {
   .glass-effect {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+    @apply bg-black/40 backdrop-blur-lg border border-white/10;
   }
   
   .glass-card {
-    @apply bg-white/20 backdrop-blur-md border border-white/30 shadow-xl;
+    @apply bg-black/30 backdrop-blur-md border border-white/10 shadow-2xl;
   }
   
   .calendar-tile {
-    @apply relative p-2 sm:p-3 text-center cursor-pointer transition-all duration-300 hover:bg-white/20 rounded-lg font-medium text-sm sm:text-base;
+    @apply relative p-2 sm:p-3 text-center cursor-pointer transition-all duration-300 hover:bg-coral/20 font-medium text-sm sm:text-base;
     min-height: 40px;
     display: flex;
     align-items: center;
@@ -32,15 +32,15 @@
   }
   
   .calendar-tile.selected {
-    @apply bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105;
+    @apply bg-gradient-to-r from-coral to-coral-dark text-white shadow-lg transform scale-105;
   }
   
   .calendar-tile.today {
-    @apply bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold shadow-md;
+    @apply bg-gradient-to-r from-coral to-coral-dark text-white font-bold shadow-md;
   }
   
   .calendar-tile.today.selected {
-    @apply bg-gradient-to-r from-blue-600 to-purple-700 text-white transform scale-110;
+    @apply bg-gradient-to-r from-coral-dark to-coral text-white transform scale-110;
   }
   
   .calendar-tile.other-month {
@@ -60,29 +60,42 @@
   }
   
   .btn-primary {
-    @apply bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300;
+    @apply bg-gradient-to-r from-coral to-coral-dark hover:from-coral-dark hover:to-coral text-white font-semibold py-3 px-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border border-coral/30;
     min-height: 48px;
     touch-action: manipulation;
   }
   
   .btn-secondary {
-    @apply bg-white/20 hover:bg-white/30 text-white font-medium py-2 px-4 rounded-lg backdrop-blur-sm border border-white/30 transition-all duration-300 hover:scale-105;
+    @apply bg-black/40 hover:bg-black/60 text-white font-medium py-2 px-4 backdrop-blur-sm border border-white/20 transition-all duration-300 hover:scale-105;
     min-height: 44px;
     touch-action: manipulation;
   }
   
   .input-field {
-    @apply w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-300;
+    @apply w-full px-4 py-3 bg-black/40 backdrop-blur-sm border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-coral focus:border-coral transition-all duration-300;
     min-height: 48px;
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 14px; /* Smaller font size */
+  }
+  
+  .input-field option {
+    @apply bg-black text-white;
+  }
+  
+  select.input-field {
+    @apply appearance-none bg-black/40;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ff7f50' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
   }
   
   .date-card {
-    @apply bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 rounded-xl p-4 hover:from-white/30 hover:to-white/20 transition-all duration-300;
+    @apply bg-gradient-to-r from-black/40 to-black/20 backdrop-blur-sm border border-white/20 p-4 hover:from-black/60 hover:to-black/40 transition-all duration-300;
   }
   
   .notification {
-    @apply glass-effect rounded-2xl shadow-2xl border border-white/30;
+    @apply glass-effect shadow-2xl border border-white/20;
   }
   
   .floating-animation {
@@ -99,12 +112,12 @@
   }
   
   @keyframes pulse-glow {
-    from { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
-    to { box-shadow: 0 0 30px rgba(255, 255, 255, 0.5); }
+    from { box-shadow: 0 0 20px rgba(255, 127, 80, 0.3); }
+    to { box-shadow: 0 0 30px rgba(255, 127, 80, 0.5); }
   }
   
   .shadow-3xl {
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 127, 80, 0.2);
   }
   
   .border-3 {
@@ -118,14 +131,27 @@
   
   .mobile-card {
     @apply p-4 sm:p-6 lg:p-8;
+    position: relative;
+  }
+  
+  .mobile-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff7f50, transparent);
+    opacity: 0.6;
   }
   
   .mobile-text {
-    @apply text-sm sm:text-base lg:text-lg;
+    @apply text-xs sm:text-sm lg:text-base;
   }
   
   .mobile-heading {
-    @apply text-2xl sm:text-3xl lg:text-4xl;
+    @apply text-xl sm:text-2xl lg:text-3xl;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
   
   .mobile-grid {
@@ -144,9 +170,15 @@
   /* Touch-friendly form elements */
   input[type="checkbox"],
   input[type="radio"] {
-    @apply w-5 h-5 sm:w-4 sm:h-4;
+    @apply w-5 h-5 sm:w-4 sm:h-4 bg-black/40 border border-white/20 text-coral focus:ring-coral focus:ring-2 focus:ring-offset-0;
     min-width: 20px;
     min-height: 20px;
+    accent-color: #ff7f50;
+  }
+  
+  input[type="checkbox"]:checked,
+  input[type="radio"]:checked {
+    @apply bg-coral border-coral;
   }
   
   /* Mobile calendar improvements */
@@ -230,14 +262,43 @@
     @apply grid grid-cols-2 sm:grid-cols-4 gap-3;
   }
   
+  /* Enhanced form styling */
+  .form-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6;
+  }
+  
+  .form-grid > div {
+    @apply relative;
+  }
+  
+  .form-grid > div::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 127, 80, 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .form-grid > div:focus-within::after {
+    opacity: 1;
+  }
+  
   /* Mobile questionnaire table */
   .questionnaire-table {
-    @apply w-full text-white text-xs sm:text-sm;
+    @apply w-full text-white text-xs sm:text-sm bg-black/20 backdrop-blur-sm border border-white/10;
   }
   
   .questionnaire-table th,
   .questionnaire-table td {
-    @apply p-2 sm:p-3 text-center;
+    @apply p-2 sm:p-3 text-center border-b border-white/10;
+  }
+  
+  .questionnaire-table th {
+    @apply bg-black/40 font-semibold;
   }
   
   /* Mobile selected dates */
@@ -257,6 +318,7 @@
   
   .mobile-header h1 {
     @apply text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   }
   
   .mobile-header p {
@@ -274,11 +336,11 @@
 }
 
 .react-calendar__navigation {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
   backdrop-filter: blur(10px) !important;
-  border-radius: 12px !important;
   padding: 8px !important;
   margin-bottom: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .react-calendar__navigation button {
@@ -288,7 +350,6 @@
   font-size: 14px !important;
   font-weight: 600 !important;
   padding: 8px 12px !important;
-  border-radius: 8px !important;
   transition: all 0.3s ease !important;
   min-height: 40px !important;
   touch-action: manipulation !important;
@@ -301,7 +362,7 @@
 }
 
 .react-calendar__navigation button:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 127, 80, 0.2) !important;
   transform: scale(1.05) !important;
 }
 
@@ -322,10 +383,10 @@
 }
 
 .react-calendar__month-view__weekdays {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
   backdrop-filter: blur(10px) !important;
-  border-radius: 8px !important;
   margin-bottom: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .react-calendar__month-view__weekdays__weekday {
@@ -344,11 +405,11 @@
 }
 
 .react-calendar__month-view__days {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
   backdrop-filter: blur(10px) !important;
-  border-radius: 12px !important;
   padding: 8px !important;
   gap: 2px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 @media (min-width: 640px) {
@@ -364,7 +425,6 @@
   font-size: 14px !important;
   font-weight: 500 !important;
   padding: 8px 4px !important;
-  border-radius: 8px !important;
   transition: all 0.3s ease !important;
   position: relative !important;
   min-height: 36px !important;
@@ -383,7 +443,7 @@
 }
 
 .react-calendar__month-view__days__day:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 127, 80, 0.2) !important;
   transform: scale(1.05) !important;
 }
 
@@ -398,7 +458,6 @@
   font-size: 14px !important;
   font-weight: 500 !important;
   padding: 8px 4px !important;
-  border-radius: 8px !important;
   transition: all 0.3s ease !important;
   position: relative !important;
   min-height: 36px !important;
@@ -417,27 +476,27 @@
 }
 
 .react-calendar__tile:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 127, 80, 0.2) !important;
   transform: scale(1.05) !important;
 }
 
 .react-calendar__tile--active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, #ff7f50 0%, #ff6347 100%) !important;
   color: white !important;
   font-weight: 700 !important;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  box-shadow: 0 4px 15px rgba(255, 127, 80, 0.4) !important;
   transform: scale(1.1) !important;
 }
 
 .react-calendar__tile--now {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+  background: linear-gradient(135deg, #ff7f50 0%, #ff6347 100%) !important;
   color: white !important;
   font-weight: 700 !important;
-  box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4) !important;
+  box-shadow: 0 4px 15px rgba(255, 127, 80, 0.4) !important;
 }
 
 .react-calendar__tile--now.react-calendar__tile--active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+  background: linear-gradient(135deg, #ff6347 0%, #ff7f50 100%) !important;
+  box-shadow: 0 6px 20px rgba(255, 127, 80, 0.6) !important;
   transform: scale(1.15) !important;
 }

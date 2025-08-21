@@ -14,6 +14,8 @@ module.exports = {
           600: '#2563eb',
           700: '#1d4ed8',
         },
+        coral: '#ff7f50',
+        'coral-dark': '#ff6347',
       },
     },
   },

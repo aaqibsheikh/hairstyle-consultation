@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       subject: 'Your Hair Consultation Form Submission',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 20px;">
-          <h1 style="color: white; text-align: center; margin-bottom: 30px; font-size: 32px;">💇‍♀️ Hair Consultation Form</h1>
+          <h1 style="color: white; text-align: center; margin-bottom: 30px; font-size: 32px;">Hair Consultation Form</h1>
           
           <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
             <h2 style="color: white; margin-bottom: 20px; font-size: 24px;">Personal Information</h2>

@@ -440,10 +440,10 @@ export default function Home() {
 
       <div className="relative z-10 container mx-auto mobile-container py-4 sm:py-6 lg:py-8">
         <header className="mobile-header">
-          <div className="inline-block p-3 sm:p-4 bg-black/40 backdrop-blur-sm border border-coral/30 mb-4 sm:mb-6 pulse-glow">
-            <h1 className="mobile-heading font-bold text-white mb-2 sm:mb-3">
-              Hair Consultation Form
-            </h1>
+          <div className="inline-block p-3 sm:p-4 bg-black/40 backdrop-blur-sm border border-coral/30 mb-4 sm:mb-6 ">
+                          <h1 className="mobile-heading font-bold text-white mb-2 sm:mb-3">
+                MKH Hair Color Analysis
+              </h1>
           </div>
           <p className="mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed">
             Tell us about your style preferences and schedule your perfect hair days
@@ -812,13 +812,18 @@ export default function Home() {
                     navigationLabel={({ date }) => format(date, 'MMMM yyyy')}
                     formatShortWeekday={(locale, date) => format(date, 'EEE')}
                   />
-                </div>
+                  
+                  <div className="mt-6">
+                    <div className="flex items-center justify-between bg-black/60 backdrop-blur-sm border border-white/10 p-3">
+                      <div className="flex items-center">
+                        <span className="text-white font-semibold text-sm">
+                          <span className="text-xl font-bold text-coral mr-1">{formData.selectedDates.length}</span>
+                          dates selected
+                        </span>
+                      </div>
+                      
 
-                <div className="mt-4 text-center">
-                  <div className="inline-block bg-black/40 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border border-white/10">
-                    <p className="text-white font-semibold mobile-text">
-                      <span className="text-xl sm:text-2xl font-bold text-coral">{formData.selectedDates.length}</span> dates selected
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -862,30 +867,32 @@ export default function Home() {
                   </div>
                 )}
               </div>
-            </div>
+              
+                          </div>
+              
+              <div className="mt-4 text-center">
+                <button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting || !formData.email || formData.selectedDates.length === 0}
+                  className="mobile-btn bg-gradient-to-r from-coral to-coral-dark hover:from-coral-dark hover:to-coral text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
+                      <span className="text-lg">Saving...</span>
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center">
+                      {/* <div className="text-2xl mr-3">💾</div> */}
+                      <span className="text-lg">Click to save</span>
+                    </span>
+                  )}
+                </button>
+              </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="text-center">
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting || !formData.email || formData.selectedDates.length === 0}
-              className="mobile-btn bg-gradient-to-r from-coral to-coral-dark hover:from-coral-dark hover:to-coral text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
-            >
-              {isSubmitting ? (
-                <span className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
-                  <span className="text-lg">Submitting...</span>
-                </span>
-              ) : (
-                <span className="flex items-center justify-center">
-                  <div className="text-2xl mr-3">📧</div>
-                  <span className="text-lg">Submit Consultation Form</span>
-                </span>
-              )}
-            </button>
-
-            <div className="h-6"></div>
+          <div className="text-center flex items-center justify-center space-x-4">
 
             <button
               onClick={generatePDF}
@@ -896,12 +903,12 @@ export default function Home() {
               {isGeneratingPDF ? (
                 <span className="flex items-center justify-center relative z-10">
                   <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
-                  <span className="text-lg">Generating PDF...</span>
+                  <span className="text-lg">Generating...</span>
                 </span>
               ) : (
                 <span className="flex items-center justify-center relative z-10">
                   <div className="text-2xl mr-3">📄</div>
-                  <span className="text-lg">Generate PDF Report</span>
+                  <span className="text-lg">Click to get your hair analysis now</span>
                 </span>
               )}
             </button>

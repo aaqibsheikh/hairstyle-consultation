@@ -359,29 +359,29 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl floating-animation"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl floating-animation" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl floating-animation" style={{animationDelay: '4s'}}></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl floating-animation mobile-bg-decoration"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{animationDelay: '4s'}}></div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <div className="inline-block p-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6 pulse-glow">
-            <h1 className="text-5xl font-bold text-white mb-3">
+      <div className="relative z-10 container mx-auto mobile-container py-4 sm:py-6 lg:py-8">
+        <header className="mobile-header">
+          <div className="inline-block p-3 sm:p-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-4 sm:mb-6 pulse-glow">
+            <h1 className="mobile-heading font-bold text-white mb-2 sm:mb-3">
               💇‍♀️ Hair Consultation Form
             </h1>
           </div>
-          <p className="text-white/90 text-xl max-w-2xl mx-auto leading-relaxed">
+          <p className="mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed">
             Tell us about your style preferences and schedule your perfect hair days
           </p>
         </header>
 
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="max-w-4xl mx-auto mobile-section">
           {/* User Information Section */}
-          <div className="glass-card rounded-3xl p-8">
-            <h2 className="text-3xl font-bold text-white mb-6">Personal Information</h2>
+          <div className="glass-card rounded-3xl mobile-card">
+            <h2 className="mobile-heading font-bold text-white mb-4 sm:mb-6">Personal Information</h2>
             
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="form-grid mb-4 sm:mb-6">
               <div>
                 <label className="block text-white/90 font-medium mb-2">First Name</label>
                 <input
@@ -404,9 +404,9 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="form-grid mb-4 sm:mb-6">
               <div>
-                <label className="block text-white/90 font-medium mb-2">Email</label>
+                <label className="mobile-label block text-white/90 mb-2">Email</label>
                 <input
                   type="email"
                   value={formData.email}
@@ -416,7 +416,7 @@ export default function Home() {
                 />
               </div>
               <div>
-                <label className="block text-white/90 font-medium mb-2">Phone Number</label>
+                <label className="mobile-label block text-white/90 mb-2">Phone Number</label>
                 <input
                   type="tel"
                   value={formData.phone}
@@ -424,13 +424,13 @@ export default function Home() {
                   className="input-field"
                   placeholder="10001 000-0000"
                 />
-                <p className="text-white/60 text-sm mt-1">Please enter a valid phone number.</p>
+                <p className="mobile-description text-white/60 mt-1">Please enter a valid phone number.</p>
               </div>
             </div>
 
             <div>
-              <label className="block text-white/90 font-medium mb-3">Lifestyle</label>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <label className="mobile-label block text-white/90 mb-3">Lifestyle</label>
+              <div className="lifestyle-grid">
                 {['Low-maintenance', 'High-maintenance', 'Stay-at-home', 'Social'].map((lifestyle) => (
                   <label key={lifestyle} className="flex items-center space-x-2 cursor-pointer">
                     <input
@@ -439,7 +439,7 @@ export default function Home() {
                       onChange={() => handleLifestyleChange(lifestyle)}
                       className="w-4 h-4 text-blue-600 bg-white/10 border-white/30 rounded focus:ring-blue-500"
                     />
-                    <span className="text-white/90 text-sm">{lifestyle}</span>
+                    <span className="text-white/90 mobile-text">{lifestyle}</span>
                   </label>
                 ))}
               </div>

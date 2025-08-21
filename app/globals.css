@@ -10,6 +10,7 @@
   body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -23,7 +24,11 @@
   }
   
   .calendar-tile {
-    @apply relative p-3 text-center cursor-pointer transition-all duration-300 hover:bg-white/20 rounded-lg font-medium;
+    @apply relative p-2 sm:p-3 text-center cursor-pointer transition-all duration-300 hover:bg-white/20 rounded-lg font-medium text-sm sm:text-base;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .calendar-tile.selected {
@@ -56,14 +61,20 @@
   
   .btn-primary {
     @apply bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300;
+    min-height: 48px;
+    touch-action: manipulation;
   }
   
   .btn-secondary {
     @apply bg-white/20 hover:bg-white/30 text-white font-medium py-2 px-4 rounded-lg backdrop-blur-sm border border-white/30 transition-all duration-300 hover:scale-105;
+    min-height: 44px;
+    touch-action: manipulation;
   }
   
   .input-field {
     @apply w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-300;
+    min-height: 48px;
+    font-size: 16px; /* Prevents zoom on iOS */
   }
   
   .date-card {
@@ -99,6 +110,158 @@
   .border-3 {
     border-width: 3px;
   }
+
+  /* Mobile-specific improvements */
+  .mobile-container {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .mobile-card {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+  
+  .mobile-text {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+  
+  .mobile-heading {
+    @apply text-2xl sm:text-3xl lg:text-4xl;
+  }
+  
+  .mobile-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4;
+  }
+  
+  .mobile-table {
+    @apply text-xs sm:text-sm lg:text-base;
+  }
+  
+  .mobile-table th,
+  .mobile-table td {
+    @apply p-2 sm:p-3;
+  }
+  
+  /* Touch-friendly form elements */
+  input[type="checkbox"],
+  input[type="radio"] {
+    @apply w-5 h-5 sm:w-4 sm:h-4;
+    min-width: 20px;
+    min-height: 20px;
+  }
+  
+  /* Mobile calendar improvements */
+  .react-calendar {
+    @apply w-full max-w-full;
+  }
+  
+  .react-calendar__navigation {
+    @apply mb-4;
+  }
+  
+  .react-calendar__navigation button {
+    @apply min-h-10 px-3 text-lg;
+  }
+  
+  .react-calendar__month-view__weekdays {
+    @apply text-xs sm:text-sm;
+  }
+  
+  .react-calendar__month-view__days {
+    @apply gap-1;
+  }
+  
+  /* Mobile file upload improvements */
+  .file-upload-area {
+    @apply p-4 sm:p-6 lg:p-8;
+    min-height: 120px;
+  }
+  
+  /* Mobile notification positioning */
+  .mobile-notification {
+    @apply fixed bottom-4 left-4 right-4 sm:bottom-6 sm:right-6 sm:left-auto sm:max-w-sm;
+  }
+  
+  /* Mobile button improvements */
+  .mobile-btn {
+    @apply w-full sm:w-auto sm:max-w-md;
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  
+  /* Mobile spacing improvements */
+  .mobile-section {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+  
+  .mobile-gap {
+    @apply gap-4 sm:gap-6 lg:gap-8;
+  }
+  
+  /* Mobile text improvements */
+  .mobile-label {
+    @apply text-sm sm:text-base font-medium;
+  }
+  
+  .mobile-description {
+    @apply text-xs sm:text-sm;
+  }
+  
+  /* Mobile table responsive */
+  .table-responsive {
+    @apply overflow-x-auto -mx-4 sm:mx-0;
+  }
+  
+  .table-responsive table {
+    @apply min-w-full;
+  }
+  
+  /* Mobile calendar responsive */
+  .calendar-responsive {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8;
+  }
+  
+  /* Mobile form grid */
+  .form-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6;
+  }
+  
+  /* Mobile lifestyle grid */
+  .lifestyle-grid {
+    @apply grid grid-cols-2 sm:grid-cols-4 gap-3;
+  }
+  
+  /* Mobile questionnaire table */
+  .questionnaire-table {
+    @apply w-full text-white text-xs sm:text-sm;
+  }
+  
+  .questionnaire-table th,
+  .questionnaire-table td {
+    @apply p-2 sm:p-3 text-center;
+  }
+  
+  /* Mobile selected dates */
+  .selected-dates-container {
+    @apply max-h-60 sm:max-h-80 overflow-y-auto;
+  }
+  
+  /* Mobile background decorations */
+  .mobile-bg-decoration {
+    @apply hidden sm:block;
+  }
+  
+  /* Mobile header */
+  .mobile-header {
+    @apply text-center mb-6 sm:mb-8 lg:mb-12;
+  }
+  
+  .mobile-header h1 {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3;
+  }
+  
+  .mobile-header p {
+    @apply text-white/90 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed;
+  }
 }
 
 /* Custom Calendar Styles */
@@ -106,6 +269,8 @@
   background: transparent !important;
   border: none !important;
   font-family: 'Inter', sans-serif !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .react-calendar__navigation {
@@ -120,11 +285,19 @@
   background: transparent !important;
   border: none !important;
   color: white !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   padding: 8px 12px !important;
   border-radius: 8px !important;
   transition: all 0.3s ease !important;
+  min-height: 40px !important;
+  touch-action: manipulation !important;
+}
+
+@media (min-width: 640px) {
+  .react-calendar__navigation button {
+    font-size: 16px !important;
+  }
 }
 
 .react-calendar__navigation button:hover {
@@ -137,9 +310,15 @@
 }
 
 .react-calendar__navigation__label {
-  font-size: 18px !important;
+  font-size: 16px !important;
   font-weight: 700 !important;
   color: white !important;
+}
+
+@media (min-width: 640px) {
+  .react-calendar__navigation__label {
+    font-size: 18px !important;
+  }
 }
 
 .react-calendar__month-view__weekdays {
@@ -150,11 +329,18 @@
 }
 
 .react-calendar__month-view__weekdays__weekday {
-  padding: 12px 8px !important;
+  padding: 8px 4px !important;
   text-align: center !important;
   font-weight: 600 !important;
   color: white !important;
-  font-size: 14px !important;
+  font-size: 12px !important;
+}
+
+@media (min-width: 640px) {
+  .react-calendar__month-view__weekdays__weekday {
+    padding: 12px 8px !important;
+    font-size: 14px !important;
+  }
 }
 
 .react-calendar__month-view__days {
@@ -162,18 +348,38 @@
   backdrop-filter: blur(10px) !important;
   border-radius: 12px !important;
   padding: 8px !important;
+  gap: 2px !important;
+}
+
+@media (min-width: 640px) {
+  .react-calendar__month-view__days {
+    gap: 4px !important;
+  }
 }
 
 .react-calendar__month-view__days__day {
   background: transparent !important;
   border: none !important;
   color: white !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   font-weight: 500 !important;
-  padding: 12px 8px !important;
+  padding: 8px 4px !important;
   border-radius: 8px !important;
   transition: all 0.3s ease !important;
   position: relative !important;
+  min-height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  touch-action: manipulation !important;
+}
+
+@media (min-width: 640px) {
+  .react-calendar__month-view__days__day {
+    font-size: 16px !important;
+    padding: 12px 8px !important;
+    min-height: 44px !important;
+  }
 }
 
 .react-calendar__month-view__days__day:hover {
@@ -189,12 +395,25 @@
   background: transparent !important;
   border: none !important;
   color: white !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   font-weight: 500 !important;
-  padding: 12px 8px !important;
+  padding: 8px 4px !important;
   border-radius: 8px !important;
   transition: all 0.3s ease !important;
   position: relative !important;
+  min-height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  touch-action: manipulation !important;
+}
+
+@media (min-width: 640px) {
+  .react-calendar__tile {
+    font-size: 16px !important;
+    padding: 12px 8px !important;
+    min-height: 44px !important;
+  }
 }
 
 .react-calendar__tile:hover {

@@ -10,75 +10,59 @@ type ValuePiece = Date | null
 type Value = ValuePiece | [ValuePiece, ValuePiece]
 
 interface FormData {
+  // Personal Information
   firstName: string
   lastName: string
   email: string
   phone: string
-  lifestyle: string[]
-  files: File[]
-  questionnaire: {
-    balayage: string
-    highlights: string
-    babylights: string
-    extensions: string
-  }
-  selectedDates: Date[]
-  // Hair color analysis fields
+  
+  // Hair Analysis
   naturalHairColor: string
   skinColor: string
   eyeColor: string
   hairTexture: string
-  hairColorMaintenance: string
+  hairLength: string
+  personalStyle: string
+  hairMaintenance: string
   specialOccasions: string[]
-  personalStyle: string[]
-  hairStyles: string[]
-  hairColorOptions: string[]
-  hairColorStyleOptions: string[]
-  generalHairCalendar: string[]
+  preferredTreatments: string[]
+  workType: string
+  workIndustry: string
+  
+  // Files and Calendar
+  files: File[]
+  selectedDates: Date[]
 }
 
 export default function Home() {
+  const [currentSlide, setCurrentSlide] = useState(1)
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
-    lifestyle: [],
-    files: [],
-    questionnaire: {
-      balayage: '',
-      highlights: '',
-      babylights: '',
-      extensions: ''
-    },
-    selectedDates: [],
     naturalHairColor: '',
     skinColor: '',
     eyeColor: '',
     hairTexture: '',
-    hairColorMaintenance: '',
+    hairLength: '',
+    personalStyle: '',
+    hairMaintenance: '',
     specialOccasions: [],
-    personalStyle: [],
-    hairStyles: [],
-    hairColorOptions: [],
-    hairColorStyleOptions: [],
-    generalHairCalendar: []
+    preferredTreatments: [],
+    workType: '',
+    workIndustry: '',
+    files: [],
+    selectedDates: []
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const [message, setMessage] = useState('')
 
+  const totalSlides = 10
+
   const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
-  }
-
-  const handleLifestyleChange = (lifestyle: string) => {
-    setFormData(prev => ({
-      ...prev,
-      lifestyle: prev.lifestyle.includes(lifestyle)
-        ? prev.lifestyle.filter(l => l !== lifestyle)
-        : [...prev.lifestyle, lifestyle]
-    }))
   }
 
   const handleArrayFieldChange = (field: keyof FormData, value: string) => {
@@ -92,8 +76,6 @@ export default function Home() {
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || [])
-    
-    // Check if files are images
     const imageFiles = files.filter(file => file.type.startsWith('image/'))
     const nonImageFiles = files.filter(file => !file.type.startsWith('image/'))
     
@@ -116,15 +98,7 @@ export default function Home() {
     }))
   }
 
-  const handleQuestionnaireChange = (service: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      questionnaire: { ...prev.questionnaire, [service]: value }
-    }))
-  }
-
   const handleDayClick = (value: Date) => {
-    // Check if the date is in the past
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     
@@ -152,6 +126,41 @@ export default function Home() {
     setFormData(prev => ({ ...prev, selectedDates: [] }))
   }
 
+  const nextSlide = () => {
+    if (currentSlide < totalSlides) {
+      setCurrentSlide(currentSlide + 1)
+    }
+  }
+
+  const prevSlide = () => {
+    if (currentSlide > 1) {
+      setCurrentSlide(currentSlide - 1)
+    }
+  }
+
+  const goToSlide = (slide: number) => {
+    setCurrentSlide(slide)
+  }
+
+  const tileClassName = ({ date, view }: { date: Date; view: string }) => {
+    if (view === 'month') {
+      const dateStr = format(date, 'yyyy-MM-dd')
+      const isSelected = formData.selectedDates.some(
+        selectedDate => format(selectedDate, 'yyyy-MM-dd') === dateStr
+      )
+      const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
+      const isPast = date < new Date(new Date().setHours(0, 0, 0, 0))
+      
+      let className = 'calendar-tile'
+      if (isSelected) className += ' selected'
+      if (isToday) className += ' today'
+      if (isPast) className += ' past-date'
+      
+      return className
+    }
+    return ''
+  }
+
   const generatePDF = async () => {
     setIsGeneratingPDF(true)
     setMessage('')
@@ -165,15 +174,14 @@ export default function Home() {
       
       let yPosition = margin
 
-      // Header with background
-      pdf.setFillColor(255, 127, 80) // Coral
+      // Header
+      pdf.setFillColor(255, 127, 80)
       pdf.rect(0, 0, pageWidth, 40, 'F')
       
-      // Title
       pdf.setFontSize(24)
       pdf.setTextColor(255, 255, 255)
       pdf.setFont('helvetica', 'bold')
-      const title = 'LOGO Hair Consultation Report'
+      const title = 'MKH Hair Color Analysis Report'
       const titleWidth = pdf.getTextWidth(title)
       pdf.text(title, (pageWidth - titleWidth) / 2, 25)
       
@@ -187,7 +195,7 @@ export default function Home() {
       pdf.text(dateText, margin, yPosition)
       yPosition += 20
 
-      // Personal Information Section with box
+      // Personal Information
       pdf.setFillColor(245, 245, 245)
       pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 50, 'F')
       pdf.setDrawColor(255, 127, 80)
@@ -207,8 +215,7 @@ export default function Home() {
       const personalInfo = [
         `Name: ${formData.firstName} ${formData.lastName}`,
         `Email: ${formData.email}`,
-        `Phone: ${formData.phone}`,
-        `Lifestyle: ${formData.lifestyle.join(', ') || 'Not specified'}`
+        `Phone: ${formData.phone}`
       ]
 
       personalInfo.forEach(info => {
@@ -217,12 +224,12 @@ export default function Home() {
       })
       yPosition += 20
 
-      // Hair Analysis Section
+      // Hair Analysis
       pdf.setFillColor(245, 245, 245)
-      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 80, 'F')
+      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 100, 'F')
       pdf.setDrawColor(255, 127, 80)
       pdf.setLineWidth(0.5)
-      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 80, 'S')
+      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 100, 'S')
       
       pdf.setFontSize(14)
       pdf.setTextColor(255, 127, 80)
@@ -239,7 +246,9 @@ export default function Home() {
         `Skin Color: ${formData.skinColor || 'Not specified'}`,
         `Eye Color: ${formData.eyeColor || 'Not specified'}`,
         `Hair Texture: ${formData.hairTexture || 'Not specified'}`,
-        `Maintenance: ${formData.hairColorMaintenance || 'Not specified'}`
+        `Hair Length: ${formData.hairLength || 'Not specified'}`,
+        `Personal Style: ${formData.personalStyle || 'Not specified'}`,
+        `Maintenance: ${formData.hairMaintenance || 'Not specified'}`
       ]
 
       hairAnalysis.forEach(info => {
@@ -248,38 +257,7 @@ export default function Home() {
       })
       yPosition += 20
 
-      // Style Preferences Section with box
-      pdf.setFillColor(245, 245, 245)
-      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 60, 'F')
-      pdf.setDrawColor(255, 127, 80)
-      pdf.setLineWidth(0.5)
-      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 60, 'S')
-      
-      pdf.setFontSize(14)
-      pdf.setTextColor(255, 127, 80)
-      pdf.setFont('helvetica', 'bold')
-      pdf.text('Style Preferences', margin, yPosition)
-      yPosition += 12
-
-      pdf.setFontSize(10)
-      pdf.setTextColor(50, 50, 50)
-      pdf.setFont('helvetica', 'normal')
-
-      const services = [
-        { name: 'Balayage', key: 'balayage' },
-        { name: 'Highlights', key: 'highlights' },
-        { name: 'Babylights', key: 'babylights' },
-        { name: 'Hair Extensions', key: 'extensions' }
-      ]
-
-      services.forEach(service => {
-        const experience = formData.questionnaire[service.key as keyof typeof formData.questionnaire] || 'Not specified'
-        pdf.text(`${service.name}: ${experience}`, margin, yPosition)
-        yPosition += 7
-      })
-      yPosition += 20
-
-      // Selected Dates Section
+      // Selected Dates
       if (formData.selectedDates.length > 0) {
         const datesHeight = Math.min(80, formData.selectedDates.length * 8 + 30)
         pdf.setFillColor(245, 245, 245)
@@ -303,7 +281,6 @@ export default function Home() {
           .forEach((date, index) => {
             const dateText = `${index + 1}. ${format(date, 'EEEE, MMMM d, yyyy')}`
             
-            // Check if we need a new page
             if (yPosition > pageHeight - 40) {
               pdf.addPage()
               yPosition = margin
@@ -318,25 +295,9 @@ export default function Home() {
         pdf.setTextColor(100, 100, 100)
         pdf.setFont('helvetica', 'bold')
         pdf.text(`Total dates selected: ${formData.selectedDates.length}`, margin, yPosition)
-        yPosition += 20
       }
 
-      // Footer with background
-      pdf.setFillColor(248, 248, 248)
-      pdf.rect(0, pageHeight - 30, pageWidth, 30, 'F')
-      pdf.setDrawColor(255, 127, 80)
-      pdf.setLineWidth(0.5)
-      pdf.line(0, pageHeight - 30, pageWidth, pageHeight - 30)
-      
-      yPosition = pageHeight - 15
-      pdf.setFontSize(9)
-      pdf.setTextColor(150, 150, 150)
-      pdf.setFont('helvetica', 'italic')
-      pdf.text('Thank you for choosing our hair consultation service!', margin, yPosition)
-      yPosition += 6
-      pdf.text('We\'ll be in touch soon to schedule your perfect hair days.', margin, yPosition)
-
-      const fileName = `hair-consultation-${formData.firstName}-${formData.lastName}-${format(new Date(), 'yyyy-MM-dd')}.pdf`
+      const fileName = `hair-analysis-${formData.firstName}-${formData.lastName}-${format(new Date(), 'yyyy-MM-dd')}.pdf`
       pdf.save(fileName)
       
       setMessage('PDF generated successfully!')
@@ -379,27 +340,21 @@ export default function Home() {
           lastName: '',
           email: '',
           phone: '',
-          lifestyle: [],
-          files: [],
-          questionnaire: {
-            balayage: '',
-            highlights: '',
-            babylights: '',
-            extensions: ''
-          },
-          selectedDates: [],
           naturalHairColor: '',
           skinColor: '',
           eyeColor: '',
           hairTexture: '',
-          hairColorMaintenance: '',
+          hairLength: '',
+          personalStyle: '',
+          hairMaintenance: '',
           specialOccasions: [],
-          personalStyle: [],
-          hairStyles: [],
-          hairColorOptions: [],
-          hairColorStyleOptions: [],
-          generalHairCalendar: []
+          preferredTreatments: [],
+          workType: '',
+          workIndustry: '',
+          files: [],
+          selectedDates: []
         })
+        setCurrentSlide(1)
       } else {
         setMessage(data.error || 'Failed to submit form. Please try again.')
       }
@@ -410,52 +365,17 @@ export default function Home() {
     }
   }
 
-  const tileClassName = ({ date, view }: { date: Date; view: string }) => {
-    if (view === 'month') {
-      const dateStr = format(date, 'yyyy-MM-dd')
-      const isSelected = formData.selectedDates.some(
-        selectedDate => format(selectedDate, 'yyyy-MM-dd') === dateStr
-      )
-      const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
-      const isPast = date < new Date(new Date().setHours(0, 0, 0, 0))
-      
-      let className = 'calendar-tile'
-      if (isSelected) className += ' selected'
-      if (isToday) className += ' today'
-      if (isPast) className += ' past-date'
-      
-      return className
-    }
-    return ''
-  }
-
-  return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-coral/10 rounded-full blur-3xl floating-animation mobile-bg-decoration"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-black/20 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{animationDelay: '4s'}}></div>
-      </div>
-
-      <div className="relative z-10 container mx-auto mobile-container py-4 sm:py-6 lg:py-8">
-        <header className="mobile-header">
-          <div className="inline-block p-3 sm:p-4 bg-black/40 backdrop-blur-sm border border-coral/30 mb-4 sm:mb-6 ">
-                          <h1 className="mobile-heading font-bold text-white mb-2 sm:mb-3">
-                MKH Hair Color Analysis
-              </h1>
-          </div>
-          <p className="mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed">
-            Tell us about your style preferences and schedule your perfect hair days
-          </p>
-        </header>
-
-        <div className="max-w-4xl mx-auto mobile-section">
-          {/* User Information Section */}
+  const renderSlide = () => {
+    switch (currentSlide) {
+      case 1:
+        return (
           <div className="glass-card mobile-card">
-            <h2 className="mobile-heading font-bold text-white mb-4 sm:mb-6">Personal Information</h2>
+            <div className="text-center mb-6">
+              <h2 className="mobile-heading font-bold text-white mb-4">Tell us a little about yourself</h2>
+              <p className="text-white/80 mobile-text">Duration to complete: 3 minutes</p>
+            </div>
             
-            <div className="form-grid mb-4 sm:mb-6">
+            <div className="form-grid mb-6">
               <div>
                 <label className="block text-white/90 font-medium mb-2 text-sm">First Name</label>
                 <input
@@ -478,9 +398,9 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="form-grid mb-4 sm:mb-6">
+            <div className="form-grid mb-6">
               <div>
-                <label className="mobile-label block text-white/90 mb-2 text-sm">Email</label>
+                <label className="block text-white/90 font-medium mb-2 text-sm">Email</label>
                 <input
                   type="email"
                   value={formData.email}
@@ -490,7 +410,7 @@ export default function Home() {
                 />
               </div>
               <div>
-                <label className="mobile-label block text-white/90 mb-2 text-sm">Phone Number</label>
+                <label className="block text-white/90 font-medium mb-2 text-sm">Phone Number</label>
                 <input
                   type="tel"
                   value={formData.phone}
@@ -498,207 +418,197 @@ export default function Home() {
                   className="input-field"
                   placeholder="10001 000-0000"
                 />
-                <p className="mobile-description text-white/60 mt-1 text-xs">Please enter a valid phone number.</p>
               </div>
             </div>
 
-            <div>
-              <label className="mobile-label block text-white/90 mb-3 text-sm">Lifestyle</label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  'High maintenance: Hair extensions, hair appointments every 4-6 weeks, nails, eye lashes etc',
-                  'Easy: chill, relaxing, retired, grown family',
-                  'Corporate: working full time',
-                  'Socially active: busy socializing during the week and weekends, active on social media, blogger/content creator',
-                  'Busy on the go: student, new job, newly married',
-                  'Active: healthy, workout',
-                  'Mom: home life balance'
-                ].map((lifestyle) => (
-                  <label key={lifestyle} className="flex items-start space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.lifestyle.includes(lifestyle)}
-                      onChange={() => handleLifestyleChange(lifestyle)}
-                      className="w-4 h-4 text-coral bg-white/10 border-white/30 focus:ring-coral mt-1 flex-shrink-0"
-                    />
-                    <span className="text-white/90 text-xs leading-relaxed">{lifestyle}</span>
-                  </label>
-                ))}
+            <div className="mb-6">
+              <h3 className="text-white font-semibold mb-4">Hair Color Analysis</h3>
+              <div className="form-grid mb-4">
+                <div>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">Your Natural Hair Color</label>
+                  <select
+                    value={formData.naturalHairColor}
+                    onChange={(e) => handleInputChange('naturalHairColor', e.target.value)}
+                    className="input-field"
+                  >
+                    <option value="">Select hair color</option>
+                    <option value="Black">Black</option>
+                    <option value="Brown">Brown</option>
+                    <option value="Natural Blonde">Natural Blonde</option>
+                    <option value="Red">Red</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">Skin Color</label>
+                  <select
+                    value={formData.skinColor}
+                    onChange={(e) => handleInputChange('skinColor', e.target.value)}
+                    className="input-field"
+                  >
+                    <option value="">Select skin color</option>
+                    <option value="Dark">Dark</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Light">Light</option>
+                  </select>
+                </div>
               </div>
-            </div>
-          </div>
 
-          {/* Hair Color Analysis Section */}
-          <div className="glass-card mobile-card">
-            <h2 className="mobile-heading font-bold text-white mb-4 sm:mb-6">Hair Color Analysis</h2>
-            
-            <div className="form-grid mb-4 sm:mb-6">
-              <div>
-                <label className="block text-white/90 font-medium mb-2 text-sm">Natural Hair Color</label>
-                <select
-                  value={formData.naturalHairColor}
-                  onChange={(e) => handleInputChange('naturalHairColor', e.target.value)}
-                  className="input-field"
-                >
-                  <option value="">Select hair color</option>
-                  <option value="Black">Black</option>
-                  <option value="Grey">Grey</option>
-                  <option value="Dark Blonde">Dark Blonde</option>
-                  <option value="Ashy blonde">Ashy blonde</option>
-                  <option value="Warm blonde">Warm blonde</option>
-                  <option value="Dark Red">Dark Red</option>
-                  <option value="Copper">Copper</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-white/90 font-medium mb-2 text-sm">Skin Color</label>
-                <select
-                  value={formData.skinColor}
-                  onChange={(e) => handleInputChange('skinColor', e.target.value)}
-                  className="input-field"
-                >
-                  <option value="">Select skin color</option>
-                  <option value="Dark">Dark</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Fair">Fair</option>
-                  <option value="Light">Light</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="form-grid mb-4 sm:mb-6">
-              <div>
-                <label className="block text-white/90 font-medium mb-2 text-sm">Eye Color</label>
-                <select
-                  value={formData.eyeColor}
-                  onChange={(e) => handleInputChange('eyeColor', e.target.value)}
-                  className="input-field"
-                >
-                  <option value="">Select eye color</option>
-                  <option value="Black">Black</option>
-                  <option value="Dark brown">Dark brown</option>
-                  <option value="Light brown">Light brown</option>
-                  <option value="Hazel">Hazel</option>
-                  <option value="Green">Green</option>
-                  <option value="Blue">Blue</option>
-                  <option value="Grey">Grey</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-white/90 font-medium mb-2 text-sm">Hair Texture</label>
-                <select
-                  value={formData.hairTexture}
-                  onChange={(e) => handleInputChange('hairTexture', e.target.value)}
-                  className="input-field"
-                >
-                  <option value="">Select hair texture</option>
-                  <option value="Fine">Fine</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Coarse">Coarse</option>
-                  <option value="Resistant">Resistant</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="mb-4 sm:mb-6">
-              <label className="block text-white/90 font-medium mb-2 text-sm">Hair Color Maintenance</label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {['3-6 weeks', '8-10 weeks', '10-12 weeks', '4-6 months', 'Twice a year', 'Once a year'].map((option) => (
-                  <label key={option} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="hairColorMaintenance"
-                      value={option}
-                      checked={formData.hairColorMaintenance === option}
-                      onChange={(e) => handleInputChange('hairColorMaintenance', e.target.value)}
-                      className="w-4 h-4 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                    />
-                    <span className="text-white/90 text-sm">{option}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="mb-4 sm:mb-6">
-              <label className="block text-white/90 font-medium mb-2 text-sm">Special Occasions</label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {['Anniversary', 'Birthday', 'Wedding', 'Holidays'].map((occasion) => (
-                  <label key={occasion} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.specialOccasions.includes(occasion)}
-                      onChange={() => handleArrayFieldChange('specialOccasions', occasion)}
-                      className="w-4 h-4 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                    />
-                    <span className="text-white/90 text-sm">{occasion}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="mb-4 sm:mb-6">
-              <label className="block text-white/90 font-medium mb-2 text-sm">Personal Style</label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {['Classic', 'Trendy', 'Funky/fun', 'Expensive', 'Simple', 'Feminine', 'Edgy', 'Minimal'].map((style) => (
-                  <label key={style} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.personalStyle.includes(style)}
-                      onChange={() => handleArrayFieldChange('personalStyle', style)}
-                      className="w-4 h-4 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                    />
-                    <span className="text-white/90 text-sm">{style}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="mb-4 sm:mb-6">
-              <label className="block text-white/90 font-medium mb-2 text-sm">Hair Styles/Hair Length</label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {['Mid back or longer', 'Mid back', 'Medium', 'Just below shoulder', 'Short- between shoulder and chin', 'Above chin'].map((style) => (
-                  <label key={style} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.hairStyles.includes(style)}
-                      onChange={() => handleArrayFieldChange('hairStyles', style)}
-                      className="w-4 h-4 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                    />
-                    <span className="text-white/90 text-sm">{style}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="mb-4 sm:mb-6">
-              <label className="block text-white/90 font-medium mb-2 text-sm">Hair Color Style Options</label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {['All over color', 'Balayage', 'Babylights', 'Highlights', 'lowlights', 'Root melt'].map((option) => (
-                  <label key={option} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.hairColorStyleOptions.includes(option)}
-                      onChange={() => handleArrayFieldChange('hairColorStyleOptions', option)}
-                      className="w-4 h-4 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                    />
-                    <span className="text-white/90 text-sm">{option}</span>
-                  </label>
-                ))}
+              <div className="form-grid">
+                <div>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">Eye Color</label>
+                  <select
+                    value={formData.eyeColor}
+                    onChange={(e) => handleInputChange('eyeColor', e.target.value)}
+                    className="input-field"
+                  >
+                    <option value="">Select eye color</option>
+                    <option value="Black">Black</option>
+                    <option value="Dark brown">Dark brown</option>
+                    <option value="Light brown">Light brown</option>
+                    <option value="Hazel">Hazel</option>
+                    <option value="Green">Green</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Grey">Grey</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">Hair Texture</label>
+                  <select
+                    value={formData.hairTexture}
+                    onChange={(e) => handleInputChange('hairTexture', e.target.value)}
+                    className="input-field"
+                  >
+                    <option value="">Select hair texture</option>
+                    <option value="Fine">Fine</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Coarse">Coarse</option>
+                    <option value="Resistant">Resistant</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
+        )
 
-          {/* File Upload Section */}
+      case 2:
+        return (
           <div className="glass-card mobile-card">
-            <div className="text-center mb-4 sm:mb-6">
-              <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">🏔️</div>
-              <h2 className="mobile-heading font-bold text-white mb-2">Upload some hair styles that inspire you</h2>
+            <h2 className="mobile-heading font-bold text-white mb-6 text-center">Your present hair length?</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {['Short', 'Medium', 'Long', 'Extra-long'].map((length) => (
+                <label key={length} className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all">
+                  <input
+                    type="radio"
+                    name="hairLength"
+                    value={length}
+                    checked={formData.hairLength === length}
+                    onChange={(e) => handleInputChange('hairLength', e.target.value)}
+                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                  />
+                  <span className="text-white/90 text-lg font-medium">{length}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 3:
+        return (
+          <div className="glass-card mobile-card">
+            <h2 className="mobile-heading font-bold text-white mb-6 text-center">Your personal style?</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {['Classic', 'Trendy', 'Elegant', 'Minimal'].map((style) => (
+                <label key={style} className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all">
+                  <input
+                    type="radio"
+                    name="personalStyle"
+                    value={style}
+                    checked={formData.personalStyle === style}
+                    onChange={(e) => handleInputChange('personalStyle', e.target.value)}
+                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                  />
+                  <span className="text-white/90 text-lg font-medium">{style}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 4:
+        return (
+          <div className="glass-card mobile-card">
+            <h2 className="mobile-heading font-bold text-white mb-6 text-center">Your hair maintenance routine?</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {['Up to 6 weeks', '3 months', '6 months', 'Yearly'].map((maintenance) => (
+                <label key={maintenance} className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all">
+                  <input
+                    type="radio"
+                    name="hairMaintenance"
+                    value={maintenance}
+                    checked={formData.hairMaintenance === maintenance}
+                    onChange={(e) => handleInputChange('hairMaintenance', e.target.value)}
+                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                  />
+                  <span className="text-white/90 text-lg font-medium">{maintenance}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 5:
+        return (
+          <div className="glass-card mobile-card">
+            <h2 className="mobile-heading font-bold text-white mb-6 text-center">Which occasions do you choose your hair treatments frequently?</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {['Birthdays/Anniversary', 'Work', 'Holiday', 'Weddings/Social events'].map((occasion) => (
+                <label key={occasion} className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all">
+                  <input
+                    type="checkbox"
+                    checked={formData.specialOccasions.includes(occasion)}
+                    onChange={() => handleArrayFieldChange('specialOccasions', occasion)}
+                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                  />
+                  <span className="text-white/90 text-lg font-medium">{occasion}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 6:
+        return (
+          <div className="glass-card mobile-card">
+            <h2 className="mobile-heading font-bold text-white mb-6 text-center">Which treatments do you prefer presently or would like to try in future?</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {['All over color', 'Balayage', 'Babylights', 'Highlights', 'Lowlights', 'Root melt'].map((treatment) => (
+                <label key={treatment} className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all">
+                  <input
+                    type="checkbox"
+                    checked={formData.preferredTreatments.includes(treatment)}
+                    onChange={() => handleArrayFieldChange('preferredTreatments', treatment)}
+                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                  />
+                  <span className="text-white/90 text-lg font-medium">{treatment}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 7:
+        return (
+          <div className="glass-card mobile-card">
+            <div className="text-center mb-6">
+              <h2 className="mobile-heading font-bold text-white mb-4">Upload some styles that inspire you</h2>
+              <p className="text-white/70 mobile-text">(Optional)</p>
             </div>
 
             <div className="border-2 border-dashed border-coral/50 file-upload-area text-center hover:border-coral transition-colors bg-black/20">
-              <div className="text-3xl sm:text-4xl mb-2 sm:mb-4">☁️</div>
-              <p className="text-white/90 mb-2 sm:mb-4 mobile-text">Browse Files</p>
-              <p className="text-white/70 mb-4 sm:mb-6 mobile-description">Drag and drop Files here</p>
+              <div className="text-4xl mb-4">☁️</div>
+              <p className="text-white/90 mb-4 mobile-text">Browse Files</p>
+              <p className="text-white/70 mb-6 mobile-description">Drag and drop Files here</p>
               <input
                 type="file"
                 multiple
@@ -713,11 +623,11 @@ export default function Home() {
             </div>
 
             {formData.files.length > 0 && (
-              <div className="mt-4 sm:mt-6">
-                <h3 className="text-white font-semibold mb-2 sm:mb-3 mobile-text">Uploaded Files:</h3>
+              <div className="mt-6">
+                <h3 className="text-white font-semibold mb-3 mobile-text">Uploaded Files:</h3>
                 <div className="space-y-2">
                   {formData.files.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between bg-black/40 p-2 sm:p-3 border border-white/10">
+                    <div key={index} className="flex items-center justify-between bg-black/40 p-3 border border-white/10">
                       <span className="text-white/90 mobile-text truncate mr-2">{file.name}</span>
                       <button
                         onClick={() => removeFile(index)}
@@ -732,62 +642,63 @@ export default function Home() {
             )}
 
             <p className="text-white/60 mobile-description mt-4 text-center">
-              You can upload up to 5 image files (JPG, PNG, GIF, etc.) of maximum file size 1MB each
+              You can upload up to 5 image files (JPG, PNG, GIF, etc.)
             </p>
           </div>
+        )
 
-          {/* Questionnaire Section */}
+      case 8:
+        return (
           <div className="glass-card mobile-card">
-            <h2 className="mobile-heading font-bold text-white mb-4 sm:mb-6">Type a question</h2>
-            
-            <div className="table-responsive">
-              <table className="questionnaire-table w-full text-white">
-                <thead>
-                  <tr className="border-b border-white/20">
-                    <th className="text-left p-2 sm:p-3 font-semibold mobile-text">Service</th>
-                    <th className="p-2 sm:p-3 font-semibold mobile-text">Never</th>
-                    <th className="p-2 sm:p-3 font-semibold mobile-text">Once</th>
-                    <th className="p-2 sm:p-3 font-semibold mobile-text">More than once</th>
-                    <th className="p-2 sm:p-3 font-semibold mobile-text">Would try</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { key: 'balayage', label: 'Balayage' },
-                    { key: 'highlights', label: 'Highlights' },
-                    { key: 'babylights', label: 'Babylights' },
-                    { key: 'extensions', label: 'Hair extensions' }
-                  ].map(({ key, label }) => (
-                    <tr key={key} className="border-b border-white/10">
-                      <td className="p-2 sm:p-3 font-medium mobile-text">{label}</td>
-                      {['Never', 'Once', 'More than once', 'Would try'].map((option) => (
-                        <td key={option} className="p-2 sm:p-3 text-center">
-                          <input
-                            type="radio"
-                            name={key}
-                            value={option}
-                            checked={formData.questionnaire[key as keyof typeof formData.questionnaire] === option}
-                            onChange={(e) => handleQuestionnaireChange(key, e.target.value)}
-                            className="w-4 h-4 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                          />
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <h2 className="mobile-heading font-bold text-white mb-6 text-center">Work</h2>
+            <p className="text-white/70 mobile-text mb-6 text-center">(Optional)</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { value: 'Corporate', label: 'Corporate' },
+                { value: 'Stay at home', label: 'Stay at home' },
+                { value: 'Work from home', label: 'Work from home' },
+                { value: 'Entrepreneur', label: 'Entrepreneur' },
+                { value: 'Student', label: 'Student' }
+              ].map((work) => (
+                <label key={work.value} className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all">
+                  <input
+                    type="radio"
+                    name="workType"
+                    value={work.value}
+                    checked={formData.workType === work.value}
+                    onChange={(e) => handleInputChange('workType', e.target.value)}
+                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                  />
+                  <span className="text-white/90 text-lg font-medium">{work.label}</span>
+                </label>
+              ))}
             </div>
-          </div>
 
-          {/* Calendar Section */}
+            {(formData.workType === 'Corporate' || formData.workType === 'Work from home' || formData.workType === 'Entrepreneur') && (
+              <div className="mt-6">
+                <label className="block text-white/90 font-medium mb-2 text-sm">Please specify industry</label>
+                <input
+                  type="text"
+                  value={formData.workIndustry}
+                  onChange={(e) => handleInputChange('workIndustry', e.target.value)}
+                  className="input-field"
+                  placeholder="e.g., Technology, Healthcare, Finance..."
+                />
+              </div>
+            )}
+          </div>
+        )
+
+      case 9:
+        return (
           <div className="glass-card mobile-card">
-            <div className="mb-4 sm:mb-6">
-              <h2 className="mobile-heading font-bold text-white mb-3 sm:mb-4">Select Your Perfect Hair Days</h2>
-              <p className="text-white/80 mobile-text mb-2">
+            <div className="mb-6">
+              <h2 className="mobile-heading font-bold text-white mb-4 text-center">Select Your Perfect Hair Days</h2>
+              <p className="text-white/80 mobile-text mb-2 text-center">
                 Select some of your most important days of the year when you would like to look your very best. 
                 Let us send you a reminder 2 weeks before to consult or set an appointment.
               </p>
-              <p className="text-white/60 italic mobile-description">A personalized schedule created just for your convenience.</p>
+              <p className="text-white/60 italic mobile-description text-center">(Optional)</p>
             </div>
 
             <div className="calendar-responsive">
@@ -803,7 +714,7 @@ export default function Home() {
                   </button>
                 </div>
 
-                <div className="bg-black/40 backdrop-blur-sm p-4 sm:p-6 border border-white/10">
+                <div className="bg-black/40 backdrop-blur-sm p-6 border border-white/10">
                   <Calendar
                     onClickDay={handleDayClick}
                     value={null}
@@ -821,19 +732,17 @@ export default function Home() {
                           dates selected
                         </span>
                       </div>
-                      
-
                     </div>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="mobile-heading font-bold text-white mb-3 sm:mb-4">Selected Dates</h3>
+                <h3 className="mobile-heading font-bold text-white mb-4">Selected Dates</h3>
                 
                 {formData.selectedDates.length === 0 ? (
-                  <div className="text-center py-8 sm:py-12">
-                    <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">📅</div>
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">📅</div>
                     <p className="text-white/70 mobile-text mb-2">No dates selected yet</p>
                     <p className="text-white/50 mobile-description">Click on dates in the calendar to select them</p>
                   </div>
@@ -867,50 +776,170 @@ export default function Home() {
                   </div>
                 )}
               </div>
-              
-                          </div>
-              
-              <div className="mt-4 text-center">
-                <button
-                  onClick={handleSubmit}
-                  disabled={isSubmitting || !formData.email || formData.selectedDates.length === 0}
-                  className="mobile-btn bg-gradient-to-r from-coral to-coral-dark hover:from-coral-dark hover:to-coral text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
-                      <span className="text-lg">Saving...</span>
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center">
-                      {/* <div className="text-2xl mr-3">💾</div> */}
-                      <span className="text-lg">Click to save</span>
-                    </span>
-                  )}
-                </button>
-              </div>
+            </div>
           </div>
+        )
 
-          {/* Action Buttons */}
-          <div className="text-center flex items-center justify-center space-x-4">
+      case 10:
+        return (
+          <div className="glass-card mobile-card">
+            <div className="text-center mb-8">
+              <h2 className="mobile-heading font-bold text-white mb-4">Review & Submit</h2>
+              <p className="text-white/80 mobile-text">Please review your information before submitting</p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="bg-black/20 p-4 rounded-lg">
+                <h3 className="text-white font-semibold mb-3">Personal Information</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white/80">
+                  <p><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
+                  <p><strong>Email:</strong> {formData.email}</p>
+                  <p><strong>Phone:</strong> {formData.phone}</p>
+                </div>
+              </div>
+
+              <div className="bg-black/20 p-4 rounded-lg">
+                <h3 className="text-white font-semibold mb-3">Hair Analysis</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white/80">
+                  <p><strong>Hair Color:</strong> {formData.naturalHairColor}</p>
+                  <p><strong>Skin Color:</strong> {formData.skinColor}</p>
+                  <p><strong>Eye Color:</strong> {formData.eyeColor}</p>
+                  <p><strong>Hair Texture:</strong> {formData.hairTexture}</p>
+                  <p><strong>Hair Length:</strong> {formData.hairLength}</p>
+                  <p><strong>Personal Style:</strong> {formData.personalStyle}</p>
+                  <p><strong>Maintenance:</strong> {formData.hairMaintenance}</p>
+                </div>
+              </div>
+
+              <div className="bg-black/20 p-4 rounded-lg">
+                <h3 className="text-white font-semibold mb-3">Selected Dates</h3>
+                <p className="text-white/80">{formData.selectedDates.length} dates selected</p>
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting || !formData.email || formData.selectedDates.length === 0}
+                className="mobile-btn bg-gradient-to-r from-coral to-coral-dark hover:from-coral-dark hover:to-coral text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
+                    <span className="text-lg">Submitting...</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center">
+                    <span className="text-lg">Submit Analysis</span>
+                  </span>
+                )}
+              </button>
+
+              <button
+                onClick={generatePDF}
+                disabled={isGeneratingPDF || !formData.firstName || !formData.lastName}
+                className="mobile-btn relative overflow-hidden bg-gradient-to-r from-black to-gray-800 hover:from-gray-800 hover:to-black text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full hover:translate-x-full transition-transform duration-1000"></div>
+                {isGeneratingPDF ? (
+                  <span className="flex items-center justify-center relative z-10">
+                    <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
+                    <span className="text-lg">Generating...</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center relative z-10">
+                    <div className="text-2xl mr-3">📄</div>
+                    <span className="text-lg">Download PDF</span>
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+        )
+
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-coral/10 rounded-full blur-3xl floating-animation mobile-bg-decoration"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-black/20 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{animationDelay: '4s'}}></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto mobile-container py-4 sm:py-6 lg:py-8">
+        <header className="mobile-header">
+          <div className="inline-block p-3 sm:p-4 bg-black/40 backdrop-blur-sm border border-coral/30 mb-4 sm:mb-6">
+            <h1 className="mobile-heading font-bold text-white mb-2 sm:mb-3">
+              MKH Hair Color Analysis
+            </h1>
+          </div>
+          <p className="mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed">
+            Complete your hair color analysis in just 3 minutes
+          </p>
+        </header>
+
+        {/* Progress Bar */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <div className="glass-card p-4">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-white font-semibold">Progress</span>
+              <span className="text-white/70 text-sm">{currentSlide} of {totalSlides}</span>
+            </div>
+            <div className="w-full bg-black/40 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-coral to-coral-dark h-2 rounded-full transition-all duration-500"
+                style={{ width: `${(currentSlide / totalSlides) * 100}%` }}
+              ></div>
+            </div>
+            
+            {/* Slide Navigation Dots */}
+            <div className="flex justify-center mt-4 space-x-2">
+              {Array.from({ length: totalSlides }, (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => goToSlide(i + 1)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    currentSlide === i + 1 
+                      ? 'bg-coral scale-125' 
+                      : 'bg-white/30 hover:bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-4xl mx-auto mobile-section">
+          {renderSlide()}
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between items-center mt-8">
+            <button
+              onClick={prevSlide}
+              disabled={currentSlide === 1}
+              className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+            >
+              ← Previous
+            </button>
+
+            <div className="text-center">
+              <span className="text-white/70 text-sm">
+                Step {currentSlide} of {totalSlides}
+              </span>
+            </div>
 
             <button
-              onClick={generatePDF}
-              disabled={isGeneratingPDF || !formData.firstName || !formData.lastName}
-              className="mobile-btn relative overflow-hidden bg-gradient-to-r from-black to-gray-800 hover:from-gray-800 hover:to-black text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
+              onClick={nextSlide}
+              disabled={currentSlide === totalSlides}
+              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full hover:translate-x-full transition-transform duration-1000"></div>
-              {isGeneratingPDF ? (
-                <span className="flex items-center justify-center relative z-10">
-                  <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
-                  <span className="text-lg">Generating...</span>
-                </span>
-              ) : (
-                <span className="flex items-center justify-center relative z-10">
-                  <div className="text-2xl mr-3">📄</div>
-                  <span className="text-lg">Click to get your hair analysis now</span>
-                </span>
-              )}
+              Next →
             </button>
           </div>
         </div>

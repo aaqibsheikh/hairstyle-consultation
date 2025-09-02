@@ -874,7 +874,7 @@ export default function Home() {
       <div className="relative z-10 container mx-auto mobile-container py-4 sm:py-6 lg:py-8">
         <header className="mobile-header">
           <div className="inline-block p-3 sm:p-4 bg-black/40 backdrop-blur-sm border border-coral/30 mb-4 sm:mb-6">
-            <h1 className="mobile-heading font-bold text-white mb-2 sm:mb-3">
+            <h1 className="mobile-heading font-bold text-white">
               MKH Hair Color Analysis
             </h1>
           </div>
@@ -884,7 +884,7 @@ export default function Home() {
         </header>
 
         {/* Progress Bar */}
-        <div className="max-w-4xl mx-auto mb-8">
+        {/* <div className="max-w-4xl mx-auto mb-8">
           <div className="glass-card p-4">
             <div className="flex items-center justify-between mb-4">
               <span className="text-white font-semibold">Progress</span>
@@ -897,7 +897,6 @@ export default function Home() {
               ></div>
             </div>
             
-            {/* Slide Navigation Dots */}
             <div className="flex justify-center mt-4 space-x-2">
               {Array.from({ length: totalSlides }, (_, i) => (
                 <button
@@ -912,14 +911,14 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Main Content */}
         <div className="max-w-4xl mx-auto mobile-section">
           {renderSlide()}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between items-center mt-8">
+          <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center sm:space-y-0 space-y-4 mt-8">
             <button
               onClick={prevSlide}
               disabled={currentSlide === 1}
@@ -928,11 +927,11 @@ export default function Home() {
               ← Previous
             </button>
 
-            <div className="text-center">
+            {/* <div className="text-center">
               <span className="text-white/70 text-sm">
                 Step {currentSlide} of {totalSlides}
               </span>
-            </div>
+            </div> */}
 
             <button
               onClick={nextSlide}

@@ -1,0 +1,25 @@
+{
+  "name": "MKH Hair Color Analysis",
+  "short_name": "MKH Hair",
+  "description": "Professional hair color analysis and consultation",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ff7f50",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["lifestyle", "beauty"],
+  "lang": "en",
+  "dir": "ltr"
+}

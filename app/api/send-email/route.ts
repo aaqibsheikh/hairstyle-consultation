@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     const images = getAllRecommendationImages(combination)
     
     // Get base URL for images
-    const baseUrl = process.env.NEXTAUTH_URL || `http://${request.headers.get('host') || 'localhost:3000'}`
+    const baseUrl = process.env.NEXTAUTH_URL || `https://${request.headers.get('host') || 'localhost:3000'}`
     
     // Convert recommendation images to full URLs for email
     let imageUrls: string[] = []

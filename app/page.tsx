@@ -5,6 +5,9 @@ import Calendar from 'react-calendar'
 import { format } from 'date-fns'
 import jsPDF from 'jspdf'
 import 'react-calendar/dist/Calendar.css'
+import ImageGallery from './components/ImageGallery'
+import { getHairRecommendation, getAllRecommendationImages, type HairCombination } from './utils/hairRecommendations'
+import { fetchImageAsDataURL } from './utils/pdfImageLoader'
 
 type ValuePiece = Date | null
 type Value = ValuePiece | [ValuePiece, ValuePiece]
@@ -15,6 +18,9 @@ interface FormData {
   lastName: string
   email: string
   phone: string
+  
+  // Hair Color Selection
+  selectedHairColor: string
   
   // Hair Analysis
   naturalHairColor: string
@@ -41,6 +47,7 @@ export default function Home() {
     lastName: '',
     email: '',
     phone: '',
+    selectedHairColor: '',
     naturalHairColor: '',
     skinColor: '',
     eyeColor: '',
@@ -59,7 +66,7 @@ export default function Home() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const [message, setMessage] = useState('')
 
-  const totalSlides = 10
+  const totalSlides = 12
 
   const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -257,6 +264,187 @@ export default function Home() {
       })
       yPosition += 20
 
+      // Hair Recommendations
+      const combination: HairCombination = {
+        hairColor: formData.selectedHairColor,
+        hairLength: formData.hairLength,
+        personalStyle: formData.personalStyle
+      }
+      
+      const recommendation = getHairRecommendation(combination)
+      const images = getAllRecommendationImages(combination)
+      
+      console.log('=== PDF GENERATION DEBUG ===')
+      console.log('Combination:', combination)
+      console.log('Recommendation:', recommendation)
+      console.log('Images array:', images)
+      console.log('Images length:', images.length)
+      
+      if (recommendation) {
+        // Check if we need a new page
+        if (yPosition > pageHeight - 80) {
+          pdf.addPage()
+          yPosition = margin
+        }
+
+        pdf.setFillColor(245, 245, 245)
+        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 120, 'F')
+        pdf.setDrawColor(255, 127, 80)
+        pdf.setLineWidth(0.5)
+        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 120, 'S')
+        
+        pdf.setFontSize(14)
+        pdf.setTextColor(255, 127, 80)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text('Personalized Hair Recommendations', margin, yPosition)
+        yPosition += 12
+
+        pdf.setFontSize(12)
+        pdf.setTextColor(255, 127, 80)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text(recommendation.title, margin, yPosition)
+        yPosition += 10
+
+        pdf.setFontSize(10)
+        pdf.setTextColor(50, 50, 50)
+        pdf.setFont('helvetica', 'normal')
+        
+        // Recommended Treatments
+        pdf.setFont('helvetica', 'bold')
+        pdf.setTextColor(255, 127, 80)
+        pdf.text('Recommended Treatments:', margin, yPosition)
+        yPosition += 7
+        
+        pdf.setFont('helvetica', 'normal')
+        pdf.setTextColor(50, 50, 50)
+        const descriptionLines = pdf.splitTextToSize(recommendation.description, contentWidth)
+        descriptionLines.forEach((line: string) => {
+          pdf.text(line, margin, yPosition)
+          yPosition += 5
+        })
+        yPosition += 5
+
+        // Hair Care Routine
+        pdf.setFont('helvetica', 'bold')
+        pdf.setTextColor(255, 127, 80)
+        pdf.text('Hair Care Routine:', margin, yPosition)
+        yPosition += 7
+        
+        pdf.setFont('helvetica', 'normal')
+        pdf.setTextColor(50, 50, 50)
+        const hairCareLines = pdf.splitTextToSize(recommendation.hairCare, contentWidth)
+        hairCareLines.forEach((line: string) => {
+          pdf.text(line, margin, yPosition)
+          yPosition += 5
+        })
+        yPosition += 5
+
+        // Maintenance Schedule
+        pdf.setFont('helvetica', 'bold')
+        pdf.setTextColor(255, 127, 80)
+        pdf.text('Maintenance Schedule:', margin, yPosition)
+        yPosition += 7
+        
+        pdf.setFont('helvetica', 'normal')
+        pdf.setTextColor(50, 50, 50)
+        recommendation.maintenanceSchedule.forEach((schedule) => {
+          pdf.text(`• ${schedule}`, margin, yPosition)
+          yPosition += 5
+        })
+
+        yPosition += 20
+
+        // Add recommendation images to PDF
+        if (images.length > 0) {
+          // Check if we need a new page for images
+          if (yPosition > pageHeight - 100) {
+            pdf.addPage()
+            yPosition = margin
+          }
+
+          pdf.setFontSize(14)
+          pdf.setTextColor(255, 127, 80)
+          pdf.setFont('helvetica', 'bold')
+          pdf.text('Recommended Styles', margin, yPosition)
+          yPosition += 15
+
+          // Add real images in a grid layout
+          const imagesPerRow = 2
+          const imageWidth = (contentWidth - (imagesPerRow - 1) * 10) / imagesPerRow
+          const imageHeight = 80 // Fixed height for consistency
+          
+          // Process images with for...of loop to handle async loading
+          const imagesToProcess = images.slice(0, 4)
+          for (let index = 0; index < imagesToProcess.length; index++) {
+            const imagePath = imagesToProcess[index]
+            const row = Math.floor(index / imagesPerRow)
+            const col = index % imagesPerRow
+            
+            if (row > 0 && col === 0) {
+              // Check if we need a new page
+              if (yPosition + imageHeight + 30 > pageHeight - 40) {
+                pdf.addPage()
+                yPosition = margin
+              } else {
+                yPosition += imageHeight + 30
+              }
+            }
+            
+            const xPos = margin + col * (imageWidth + 10)
+            const yPos = yPosition
+            
+            try {
+              console.log('Processing image:', imagePath)
+              // Fetch image as data URL
+              const dataUrl = await fetchImageAsDataURL(imagePath)
+              console.log('Data URL result:', dataUrl ? 'Success' : 'Failed')
+              
+              if (dataUrl) {
+                // Infer format from extension
+                const fmt = imagePath.toLowerCase().includes('.png') ? 'PNG' : 'JPEG'
+                console.log('Using format:', fmt, 'for image:', imagePath)
+                
+                // Add image to PDF
+                pdf.addImage(dataUrl, fmt, xPos, yPos, imageWidth, imageHeight)
+                console.log('Successfully added image to PDF')
+              } else {
+                // Draw fallback box on error
+                pdf.setFillColor(240, 240, 240)
+                pdf.setDrawColor(200, 200, 200)
+                pdf.setLineWidth(1)
+                pdf.rect(xPos, yPos, imageWidth, imageHeight, 'FD')
+                
+                // Add error text
+                pdf.setFontSize(8)
+                pdf.setTextColor(150, 150, 150)
+                pdf.setFont('helvetica', 'normal')
+                const errorText = 'Image failed to load'
+                const textWidth = pdf.getTextWidth(errorText)
+                pdf.text(errorText, xPos + (imageWidth - textWidth) / 2, yPos + imageHeight / 2)
+              }
+            } catch (error) {
+              console.error('Error processing image:', error)
+              
+              // Draw fallback box on error
+              pdf.setFillColor(240, 240, 240)
+              pdf.setDrawColor(200, 200, 200)
+              pdf.setLineWidth(1)
+              pdf.rect(xPos, yPos, imageWidth, imageHeight, 'FD')
+              
+              // Add error text
+              pdf.setFontSize(8)
+              pdf.setTextColor(150, 150, 150)
+              pdf.setFont('helvetica', 'normal')
+              const errorText = 'Image failed to load'
+              const textWidth = pdf.getTextWidth(errorText)
+              pdf.text(errorText, xPos + (imageWidth - textWidth) / 2, yPos + imageHeight / 2)
+            }
+          }
+          
+          yPosition += imageHeight + 30
+        }
+      }
+
       // Selected Dates
       if (formData.selectedDates.length > 0) {
         const datesHeight = Math.min(80, formData.selectedDates.length * 8 + 30)
@@ -340,6 +528,7 @@ export default function Home() {
           lastName: '',
           email: '',
           phone: '',
+          selectedHairColor: '',
           naturalHairColor: '',
           skinColor: '',
           eyeColor: '',
@@ -422,7 +611,7 @@ export default function Home() {
             </div>
 
             <div className="mb-6">
-              <h3 className="text-white font-semibold mb-4">Hair Color Analysis</h3>
+              <h3 className="text-white font-semibold mb-4">Hair Analysis</h3>
               <div className="form-grid mb-4">
                 <div>
                   <label className="block text-white/90 font-medium mb-2 text-sm">Your Natural Hair Color</label>
@@ -494,6 +683,36 @@ export default function Home() {
       case 2:
         return (
           <div className="glass-card mobile-card">
+            <div className="text-center mb-6">
+              <h2 className="mobile-heading font-bold text-white mb-4">Choose Your Hair Color</h2>
+              <p className="text-white/80 mobile-text">Select the hair color category you're most interested in</p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { value: 'Blonde', label: 'Blonde', emoji: '💛' },
+                { value: 'Brunette', label: 'Brunette', emoji: '🤎' }
+              ].map((color) => (
+                <label key={color.value} className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all">
+                  <input
+                    type="radio"
+                    name="selectedHairColor"
+                    value={color.value}
+                    checked={formData.selectedHairColor === color.value}
+                    onChange={(e) => handleInputChange('selectedHairColor', e.target.value)}
+                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral focus:ring-2"
+                  />
+                  {/* <span className="text-2xl">{color.emoji}</span> */}
+                  <span className="text-white/90 text-lg font-medium">{color.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 3:
+        return (
+          <div className="glass-card mobile-card">
             <h2 className="mobile-heading font-bold text-white mb-6 text-center">Your present hair length?</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {['Short', 'Medium', 'Long', 'Extra-long'].map((length) => (
@@ -513,7 +732,7 @@ export default function Home() {
           </div>
         )
 
-      case 3:
+      case 4:
         return (
           <div className="glass-card mobile-card">
             <h2 className="mobile-heading font-bold text-white mb-6 text-center">Your personal style?</h2>
@@ -535,7 +754,7 @@ export default function Home() {
           </div>
         )
 
-      case 4:
+      case 5:
         return (
           <div className="glass-card mobile-card">
             <h2 className="mobile-heading font-bold text-white mb-6 text-center">Your hair maintenance routine?</h2>
@@ -557,7 +776,7 @@ export default function Home() {
           </div>
         )
 
-      case 5:
+      case 6:
         return (
           <div className="glass-card mobile-card">
             <h2 className="mobile-heading font-bold text-white mb-6 text-center">Which occasions do you choose your hair treatments frequently?</h2>
@@ -577,7 +796,7 @@ export default function Home() {
           </div>
         )
 
-      case 6:
+      case 7:
         return (
           <div className="glass-card mobile-card">
             <h2 className="mobile-heading font-bold text-white mb-6 text-center">Which treatments do you prefer presently or would like to try in future?</h2>
@@ -597,7 +816,7 @@ export default function Home() {
           </div>
         )
 
-      case 7:
+      case 8:
         return (
           <div className="glass-card mobile-card">
             <div className="text-center mb-6">
@@ -647,7 +866,7 @@ export default function Home() {
           </div>
         )
 
-      case 8:
+      case 9:
         return (
           <div className="glass-card mobile-card">
             <h2 className="mobile-heading font-bold text-white mb-6 text-center">Work</h2>
@@ -689,7 +908,7 @@ export default function Home() {
           </div>
         )
 
-      case 9:
+      case 10:
         return (
           <div className="glass-card mobile-card">
             <div className="mb-6">
@@ -780,7 +999,166 @@ export default function Home() {
           </div>
         )
 
-      case 10:
+      case 11:
+        return (
+          <div className="glass-card mobile-card">
+            <div className="text-center mb-8">
+              <h2 className="mobile-heading font-bold text-white mb-4">Your Personalized Hair Recommendations</h2>
+              <p className="text-white/80 mobile-text">Based on your selections, here are our recommendations</p>
+            </div>
+
+            {(() => {
+              const combination: HairCombination = {
+                hairColor: formData.selectedHairColor,
+                hairLength: formData.hairLength,
+                personalStyle: formData.personalStyle
+              }
+              
+              const recommendation = getHairRecommendation(combination)
+              const images = getAllRecommendationImages(combination)
+              console.log('Combination:', combination)
+              console.log('Recommendation:', recommendation)
+              console.log('Images:', images)
+
+              if (!recommendation) {
+                return (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">💇‍♀️</div>
+                    <p className="text-white/70 mobile-text mb-2">Recommendations coming soon!</p>
+                    <p className="text-white/50 mobile-description">
+                      We're working on recommendations for your specific combination.
+                      Please complete all required fields for personalized suggestions.
+                    </p>
+                  </div>
+                )
+              }
+
+              return (
+                <div className="space-y-8">
+                  {/* Recommendation Details */}
+                  <div className="bg-black/20 p-6 rounded-lg border border-white/10">
+                    <h3 className="text-white font-bold text-xl mb-4">{recommendation.title}</h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-coral font-semibold mb-2">Recommended Treatments:</h4>
+                        <p className="text-white/90 leading-relaxed">{recommendation.description}</p>
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-coral font-semibold mb-2">Hair Care Routine:</h4>
+                        <p className="text-white/90 leading-relaxed">{recommendation.hairCare}</p>
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-coral font-semibold mb-2">Maintenance Schedule:</h4>
+                        <ul className="space-y-1">
+                          {recommendation.maintenanceSchedule.map((schedule, index) => (
+                            <li key={index} className="text-white/90 flex items-start">
+                              <span className="text-coral mr-2">•</span>
+                              <span>{schedule}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Image Gallery */}
+                  {images.length > 0 && (
+                    <div>
+                      <ImageGallery 
+                        images={images} 
+                        title="Recommended Styles" 
+                        className="bg-black/20 p-6 rounded-lg border border-white/10"
+                      />
+                      
+                      {/* Debug section - remove in production */}
+                      <div className="mt-4 p-4 bg-black/40 rounded-lg">
+                        <h4 className="text-white font-semibold mb-2">Debug Info:</h4>
+                        <p className="text-white/70 text-sm">Image paths:</p>
+                        {images.map((img, idx) => (
+                          <p key={idx} className="text-white/60 text-xs">{img}</p>
+                        ))}
+                        <button 
+                          onClick={() => {
+                            images.forEach(img => {
+                              const fullUrl = `${window.location.origin}${img}`
+                              console.log('Testing image URL:', fullUrl)
+                              fetch(fullUrl)
+                                .then(res => console.log(`Image ${img}: ${res.ok ? 'OK' : 'FAILED'} (${res.status})`))
+                                .catch(err => console.error(`Image ${img} error:`, err))
+                            })
+                          }}
+                          className="mt-2 px-3 py-1 bg-coral text-white text-xs rounded"
+                        >
+                          Test Image URLs
+                        </button>
+                        
+                        <button 
+                          onClick={async () => {
+                            console.log('=== TESTING fetchImageAsDataURL ===')
+                            if (images.length > 0) {
+                              const testImage = images[0]
+                              console.log('Testing with image:', testImage)
+                              try {
+                                const result = await fetchImageAsDataURL(testImage)
+                                console.log('fetchImageAsDataURL result:', result ? 'SUCCESS' : 'FAILED')
+                                if (result) {
+                                  console.log('Data URL length:', result.length)
+                                  console.log('Data URL preview:', result.substring(0, 100) + '...')
+                                }
+                              } catch (error) {
+                                console.error('fetchImageAsDataURL error:', error)
+                              }
+                            }
+                          }}
+                          className="mt-2 ml-2 px-3 py-1 bg-blue-500 text-white text-xs rounded"
+                        >
+                          Test fetchImageAsDataURL
+                        </button>
+                        
+                        <button 
+                          onClick={async () => {
+                            console.log('=== TESTING SIMPLE PDF WITH IMAGE ===')
+                            try {
+                              // Create a simple test PDF
+                              const testPdf = new jsPDF()
+                              testPdf.text('Testing image in PDF', 20, 20)
+                              
+                              // Try to add a simple image
+                              const testImage = images[0]
+                              console.log('Testing image:', testImage)
+                              
+                              const dataUrl = await fetchImageAsDataURL(testImage)
+                              if (dataUrl) {
+                                console.log('Got data URL, adding to PDF')
+                                testPdf.addImage(dataUrl, 'JPEG', 20, 30, 50, 40)
+                                testPdf.save('test-image.pdf')
+                                console.log('Test PDF saved successfully')
+                              } else {
+                                console.log('Failed to get data URL')
+                                testPdf.text('Image failed to load', 20, 30)
+                                testPdf.save('test-no-image.pdf')
+                              }
+                            } catch (error) {
+                              console.error('Test PDF error:', error)
+                            }
+                          }}
+                          className="mt-2 ml-2 px-3 py-1 bg-green-500 text-white text-xs rounded"
+                        >
+                          Test PDF with Image
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })()}
+          </div>
+        )
+
+      case 12:
         return (
           <div className="glass-card mobile-card">
             <div className="text-center mb-8">

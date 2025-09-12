@@ -1,6 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 import { format } from 'date-fns'
+import { getHairRecommendation, getAllRecommendationImages, type HairCombination } from '../../utils/hairRecommendations'
+
+// Helper function to fetch image as data URL for email
+async function fetchImageAsDataURLForEmail(imagePath: string, baseUrl: string): Promise<string | null> {
+  try {
+    const fullUrl = imagePath.startsWith('http') ? imagePath : `${baseUrl}${imagePath}`
+    console.log('Fetching image for email:', fullUrl)
+    
+    const response = await fetch(fullUrl)
+    if (!response.ok) {
+      console.error(`Failed to fetch image for email: ${response.status} ${response.statusText}`)
+      return null
+    }
+    
+    const buffer = await response.arrayBuffer()
+    const base64 = Buffer.from(buffer).toString('base64')
+    const mimeType = response.headers.get('content-type') || 'image/jpeg'
+    
+    return `data:${mimeType};base64,${base64}`
+  } catch (error) {
+    console.error('Error fetching image for email:', error)
+    return null
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,6 +54,45 @@ export async function POST(request: NextRequest) {
       })
       .join('\n• ')
 
+    // Get hair recommendations
+    const combination: HairCombination = {
+      hairColor: formData.selectedHairColor,
+      hairLength: formData.hairLength,
+      personalStyle: formData.personalStyle
+    }
+    
+    const recommendation = getHairRecommendation(combination)
+    const images = getAllRecommendationImages(combination)
+    
+    // Get base URL for images
+    const baseUrl = process.env.NEXTAUTH_URL || `http://${request.headers.get('host') || 'localhost:3000'}`
+    
+    // Convert recommendation images to full URLs for email
+    let imageUrls: string[] = []
+    if (recommendation && images.length > 0) {
+      console.log('Preparing image URLs for email...')
+      console.log('Full image paths:', images)
+      for (const imagePath of images.slice(0, 4)) {
+        console.log('Processing image for email:', imagePath)
+        const fullImageUrl = imagePath.startsWith('http') ? imagePath : `${baseUrl}${imagePath}`
+        imageUrls.push(fullImageUrl)
+        console.log('Full image URL:', fullImageUrl)
+      }
+      console.log(`Prepared ${imageUrls.length} image URLs for email`)
+    }
+
+    // Debug: Log the image URLs that will be used in email
+    console.log('=== EMAIL DEBUG INFO ===')
+    console.log('Base URL:', baseUrl)
+    console.log('Number of image URLs:', imageUrls.length)
+    console.log('Image URLs:', imageUrls)
+    
+    // Test: Create a simple HTML snippet with one image to test
+    if (imageUrls.length > 0) {
+      const testHtml = `<div><h3>Test Image:</h3><img src="${imageUrls[0]}" style="width: 100px; height: 100px;" alt="test" /></div>`
+      console.log('Test HTML snippet:', testHtml)
+    }
+
     // Email content
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -52,39 +115,114 @@ export async function POST(request: NextRequest) {
                 <strong>Phone:</strong> ${formData.phone}
               </div>
               <div>
-                <strong>Lifestyle:</strong> ${formData.lifestyle.join(', ') || 'Not specified'}
+                <strong>Natural Hair Color:</strong> ${formData.naturalHairColor || 'Not specified'}
               </div>
             </div>
           </div>
 
           <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
-            <h2 style="color: white; margin-bottom: 20px; font-size: 24px;">Style Preferences</h2>
-            <table style="width: 100%; border-collapse: collapse; color: white;">
-              <thead>
-                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
-                  <th style="text-align: left; padding: 12px; font-weight: bold;">Service</th>
-                  <th style="text-align: center; padding: 12px; font-weight: bold;">Experience</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                  <td style="padding: 12px;">Balayage</td>
-                  <td style="text-align: center; padding: 12px;">${formData.questionnaire.balayage || 'Not specified'}</td>
-                </tr>
-                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                  <td style="padding: 12px;">Highlights</td>
-                  <td style="text-align: center; padding: 12px;">${formData.questionnaire.highlights || 'Not specified'}</td>
-                </tr>
-                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                  <td style="padding: 12px;">Babylights</td>
-                  <td style="text-align: center; padding: 12px;">${formData.questionnaire.babylights || 'Not specified'}</td>
-                </tr>
-                <tr>
-                  <td style="padding: 12px;">Hair Extensions</td>
-                  <td style="text-align: center; padding: 12px;">${formData.questionnaire.extensions || 'Not specified'}</td>
-                </tr>
-              </tbody>
-            </table>
+            <h2 style="color: white; margin-bottom: 20px; font-size: 24px;">Hair Analysis</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+              <div>
+                <strong>Hair Length:</strong> ${formData.hairLength || 'Not specified'}
+              </div>
+              <div>
+                <strong>Personal Style:</strong> ${formData.personalStyle || 'Not specified'}
+              </div>
+              <div>
+                <strong>Skin Color:</strong> ${formData.skinColor || 'Not specified'}
+              </div>
+              <div>
+                <strong>Eye Color:</strong> ${formData.eyeColor || 'Not specified'}
+              </div>
+              <div>
+                <strong>Hair Texture:</strong> ${formData.hairTexture || 'Not specified'}
+              </div>
+              <div>
+                <strong>Maintenance:</strong> ${formData.hairMaintenance || 'Not specified'}
+              </div>
+            </div>
+          </div>
+
+            ${recommendation ? `
+          <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
+            <h2 style="color: white; margin-bottom: 20px; font-size: 24px;">Your Personalized Hair Recommendations</h2>
+            <div style="background: rgba(255, 127, 80, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+              <h3 style="color: #ff7f50; margin-bottom: 15px; font-size: 20px;">${recommendation.title}</h3>
+              
+              <div style="margin-bottom: 15px;">
+                <h4 style="color: #ff7f50; margin-bottom: 8px; font-size: 16px;">Recommended Treatments:</h4>
+                <p style="color: white; line-height: 1.6; margin-bottom: 0;">${recommendation.description}</p>
+              </div>
+              
+              <div style="margin-bottom: 15px;">
+                <h4 style="color: #ff7f50; margin-bottom: 8px; font-size: 16px;">Hair Care Routine:</h4>
+                <p style="color: white; line-height: 1.6; margin-bottom: 0;">${recommendation.hairCare}</p>
+              </div>
+              
+              <div>
+                <h4 style="color: #ff7f50; margin-bottom: 8px; font-size: 16px;">Maintenance Schedule:</h4>
+                <ul style="color: white; margin: 0; padding-left: 20px;">
+                  ${recommendation.maintenanceSchedule.map(schedule => `<li style="margin-bottom: 5px;">${schedule}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+            
+            ${imageUrls.length > 0 ? `
+            <div style="margin-top: 20px;">
+              <h4 style="color: #ff7f50; margin-bottom: 15px; font-size: 16px;">Recommended Styles:</h4>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                ${imageUrls.map((imageUrl, index) => {
+                  const imageName = images[index]?.split('/').pop() || `style-${index + 1}`
+                  return `
+                    <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
+                      <div style="width: 100%; height: 120px; border-radius: 8px; margin-bottom: 10px; border: 2px solid rgba(255, 127, 80, 0.3); overflow: hidden; background: rgba(255, 255, 255, 0.05);">
+                        <img 
+                          src="${imageUrl}" 
+                          alt="${imageName}" 
+                          style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        />
+                        <div style="display: none; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.1); align-items: center; justify-content: center; text-align: center;">
+                          <div>
+                            <div style="font-size: 24px; margin-bottom: 8px; color: #ff7f50;">💇‍♀️</div>
+                            <div style="font-size: 10px; color: rgba(255, 255, 255, 0.7);">${imageName}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div style="font-size: 12px; color: rgba(255, 255, 255, 0.8);">${imageName.replace('.jpg', '')}</div>
+                    </div>
+                  `
+                }).join('')}
+              </div>
+            </div>
+            ` : `
+            <div style="margin-top: 20px;">
+              <h4 style="color: #ff7f50; margin-bottom: 15px; font-size: 16px;">Recommended Styles:</h4>
+              <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; text-align: center;">
+                <p style="color: white; margin: 0;">Images for your recommended styles are being processed. Please check your PDF report for the complete visual recommendations.</p>
+              </div>
+            </div>
+            `}
+          </div>
+          ` : ''}
+
+          <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
+            <h2 style="color: white; margin-bottom: 20px; font-size: 24px;">Preferences & Treatments</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+              <div>
+                <strong>Special Occasions:</strong> ${formData.specialOccasions?.join(', ') || 'Not specified'}
+              </div>
+              <div>
+                <strong>Preferred Treatments:</strong> ${formData.preferredTreatments?.join(', ') || 'Not specified'}
+              </div>
+              <div>
+                <strong>Work Type:</strong> ${formData.workType || 'Not specified'}
+              </div>
+              <div>
+                <strong>Work Industry:</strong> ${formData.workIndustry || 'Not specified'}
+              </div>
+            </div>
           </div>
 
           <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 30px; margin-bottom: 30px;">

@@ -942,6 +942,16 @@ export default function Home() {
                     onClickDay={handleDayClick}
                     value={null}
                     tileClassName={tileClassName}
+                    tileContent={({ date, view }) => {
+                      if (view === 'month') {
+                        const dateStr = format(date, 'yyyy-MM-dd')
+                        const isSelected = formData.selectedDates.some(
+                          selectedDate => format(selectedDate, 'yyyy-MM-dd') === dateStr
+                        )
+                        return isSelected ? <span className="calendar-selected-dot" /> : null
+                      }
+                      return null
+                    }}
                     className="w-full border-0 bg-transparent text-white"
                     navigationLabel={({ date }) => format(date, 'MMMM yyyy')}
                     formatShortWeekday={(locale, date) => format(date, 'EEE')}

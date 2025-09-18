@@ -135,13 +135,17 @@ export default function Home() {
 
   const nextSlide = () => {
     if (currentSlide < totalSlides) {
-      setCurrentSlide(currentSlide + 1)
+      const next = currentSlide + 1
+      // Temporarily skip slide 11
+      setCurrentSlide(next === 11 ? 12 : next)
     }
   }
 
   const prevSlide = () => {
     if (currentSlide > 1) {
-      setCurrentSlide(currentSlide - 1)
+      const prev = currentSlide - 1
+      // Temporarily skip slide 11
+      setCurrentSlide(prev === 11 ? 10 : prev)
     }
   }
 
@@ -1000,163 +1004,8 @@ export default function Home() {
         )
 
       case 11:
-        return (
-          <div className="glass-card mobile-card">
-            <div className="text-center mb-8">
-              <h2 className="mobile-heading font-bold text-white mb-4">Your Personalized Hair Recommendations</h2>
-              <p className="text-white/80 mobile-text">Based on your selections, here are our recommendations</p>
-            </div>
-
-            {(() => {
-              const combination: HairCombination = {
-                hairColor: formData.selectedHairColor,
-                hairLength: formData.hairLength,
-                personalStyle: formData.personalStyle
-              }
-              
-              const recommendation = getHairRecommendation(combination)
-              const images = getAllRecommendationImages(combination)
-              console.log('Combination:', combination)
-              console.log('Recommendation:', recommendation)
-              console.log('Images:', images)
-
-              if (!recommendation) {
-                return (
-                  <div className="text-center py-12">
-                    <div className="text-6xl mb-4">💇‍♀️</div>
-                    <p className="text-white/70 mobile-text mb-2">Recommendations coming soon!</p>
-                    <p className="text-white/50 mobile-description">
-                      We're working on recommendations for your specific combination.
-                      Please complete all required fields for personalized suggestions.
-                    </p>
-                  </div>
-                )
-              }
-
-              return (
-                <div className="space-y-8">
-                  {/* Recommendation Details */}
-                  <div className="bg-black/20 p-6 rounded-lg border border-white/10">
-                    <h3 className="text-white font-bold text-xl mb-4">{recommendation.title}</h3>
-                    
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="text-coral font-semibold mb-2">Recommended Treatments:</h4>
-                        <p className="text-white/90 leading-relaxed">{recommendation.description}</p>
-                      </div>
-                      
-                      <div>
-                        <h4 className="text-coral font-semibold mb-2">Hair Care Routine:</h4>
-                        <p className="text-white/90 leading-relaxed">{recommendation.hairCare}</p>
-                      </div>
-                      
-                      <div>
-                        <h4 className="text-coral font-semibold mb-2">Maintenance Schedule:</h4>
-                        <ul className="space-y-1">
-                          {recommendation.maintenanceSchedule.map((schedule, index) => (
-                            <li key={index} className="text-white/90 flex items-start">
-                              <span className="text-coral mr-2">•</span>
-                              <span>{schedule}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Image Gallery */}
-                  {images.length > 0 && (
-                    <div>
-                      <ImageGallery 
-                        images={images} 
-                        title="Recommended Styles" 
-                        className="bg-black/20 p-6 rounded-lg border border-white/10"
-                      />
-                      
-                      {/* Debug section - remove in production */}
-                      <div className="mt-4 p-4 bg-black/40 rounded-lg">
-                        <h4 className="text-white font-semibold mb-2">Debug Info:</h4>
-                        <p className="text-white/70 text-sm">Image paths:</p>
-                        {images.map((img, idx) => (
-                          <p key={idx} className="text-white/60 text-xs">{img}</p>
-                        ))}
-                        <button 
-                          onClick={() => {
-                            images.forEach(img => {
-                              const fullUrl = `${window.location.origin}${img}`
-                              console.log('Testing image URL:', fullUrl)
-                              fetch(fullUrl)
-                                .then(res => console.log(`Image ${img}: ${res.ok ? 'OK' : 'FAILED'} (${res.status})`))
-                                .catch(err => console.error(`Image ${img} error:`, err))
-                            })
-                          }}
-                          className="mt-2 px-3 py-1 bg-coral text-white text-xs rounded"
-                        >
-                          Test Image URLs
-                        </button>
-                        
-                        <button 
-                          onClick={async () => {
-                            console.log('=== TESTING fetchImageAsDataURL ===')
-                            if (images.length > 0) {
-                              const testImage = images[0]
-                              console.log('Testing with image:', testImage)
-                              try {
-                                const result = await fetchImageAsDataURL(testImage)
-                                console.log('fetchImageAsDataURL result:', result ? 'SUCCESS' : 'FAILED')
-                                if (result) {
-                                  console.log('Data URL length:', result.length)
-                                  console.log('Data URL preview:', result.substring(0, 100) + '...')
-                                }
-                              } catch (error) {
-                                console.error('fetchImageAsDataURL error:', error)
-                              }
-                            }
-                          }}
-                          className="mt-2 ml-2 px-3 py-1 bg-blue-500 text-white text-xs rounded"
-                        >
-                          Test fetchImageAsDataURL
-                        </button>
-                        
-                        <button 
-                          onClick={async () => {
-                            console.log('=== TESTING SIMPLE PDF WITH IMAGE ===')
-                            try {
-                              // Create a simple test PDF
-                              const testPdf = new jsPDF()
-                              testPdf.text('Testing image in PDF', 20, 20)
-                              
-                              // Try to add a simple image
-                              const testImage = images[0]
-                              console.log('Testing image:', testImage)
-                              
-                              const dataUrl = await fetchImageAsDataURL(testImage)
-                              if (dataUrl) {
-                                console.log('Got data URL, adding to PDF')
-                                testPdf.addImage(dataUrl, 'JPEG', 20, 30, 50, 40)
-                                testPdf.save('test-image.pdf')
-                                console.log('Test PDF saved successfully')
-                              } else {
-                                console.log('Failed to get data URL')
-                                testPdf.text('Image failed to load', 20, 30)
-                                testPdf.save('test-no-image.pdf')
-                              }
-                            } catch (error) {
-                              console.error('Test PDF error:', error)
-                            }
-                          }}
-                          className="mt-2 ml-2 px-3 py-1 bg-green-500 text-white text-xs rounded"
-                        >
-                          Test PDF with Image
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )
-            })()}
-          </div>
-        )
+        // Hidden for now; kept for future use
+        return null
 
       case 12:
         return (

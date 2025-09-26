@@ -8,6 +8,8 @@ import 'react-calendar/dist/Calendar.css'
 import ImageGallery from './components/ImageGallery'
 import { getHairRecommendation, getAllRecommendationImages, type HairCombination } from './utils/hairRecommendations'
 import { fetchImageAsDataURL } from './utils/pdfImageLoader'
+import mkhLogo from '/public/mkh-logo.jpg';
+import Image from 'next/image'
 
 type ValuePiece = Date | null
 type Value = ValuePiece | [ValuePiece, ValuePiece]
@@ -18,10 +20,10 @@ interface FormData {
   lastName: string
   email: string
   phone: string
-  
+
   // Hair Color Selection
   selectedHairColor: string
-  
+
   // Hair Analysis
   naturalHairColor: string
   skinColor: string
@@ -34,7 +36,7 @@ interface FormData {
   preferredTreatments: string[]
   workType: string
   workIndustry: string
-  
+
   // Files and Calendar
   files: File[]
   selectedDates: Date[]
@@ -85,12 +87,12 @@ export default function Home() {
     const files = Array.from(event.target.files || [])
     const imageFiles = files.filter(file => file.type.startsWith('image/'))
     const nonImageFiles = files.filter(file => !file.type.startsWith('image/'))
-    
+
     if (nonImageFiles.length > 0) {
       setMessage('Please upload only image files (JPG, PNG, GIF, etc.)')
       return
     }
-    
+
     if (imageFiles.length + formData.files.length <= 5) {
       setFormData(prev => ({ ...prev, files: [...prev.files, ...imageFiles] }))
     } else {
@@ -108,12 +110,12 @@ export default function Home() {
   const handleDayClick = (value: Date) => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    
+
     if (value < today) {
       setMessage('Cannot select past dates. Please choose a future date.')
       return
     }
-    
+
     const dateStr = format(value, 'yyyy-MM-dd')
     const isSelected = formData.selectedDates.some(d => format(d, 'yyyy-MM-dd') === dateStr)
     if (isSelected) {
@@ -161,16 +163,23 @@ export default function Home() {
       )
       const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
       const isPast = date < new Date(new Date().setHours(0, 0, 0, 0))
-      
+
       let className = 'calendar-tile'
       if (isSelected) className += ' selected'
       if (isToday) className += ' today'
       if (isPast) className += ' past-date'
-      
+
       return className
     }
     return ''
   }
+
+  const downloadPDFHandler = async () => {
+
+    generatePDF()
+    handleSubmit()
+  }
+
 
   const generatePDF = async () => {
     setIsGeneratingPDF(true)
@@ -182,76 +191,61 @@ export default function Home() {
       const pageHeight = pdf.internal.pageSize.getHeight()
       const margin = 25
       const contentWidth = pageWidth - (2 * margin)
-      
+
       let yPosition = margin
 
-      // Header
+      // ===== HEADER =====
       pdf.setFillColor(255, 127, 80)
       pdf.rect(0, 0, pageWidth, 40, 'F')
-      
-      pdf.setFontSize(24)
-      pdf.setTextColor(255, 255, 255)
-      pdf.setFont('helvetica', 'bold')
+
+      pdf.setFontSize(24).setTextColor(255, 255, 255).setFont('helvetica', 'bold')
       const title = 'MKH Hair Color Analysis Report'
       const titleWidth = pdf.getTextWidth(title)
       pdf.text(title, (pageWidth - titleWidth) / 2, 25)
-      
+
       yPosition = 50
 
-      // Date
-      pdf.setFontSize(10)
-      pdf.setTextColor(100, 100, 100)
-      pdf.setFont('helvetica', 'normal')
+      // ===== DATE =====
+      pdf.setFontSize(10).setTextColor(100, 100, 100).setFont('helvetica', 'normal')
       const dateText = `Generated on: ${format(new Date(), 'EEEE, MMMM d, yyyy')}`
       pdf.text(dateText, margin, yPosition)
       yPosition += 20
 
-      // Personal Information
+      // ===== PERSONAL INFORMATION =====
+      const personalInfoHeight = 50
       pdf.setFillColor(245, 245, 245)
-      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 50, 'F')
-      pdf.setDrawColor(255, 127, 80)
-      pdf.setLineWidth(0.5)
-      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 50, 'S')
-      
-      pdf.setFontSize(14)
-      pdf.setTextColor(255, 127, 80)
-      pdf.setFont('helvetica', 'bold')
+      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, personalInfoHeight, 'F')
+      pdf.setDrawColor(255, 127, 80).setLineWidth(0.5)
+      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, personalInfoHeight, 'S')
+
+      pdf.setFontSize(14).setTextColor(255, 127, 80).setFont('helvetica', 'bold')
       pdf.text('Personal Information', margin, yPosition)
       yPosition += 12
 
-      pdf.setFontSize(10)
-      pdf.setTextColor(50, 50, 50)
-      pdf.setFont('helvetica', 'normal')
-      
+      pdf.setFontSize(10).setTextColor(50, 50, 50).setFont('helvetica', 'normal')
       const personalInfo = [
         `Name: ${formData.firstName} ${formData.lastName}`,
         `Email: ${formData.email}`,
         `Phone: ${formData.phone}`
       ]
-
-      personalInfo.forEach(info => {
+      personalInfo.forEach((info: string) => {
         pdf.text(info, margin, yPosition)
         yPosition += 7
       })
       yPosition += 20
 
-      // Hair Analysis
+      // ===== HAIR ANALYSIS =====
+      const hairAnalysisHeight = 100
       pdf.setFillColor(245, 245, 245)
-      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 100, 'F')
-      pdf.setDrawColor(255, 127, 80)
-      pdf.setLineWidth(0.5)
-      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 100, 'S')
-      
-      pdf.setFontSize(14)
-      pdf.setTextColor(255, 127, 80)
-      pdf.setFont('helvetica', 'bold')
+      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, hairAnalysisHeight, 'F')
+      pdf.setDrawColor(255, 127, 80).setLineWidth(0.5)
+      pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, hairAnalysisHeight, 'S')
+
+      pdf.setFontSize(14).setTextColor(255, 127, 80).setFont('helvetica', 'bold')
       pdf.text('Hair Analysis', margin, yPosition)
       yPosition += 12
 
-      pdf.setFontSize(10)
-      pdf.setTextColor(50, 50, 50)
-      pdf.setFont('helvetica', 'normal')
-
+      pdf.setFontSize(10).setTextColor(50, 50, 50).setFont('helvetica', 'normal')
       const hairAnalysis = [
         `Natural Hair Color: ${formData.naturalHairColor || 'Not specified'}`,
         `Skin Color: ${formData.skinColor || 'Not specified'}`,
@@ -261,131 +255,124 @@ export default function Home() {
         `Personal Style: ${formData.personalStyle || 'Not specified'}`,
         `Maintenance: ${formData.hairMaintenance || 'Not specified'}`
       ]
-
-      hairAnalysis.forEach(info => {
+      hairAnalysis.forEach((info: string) => {
         pdf.text(info, margin, yPosition)
         yPosition += 7
       })
       yPosition += 20
 
-      // Hair Recommendations
+      // ===== RECOMMENDATIONS =====
       const combination: HairCombination = {
         hairColor: formData.selectedHairColor,
         hairLength: formData.hairLength,
         personalStyle: formData.personalStyle
       }
-      
+
       const recommendation = getHairRecommendation(combination)
       const images = getAllRecommendationImages(combination)
-      
-      console.log('=== PDF GENERATION DEBUG ===')
-      console.log('Combination:', combination)
-      console.log('Recommendation:', recommendation)
-      console.log('Images array:', images)
-      console.log('Images length:', images.length)
-      
+
       if (recommendation) {
-        // Check if we need a new page
-        if (yPosition > pageHeight - 80) {
+        // ==== Calculate dynamic box height ====
+        let calcHeight = 0
+        calcHeight += 12 // title
+        calcHeight += 10 // sub-title
+        calcHeight += 7 // heading
+
+        const descLines: string[] = pdf.splitTextToSize(recommendation.description, contentWidth)
+        calcHeight += descLines.length * 5 + 5
+
+        calcHeight += 7 // heading
+        const careLines: string[] = pdf.splitTextToSize(recommendation.hairCare, contentWidth)
+        calcHeight += careLines.length * 5 + 5
+
+        calcHeight += 7 // heading
+        calcHeight += recommendation.maintenanceSchedule.length * 5
+
+        calcHeight += 20 // bottom padding
+
+        // If not enough space, shift to new page
+        if (yPosition + calcHeight > pageHeight - 40) {
           pdf.addPage()
           yPosition = margin
         }
 
+        // Draw box
         pdf.setFillColor(245, 245, 245)
-        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 120, 'F')
-        pdf.setDrawColor(255, 127, 80)
-        pdf.setLineWidth(0.5)
-        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, 120, 'S')
-        
-        pdf.setFontSize(14)
-        pdf.setTextColor(255, 127, 80)
-        pdf.setFont('helvetica', 'bold')
+        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, calcHeight, 'F')
+        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5)
+        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, calcHeight, 'S')
+
+        // Content inside box
+        pdf.setFontSize(14).setTextColor(255, 127, 80).setFont('helvetica', 'bold')
         pdf.text('Personalized Hair Recommendations', margin, yPosition)
         yPosition += 12
 
-        pdf.setFontSize(12)
-        pdf.setTextColor(255, 127, 80)
-        pdf.setFont('helvetica', 'bold')
+        pdf.setFontSize(12).setTextColor(255, 127, 80).setFont('helvetica', 'bold')
         pdf.text(recommendation.title, margin, yPosition)
         yPosition += 10
 
-        pdf.setFontSize(10)
-        pdf.setTextColor(50, 50, 50)
-        pdf.setFont('helvetica', 'normal')
-        
-        // Recommended Treatments
-        pdf.setFont('helvetica', 'bold')
-        pdf.setTextColor(255, 127, 80)
+        // Treatments
+        pdf.setFontSize(10).setTextColor(255, 127, 80).setFont('helvetica', 'bold')
         pdf.text('Recommended Treatments:', margin, yPosition)
         yPosition += 7
-        
-        pdf.setFont('helvetica', 'normal')
-        pdf.setTextColor(50, 50, 50)
-        const descriptionLines = pdf.splitTextToSize(recommendation.description, contentWidth)
-        descriptionLines.forEach((line: string) => {
+
+        pdf.setFont('helvetica', 'normal').setTextColor(50, 50, 50)
+        descLines.forEach((line: string) => {
           pdf.text(line, margin, yPosition)
           yPosition += 5
         })
         yPosition += 5
 
-        // Hair Care Routine
-        pdf.setFont('helvetica', 'bold')
-        pdf.setTextColor(255, 127, 80)
+        // Care Routine
+        pdf.setFont('helvetica', 'bold').setTextColor(255, 127, 80)
         pdf.text('Hair Care Routine:', margin, yPosition)
         yPosition += 7
-        
-        pdf.setFont('helvetica', 'normal')
-        pdf.setTextColor(50, 50, 50)
-        const hairCareLines = pdf.splitTextToSize(recommendation.hairCare, contentWidth)
-        hairCareLines.forEach((line: string) => {
+
+        pdf.setFont('helvetica', 'normal').setTextColor(50, 50, 50)
+        careLines.forEach((line: string) => {
           pdf.text(line, margin, yPosition)
           yPosition += 5
         })
         yPosition += 5
 
-        // Maintenance Schedule
-        pdf.setFont('helvetica', 'bold')
-        pdf.setTextColor(255, 127, 80)
+        // Schedule
+        pdf.setFont('helvetica', 'bold').setTextColor(255, 127, 80)
         pdf.text('Maintenance Schedule:', margin, yPosition)
         yPosition += 7
-        
-        pdf.setFont('helvetica', 'normal')
-        pdf.setTextColor(50, 50, 50)
-        recommendation.maintenanceSchedule.forEach((schedule) => {
+
+        pdf.setFont('helvetica', 'normal').setTextColor(50, 50, 50)
+        recommendation.maintenanceSchedule.forEach((schedule: string) => {
           pdf.text(`• ${schedule}`, margin, yPosition)
           yPosition += 5
         })
 
         yPosition += 20
 
-        // Add recommendation images to PDF
+        // ==== Recommended Styles (images) ====
         if (images.length > 0) {
-          // Check if we need a new page for images
           if (yPosition > pageHeight - 100) {
             pdf.addPage()
             yPosition = margin
           }
 
-          pdf.setFontSize(14)
-          pdf.setTextColor(255, 127, 80)
-          pdf.setFont('helvetica', 'bold')
+          // ADD EXTRA SPACE before heading
+          yPosition += 10
+
+          pdf.setFontSize(14).setTextColor(255, 127, 80).setFont('helvetica', 'bold')
           pdf.text('Recommended Styles', margin, yPosition)
           yPosition += 15
 
-          // Add real images in a grid layout
           const imagesPerRow = 2
-          const imageWidth = (contentWidth - (imagesPerRow - 1) * 10) / imagesPerRow
-          const imageHeight = 80 // Fixed height for consistency
-          
-          // Process images with for...of loop to handle async loading
+          const imageWidth = (contentWidth - 10) / imagesPerRow
+          const imageHeight = 80
           const imagesToProcess = images.slice(0, 4)
+
           for (let index = 0; index < imagesToProcess.length; index++) {
             const imagePath = imagesToProcess[index]
             const row = Math.floor(index / imagesPerRow)
             const col = index % imagesPerRow
-            
+
             if (row > 0 && col === 0) {
-              // Check if we need a new page
               if (yPosition + imageHeight + 30 > pageHeight - 40) {
                 pdf.addPage()
                 yPosition = margin
@@ -393,105 +380,64 @@ export default function Home() {
                 yPosition += imageHeight + 30
               }
             }
-            
+
             const xPos = margin + col * (imageWidth + 10)
             const yPos = yPosition
-            
+
             try {
-              console.log('Processing image:', imagePath)
-              // Fetch image as data URL
               const dataUrl = await fetchImageAsDataURL(imagePath)
-              console.log('Data URL result:', dataUrl ? 'Success' : 'Failed')
-              
               if (dataUrl) {
-                // Infer format from extension
                 const fmt = imagePath.toLowerCase().includes('.png') ? 'PNG' : 'JPEG'
-                console.log('Using format:', fmt, 'for image:', imagePath)
-                
-                // Add image to PDF
                 pdf.addImage(dataUrl, fmt, xPos, yPos, imageWidth, imageHeight)
-                console.log('Successfully added image to PDF')
-              } else {
-                // Draw fallback box on error
-                pdf.setFillColor(240, 240, 240)
-                pdf.setDrawColor(200, 200, 200)
-                pdf.setLineWidth(1)
-                pdf.rect(xPos, yPos, imageWidth, imageHeight, 'FD')
-                
-                // Add error text
-                pdf.setFontSize(8)
-                pdf.setTextColor(150, 150, 150)
-                pdf.setFont('helvetica', 'normal')
-                const errorText = 'Image failed to load'
-                const textWidth = pdf.getTextWidth(errorText)
-                pdf.text(errorText, xPos + (imageWidth - textWidth) / 2, yPos + imageHeight / 2)
               }
-            } catch (error) {
-              console.error('Error processing image:', error)
-              
-              // Draw fallback box on error
+            } catch {
               pdf.setFillColor(240, 240, 240)
-              pdf.setDrawColor(200, 200, 200)
-              pdf.setLineWidth(1)
               pdf.rect(xPos, yPos, imageWidth, imageHeight, 'FD')
-              
-              // Add error text
-              pdf.setFontSize(8)
-              pdf.setTextColor(150, 150, 150)
-              pdf.setFont('helvetica', 'normal')
-              const errorText = 'Image failed to load'
-              const textWidth = pdf.getTextWidth(errorText)
-              pdf.text(errorText, xPos + (imageWidth - textWidth) / 2, yPos + imageHeight / 2)
+              pdf.setFontSize(8).setTextColor(150).text('Image failed to load', xPos + 5, yPos + imageHeight / 2)
             }
           }
-          
           yPosition += imageHeight + 30
         }
       }
 
-      // Selected Dates
+      // ===== SELECTED PERFECT HAIR DAYS =====
       if (formData.selectedDates.length > 0) {
-        const datesHeight = Math.min(80, formData.selectedDates.length * 8 + 30)
+        const lineHeight = 7
+        const totalLines = formData.selectedDates.length
+        const totalHeight = totalLines * lineHeight + 35
+
+        if (yPosition + totalHeight > pageHeight - 40) {
+          pdf.addPage()
+          yPosition = margin
+        }
+
         pdf.setFillColor(245, 245, 245)
-        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, datesHeight, 'F')
-        pdf.setDrawColor(255, 127, 80)
-        pdf.setLineWidth(0.5)
-        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, datesHeight, 'S')
-        
-        pdf.setFontSize(14)
-        pdf.setTextColor(255, 127, 80)
-        pdf.setFont('helvetica', 'bold')
+        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, totalHeight, 'F')
+        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5)
+        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, totalHeight, 'S')
+
+        pdf.setFontSize(14).setTextColor(255, 127, 80).setFont('helvetica', 'bold')
         pdf.text('Selected Perfect Hair Days', margin, yPosition)
         yPosition += 12
 
-        pdf.setFontSize(10)
-        pdf.setTextColor(50, 50, 50)
-        pdf.setFont('helvetica', 'normal')
-
+        pdf.setFontSize(10).setTextColor(50, 50, 50).setFont('helvetica', 'normal')
         formData.selectedDates
           .sort((a, b) => a.getTime() - b.getTime())
-          .forEach((date, index) => {
+          .forEach((date: Date, index: number) => {
             const dateText = `${index + 1}. ${format(date, 'EEEE, MMMM d, yyyy')}`
-            
-            if (yPosition > pageHeight - 40) {
-              pdf.addPage()
-              yPosition = margin
-            }
-            
             pdf.text(dateText, margin, yPosition)
-            yPosition += 7
+            yPosition += lineHeight
           })
 
-        yPosition += 10
-        pdf.setFontSize(9)
-        pdf.setTextColor(100, 100, 100)
-        pdf.setFont('helvetica', 'bold')
+        yPosition += 5
+        pdf.setFontSize(9).setTextColor(100, 100, 100).setFont('helvetica', 'bold')
         pdf.text(`Total dates selected: ${formData.selectedDates.length}`, margin, yPosition)
       }
 
+      // ===== SAVE FILE =====
       const fileName = `hair-analysis-${formData.firstName}-${formData.lastName}-${format(new Date(), 'yyyy-MM-dd')}.pdf`
       pdf.save(fileName)
-      
+
       setMessage('PDF generated successfully!')
     } catch (error) {
       console.error('PDF generation error:', error)
@@ -500,6 +446,7 @@ export default function Home() {
       setIsGeneratingPDF(false)
     }
   }
+
 
   const handleSubmit = async () => {
     if (!formData.email || formData.selectedDates.length === 0) {
@@ -519,7 +466,8 @@ export default function Home() {
         body: JSON.stringify({
           email: formData.email,
           dates: formData.selectedDates.map(date => format(date, 'yyyy-MM-dd')),
-          formData: formData
+          formData: formData,
+          sendAdditionalEmail: true,
         }),
       })
 
@@ -564,10 +512,14 @@ export default function Home() {
         return (
           <div className="glass-card mobile-card">
             <div className="text-center mb-6">
+              <Image src={mkhLogo}
+                alt="MKH Logo"
+                className="mx-auto mb-4 w-32 h-auto"
+              />
               <h2 className="mobile-heading font-bold text-white mb-4">Tell us a little about yourself</h2>
               <p className="text-white/80 mobile-text">Duration to complete: 3 minutes</p>
             </div>
-            
+
             <div className="form-grid mb-6">
               <div>
                 <label className="block text-white/90 font-medium mb-2 text-sm">First Name</label>
@@ -575,7 +527,7 @@ export default function Home() {
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className="input-field"
+                  className="input-field placeholder-gray-300 placeholder-opacity-60"
                   placeholder="Enter your first name"
                 />
               </div>
@@ -585,7 +537,7 @@ export default function Home() {
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className="input-field"
+                  className="input-field placeholder-gray-300 placeholder-opacity-60"
                   placeholder="Enter your last name"
                 />
               </div>
@@ -598,47 +550,66 @@ export default function Home() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="input-field"
+                  className="input-field placeholder-gray-300 placeholder-opacity-60"
                   placeholder="example@example.com"
                 />
               </div>
               <div>
-                <label className="block text-white/90 font-medium mb-2 text-sm">Phone Number</label>
+                <label className="block text-white/90 font-medium mb-2 text-sm">
+                  Phone Number
+                </label>
                 <input
                   type="tel"
                   value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  className="input-field"
+                  onChange={(e) => {
+                    // sirf digits allow karo
+                    const onlyNums = e.target.value.replace(/\D/g, "");
+                    handleInputChange("phone", onlyNums);
+                  }}
+                  className="input-field placeholder-gray-300 placeholder-opacity-60"
                   placeholder="10001 000-0000"
                 />
               </div>
+
             </div>
 
             <div className="mb-6">
               <h3 className="text-white font-semibold mb-4">Hair Analysis</h3>
               <div className="form-grid mb-4">
                 <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">Your Natural Hair Color</label>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Your Natural Hair Color
+                  </label>
                   <select
                     value={formData.naturalHairColor}
-                    onChange={(e) => handleInputChange('naturalHairColor', e.target.value)}
-                    className="input-field"
+                    onChange={(e) => handleInputChange("naturalHairColor", e.target.value)}
+                    className={`input-field ${formData.naturalHairColor === "" ? "text-gray-300 opacity-60" : "text-white"
+                      }`}
                   >
-                    <option value="">Select hair color</option>
+                    <option value="" disabled>
+                      Select hair color
+                    </option>
                     <option value="Black">Black</option>
                     <option value="Brown">Brown</option>
                     <option value="Natural Blonde">Natural Blonde</option>
                     <option value="Red">Red</option>
                   </select>
                 </div>
+
+
                 <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">Skin Color</label>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Skin Color
+                  </label>
                   <select
                     value={formData.skinColor}
-                    onChange={(e) => handleInputChange('skinColor', e.target.value)}
-                    className="input-field"
+                    onChange={(e) => handleInputChange("skinColor", e.target.value)}
+                    className={`input-field ${formData.skinColor === "" ? "text-gray-300 opacity-60" : "text-white"
+                      }`}
                   >
-                    <option value="">Select skin color</option>
+                    <option value="" disabled>
+                      Select skin color
+                    </option>
                     <option value="Dark">Dark</option>
                     <option value="Medium">Medium</option>
                     <option value="Fair">Fair</option>
@@ -649,13 +620,18 @@ export default function Home() {
 
               <div className="form-grid">
                 <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">Eye Color</label>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Eye Color
+                  </label>
                   <select
                     value={formData.eyeColor}
-                    onChange={(e) => handleInputChange('eyeColor', e.target.value)}
-                    className="input-field"
+                    onChange={(e) => handleInputChange("eyeColor", e.target.value)}
+                    className={`input-field ${formData.eyeColor === "" ? "text-gray-300 opacity-60" : "text-white"
+                      }`}
                   >
-                    <option value="">Select eye color</option>
+                    <option value="" disabled>
+                      Select eye color
+                    </option>
                     <option value="Black">Black</option>
                     <option value="Dark brown">Dark brown</option>
                     <option value="Light brown">Light brown</option>
@@ -665,20 +641,27 @@ export default function Home() {
                     <option value="Grey">Grey</option>
                   </select>
                 </div>
+
                 <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">Hair Texture</label>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Hair Texture
+                  </label>
                   <select
                     value={formData.hairTexture}
-                    onChange={(e) => handleInputChange('hairTexture', e.target.value)}
-                    className="input-field"
+                    onChange={(e) => handleInputChange("hairTexture", e.target.value)}
+                    className={`input-field ${formData.hairTexture === "" ? "text-gray-300 opacity-60" : "text-white"
+                      }`}
                   >
-                    <option value="">Select hair texture</option>
+                    <option value="" disabled>
+                      Select hair texture
+                    </option>
                     <option value="Fine">Fine</option>
                     <option value="Medium">Medium</option>
                     <option value="Coarse">Coarse</option>
                     <option value="Resistant">Resistant</option>
                   </select>
                 </div>
+
               </div>
             </div>
           </div>
@@ -691,7 +674,7 @@ export default function Home() {
               <h2 className="mobile-heading font-bold text-white mb-4">Choose Your Hair Color</h2>
               <p className="text-white/80 mobile-text">Select the hair color category you're most interested in</p>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { value: 'Blonde', label: 'Blonde', emoji: '💛' },
@@ -904,7 +887,7 @@ export default function Home() {
                   type="text"
                   value={formData.workIndustry}
                   onChange={(e) => handleInputChange('workIndustry', e.target.value)}
-                  className="input-field"
+                  className="input-field placeholder-gray-300 placeholder-opacity-60"
                   placeholder="e.g., Technology, Healthcare, Finance..."
                 />
               </div>
@@ -918,7 +901,7 @@ export default function Home() {
             <div className="mb-6">
               <h2 className="mobile-heading font-bold text-white mb-4 text-center">Select Your Perfect Hair Days</h2>
               <p className="text-white/80 mobile-text mb-2 text-center">
-                Select some of your most important days of the year when you would like to look your very best. 
+                Select some of your most important days of the year when you would like to look your very best.
                 Let us send you a reminder 2 weeks before to consult or set an appointment.
               </p>
               <p className="text-white/60 italic mobile-description text-center">(Optional)</p>
@@ -956,7 +939,7 @@ export default function Home() {
                     navigationLabel={({ date }) => format(date, 'MMMM yyyy')}
                     formatShortWeekday={(locale, date) => format(date, 'EEE')}
                   />
-                  
+
                   <div className="mt-6">
                     <div className="flex items-center justify-between bg-black/60 backdrop-blur-sm border border-white/10 p-3">
                       <div className="flex items-center">
@@ -972,7 +955,7 @@ export default function Home() {
 
               <div>
                 <h3 className="mobile-heading font-bold text-white mb-4">Selected Dates</h3>
-                
+
                 {formData.selectedDates.length === 0 ? (
                   <div className="text-center py-12">
                     <div className="text-6xl mb-4">📅</div>
@@ -1055,7 +1038,7 @@ export default function Home() {
             </div>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-              <button
+              {/* <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !formData.email || formData.selectedDates.length === 0}
                 className="mobile-btn bg-gradient-to-r from-coral to-coral-dark hover:from-coral-dark hover:to-coral text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
@@ -1070,11 +1053,11 @@ export default function Home() {
                     <span className="text-lg">Submit Analysis</span>
                   </span>
                 )}
-              </button>
+              </button> */}
 
               <button
-                onClick={generatePDF}
-                disabled={isGeneratingPDF || !formData.firstName || !formData.lastName}
+                onClick={downloadPDFHandler}
+                disabled={isSubmitting || isGeneratingPDF || !formData.firstName || !formData.lastName}
                 className="mobile-btn relative overflow-hidden bg-gradient-to-r from-black to-gray-800 hover:from-gray-800 hover:to-black text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full hover:translate-x-full transition-transform duration-1000"></div>
@@ -1104,8 +1087,8 @@ export default function Home() {
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-coral/10 rounded-full blur-3xl floating-animation mobile-bg-decoration"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-black/20 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{animationDelay: '4s'}}></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-black/20 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl floating-animation mobile-bg-decoration" style={{ animationDelay: '4s' }}></div>
       </div>
 
       <div className="relative z-10 container mx-auto mobile-container py-4 sm:py-6 lg:py-8">
@@ -1154,6 +1137,18 @@ export default function Home() {
         <div className="max-w-4xl mx-auto mobile-section">
           {renderSlide()}
 
+          {/* Footer Logo – hidden on first slide */}
+          {/* Footer Logo – hidden on first slide */}
+          {currentSlide !== 1 && (
+            <div className="flex justify-center mt-6">
+              <Image
+                src={mkhLogo}
+                alt="MKH Logo"
+                className="w-16 h-16 opacity-80 rounded-full object-cover"
+              />
+            </div>
+          )}
+
           {/* Navigation Buttons */}
           <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center sm:space-y-0 space-y-4 mt-8">
             <button
@@ -1164,12 +1159,6 @@ export default function Home() {
               ← Previous
             </button>
 
-            {/* <div className="text-center">
-              <span className="text-white/70 text-sm">
-                Step {currentSlide} of {totalSlides}
-              </span>
-            </div> */}
-
             <button
               onClick={nextSlide}
               disabled={currentSlide === totalSlides}
@@ -1179,6 +1168,7 @@ export default function Home() {
             </button>
           </div>
         </div>
+
 
         {/* Notification */}
         {message && (

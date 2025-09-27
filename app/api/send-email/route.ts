@@ -9,7 +9,7 @@ import path from 'path'
 async function getImageAsBase64(imagePath: string, baseUrl: string): Promise<{ data: string; mimeType: string; filename: string } | null> {
   try {
     console.log('Processing image:', imagePath)
-    
+
     // Check if it's a local file path (starts with /)
     if (imagePath.startsWith('/')) {
       try {
@@ -28,7 +28,7 @@ async function getImageAsBase64(imagePath: string, baseUrl: string): Promise<{ d
             '.svg': 'image/svg+xml'
           }
           const mimeType = mimeTypes[ext] || 'image/jpeg'
-          
+
           console.log(`Successfully read local file: ${publicPath}`)
           return { data: base64, mimeType, filename: path.basename(imagePath) }
         }
@@ -114,11 +114,11 @@ export async function POST(request: NextRequest) {
 
     // Format dates for email
     const formattedDates = dates
-      .map((dateStr: string) => {
+      .map((dateStr: string, index: number) => {
         const date = new Date(dateStr)
-        return format(date, 'EEEE, MMMM d, yyyy')
+        return `${index + 1}. ${format(date, 'EEEE, MMMM d, yyyy')}`
       })
-      .join('\n• ')
+      .join('<br>')
 
     // Get hair recommendations
     const combination: HairCombination = {
@@ -134,28 +134,28 @@ export async function POST(request: NextRequest) {
     const baseUrl = process.env.NEXTAUTH_URL || `https://${request.headers.get('host') || 'localhost:3000'}`
     console.log('Base URL for images:', baseUrl)
     console.log('Available images:', images)
-    
+
     // Prepare images for email embedding
     const embeddedImages: Array<{ cid: string; imageData: any; filename: string; alt: string }> = []
     let imagesHtml = ''
 
     if (recommendation && images && images.length > 0) {
       console.log('Processing images for email embedding...')
-      
+
       // Process up to 4 images for email
       const imagesToProcess = images.slice(0, 4)
-      
+
       for (let i = 0; i < imagesToProcess.length; i++) {
         const imagePath = imagesToProcess[i]
         if (!imagePath) continue
 
         const imageData = await getImageAsBase64(imagePath, baseUrl)
-        
+
         if (imageData) {
           const filename = imageData.filename
-          const alt = filename.replace(/\.[^/.]+$/, "").replace(/[_]/g, ' ')
+          const alt = `Style ${i + 1}`
           const cid = createCid(i, filename)
-          
+
           embeddedImages.push({
             cid,
             imageData,
@@ -165,29 +165,29 @@ export async function POST(request: NextRequest) {
 
           // Create HTML for this image (will be embedded via CID)
           imagesHtml += `
-            <div style="text-align: center; background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px;">
-              <div style="width: 100%; height: 120px; border-radius: 8px; margin-bottom: 10px; border: 2px solid rgba(255, 127, 80, 0.3); overflow: hidden; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center;">
+            <div style="text-align: center; padding: 10px; margin: 5px;">
+              <div style="width: 100%; height: 120px; margin-bottom: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                 <img 
                   src="cid:${cid}" 
                   alt="${alt}" 
-                  style="max-width: 100%; max-height: 100%; object-fit: cover;"
+                  style="max-width: 100%; max-height: 100%; object-fit: contain;"
                   border="0"
                 />
               </div>
-              <div style="font-size: 12px; color: rgba(255, 255, 255, 0.8);">${alt}</div>
+              <div style="font-size: 12px; color: #000000; font-weight: bold;">${alt}</div>
             </div>
           `
         } else {
           console.warn(`Failed to process image: ${imagePath}`)
         }
       }
-      
+
       console.log(`Successfully prepared ${embeddedImages.length} images for embedding`)
     } else {
       console.log('No recommendation or images available')
     }
 
-    // Build email HTML
+    // Build clean email HTML with black text and NO boxes
     const emailHtml = `
       <!DOCTYPE html>
       <html>
@@ -196,139 +196,145 @@ export async function POST(request: NextRequest) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Hair Consultation Form Submission</title>
       </head>
-      <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
-        <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
-          <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; color: white;">
-            <h1 style="color: white; text-align: center; margin-bottom: 30px; font-size: 32px; margin-top: 0;">Hair Consultation Form</h1>
+      <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; color: #000000; background-color: #ffffff; line-height: 1.6;">
+        <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+          <h1 style="text-align: center; margin-bottom: 30px; font-size: 28px; color: #000000;">Hair Consultation Form</h1>
+          
+          <!-- Personal Information Section -->
+          <div style="margin-bottom: 30px;">
+            <h2 style="margin-bottom: 15px; font-size: 20px; color: #000000;">Personal Information</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div style="color: #000000;">
+                <strong>Name:</strong> ${formData.firstName} ${formData.lastName}
+              </div>
+              <div style="color: #000000;">
+                <strong>Email:</strong> ${formData.email}
+              </div>
+              <div style="color: #000000;">
+                <strong>Phone:</strong> ${formData.phone || 'Not provided'}
+              </div>
+              <div style="color: #000000;">
+                <strong>Natural Hair Color:</strong> ${formData.naturalHairColor || 'Not specified'}
+              </div>
+            </div>
+          </div>
+
+          <!-- Hair Analysis Section -->
+          <div style="margin-bottom: 30px;">
+            <h2 style="margin-bottom: 15px; font-size: 20px; color: #000000;">Hair Analysis</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div style="color: #000000;">
+                <strong>Hair Length:</strong> ${formData.hairLength || 'Not specified'}
+              </div>
+              <div style="color: #000000;">
+                <strong>Personal Style:</strong> ${formData.personalStyle || 'Not specified'}
+              </div>
+              <div style="color: #000000;">
+                <strong>Skin Tone:</strong> ${formData.skinColor || 'Not specified'}
+              </div>
+              <div style="color: #000000;">
+                <strong>Eye Color:</strong> ${formData.eyeColor || 'Not specified'}
+              </div>
+              <div style="color: #000000;">
+                <strong>Hair Texture:</strong> ${formData.hairTexture || 'Not specified'}
+              </div>
+              <div style="color: #000000;">
+                <strong>Maintenance Preference:</strong> ${formData.hairMaintenance || 'Not specified'}
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommendations Section -->
+          ${recommendation ? `
+          <div style="margin-bottom: 30px;">
+            <h2 style="margin-bottom: 15px; font-size: 20px; color: #000000;">Your Personalized Hair Recommendations</h2>
             
-            <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
-              <h2 style="color: white; margin-bottom: 20px; font-size: 24px; margin-top: 0;">Personal Information</h2>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                <div>
-                  <strong>Name:</strong> ${formData.firstName} ${formData.lastName}
-                </div>
-                <div>
-                  <strong>Email:</strong> ${formData.email}
-                </div>
-                <div>
-                  <strong>Phone:</strong> ${formData.phone}
-                </div>
-                <div>
-                  <strong>Natural Hair Color:</strong> ${formData.naturalHairColor || 'Not specified'}
-                </div>
-              </div>
-            </div>
-
-            <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
-              <h2 style="color: white; margin-bottom: 20px; font-size: 24px; margin-top: 0;">Hair Analysis</h2>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                <div>
-                  <strong>Hair Length:</strong> ${formData.hairLength || 'Not specified'}
-                </div>
-                <div>
-                  <strong>Personal Style:</strong> ${formData.personalStyle || 'Not specified'}
-                </div>
-                <div>
-                  <strong>Skin Color:</strong> ${formData.skinColor || 'Not specified'}
-                </div>
-                <div>
-                  <strong>Eye Color:</strong> ${formData.eyeColor || 'Not specified'}
-                </div>
-                <div>
-                  <strong>Hair Texture:</strong> ${formData.hairTexture || 'Not specified'}
-                </div>
-                <div>
-                  <strong>Maintenance:</strong> ${formData.hairMaintenance || 'Not specified'}
-                </div>
-              </div>
-            </div>
-
-            ${recommendation ? `
-            <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
-              <h2 style="color: white; margin-bottom: 20px; font-size: 24px; margin-top: 0;">Your Personalized Hair Recommendations</h2>
-              <div style="background: rgba(255, 127, 80, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                <h3 style="color: #ff7f50; margin-bottom: 15px; font-size: 20px; margin-top: 0;">${recommendation.title}</h3>
-                
-                <div style="margin-bottom: 15px;">
-                  <h4 style="color: #ff7f50; margin-bottom: 8px; font-size: 16px; margin-top: 0;">Recommended Treatments:</h4>
-                  <p style="color: white; line-height: 1.6; margin-bottom: 0;">${recommendation.description}</p>
-                </div>
-                
-                <div style="margin-bottom: 15px;">
-                  <h4 style="color: #ff7f50; margin-bottom: 8px; font-size: 16px; margin-top: 0;">Hair Care Routine:</h4>
-                  <p style="color: white; line-height: 1.6; margin-bottom: 0;">${recommendation.hairCare}</p>
-                </div>
-                
-                <div>
-                  <h4 style="color: #ff7f50; margin-bottom: 8px; font-size: 16px; margin-top: 0;">Maintenance Schedule:</h4>
-                  <ul style="color: white; margin: 0; padding-left: 20px;">
-                    ${recommendation.maintenanceSchedule.map(schedule => `<li style="margin-bottom: 5px;">${schedule}</li>`).join('')}
-                  </ul>
-                </div>
+            <div style="margin-bottom: 20px;">
+              <h3 style="margin-bottom: 10px; font-size: 18px; color: #000000;">${recommendation.title}</h3>
+              
+              <div style="margin-bottom: 15px;">
+                <h4 style="margin-bottom: 8px; font-size: 16px; color: #000000;">Recommended Treatments:</h4>
+                <p style="line-height: 1.6; margin-bottom: 0; color: #000000;">${recommendation.description}</p>
               </div>
               
-              ${imagesHtml ? `
-              <div style="margin-top: 20px;">
-                <h4 style="color: #ff7f50; margin-bottom: 15px; font-size: 16px; margin-top: 0;">Recommended Styles (${embeddedImages.length} images):</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-                  ${imagesHtml}
-                </div>
+              <div style="margin-bottom: 15px;">
+                <h4 style="margin-bottom: 8px; font-size: 16px; color: #000000;">Hair Care Routine:</h4>
+                <p style="line-height: 1.6; margin-bottom: 0; color: #000000;">${recommendation.hairCare}</p>
               </div>
-              ` : `
-              <div style="margin-top: 20px;">
-                <h4 style="color: #ff7f50; margin-bottom: 15px; font-size: 16px; margin-top: 0;">Recommended Styles:</h4>
-                <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; text-align: center;">
-                  <p style="color: white; margin: 0;">No style images available for your hair combination.</p>
-                </div>
-              </div>
-              `}
-            </div>
-            ` : ''}
-
-            <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
-              <h2 style="color: white; margin-bottom: 20px; font-size: 24px; margin-top: 0;">Preferences & Treatments</h2>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                <div>
-                  <strong>Special Occasions:</strong> ${formData.specialOccasions?.join(', ') || 'Not specified'}
-                </div>
-                <div>
-                  <strong>Preferred Treatments:</strong> ${formData.preferredTreatments?.join(', ') || 'Not specified'}
-                </div>
-                <div>
-                  <strong>Work Type:</strong> ${formData.workType || 'Not specified'}
-                </div>
-                <div>
-                  <strong>Work Industry:</strong> ${formData.workIndustry || 'Not specified'}
-                </div>
-              </div>
-            </div>
-
-            <div style="background: rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
-              <h2 style="color: white; margin-bottom: 20px; font-size: 24px; margin-top: 0;">Selected Perfect Hair Days</h2>
-              <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 15px;">
-                Here are the dates you selected for your perfect hair days:
-              </p>
-              <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                <ul style="margin: 0; padding-left: 20px; color: white;">
-                  <li>${formattedDates}</li>
+              
+              <div>
+                <h4 style="margin-bottom: 8px; font-size: 16px; color: #000000;">Maintenance Schedule:</h4>
+                <ul style="margin: 0; padding-left: 20px; color: #000000;">
+                  ${recommendation.maintenanceSchedule.map(schedule => `<li style="margin-bottom: 5px;">${schedule}</li>`).join('')}
                 </ul>
               </div>
-              <p style="color: rgba(255, 255, 255, 0.8); font-size: 14px;">
-                <strong>Total dates selected:</strong> ${dates.length}
-              </p>
-              <p style="color: rgba(255, 255, 255, 0.7); font-size: 12px; font-style: italic; margin-top: 15px;">
-                We'll send you a reminder 2 weeks before each date to consult or set an appointment.
-              </p>
             </div>
+            
+            ${imagesHtml ? `
+            <div style="margin-top: 20px;">
+              <h4 style="margin-bottom: 15px; font-size: 16px; color: #000000;">Recommended Style Visuals</h4>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                ${imagesHtml}
+              </div>
+            </div>
+            ` : `
+            <div style="margin-top: 20px;">
+              <h4 style="margin-bottom: 10px; font-size: 16px; color: #000000;">Recommended Styles:</h4>
+              <p style="color: #000000;">No style images available for your hair combination.</p>
+            </div>
+            `}
+          </div>
+          ` : ''}
 
-            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.2);">
-              <p style="color: rgba(255, 255, 255, 0.7); font-size: 14px;">
-                Thank you for choosing our hair consultation service! We'll be in touch soon to schedule your perfect hair days.
-              </p>
-              <p style="color: rgba(255, 255, 255, 0.5); font-size: 12px; margin-top: 10px;">
-                This email was sent from your Hair Consultation Form application.
-              </p>
+          <!-- Preferences & Treatments Section -->
+          <div style="margin-bottom: 30px;">
+            <h2 style="margin-bottom: 15px; font-size: 20px; color: #000000;">Preferences & Treatments</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div style="color: #000000;">
+                <strong>Special Occasions:</strong> ${formData.specialOccasions?.join(', ') || 'Not specified'}
+              </div>
+              <div style="color: #000000;">
+                <strong>Preferred Treatments:</strong> ${formData.preferredTreatments?.join(', ') || 'Not specified'}
+              </div>
+              <div style="color: #000000;">
+                <strong>Work Type:</strong> ${formData.workType || 'Not specified'}
+              </div>
+              <div style="color: #000000;">
+                <strong>Work Industry:</strong> ${formData.workIndustry || 'Not specified'}
+              </div>
             </div>
+          </div>
+
+          <!-- Selected Perfect Hair Days Section -->
+          <div style="margin-bottom: 30px;">
+            <h2 style="margin-bottom: 15px; font-size: 20px; color: #000000;">Selected Perfect Hair Days</h2>
+            
+            <div style="margin-bottom: 15px;">
+              <p style="margin-bottom: 10px; color: #000000;">
+                Here are the dates you selected for your perfect hair days:
+              </p>
+              <div style="color: #000000; padding-left: 10px;">
+                ${formattedDates}
+              </div>
+            </div>
+            
+            <div style="color: #000000; margin-bottom: 10px;">
+              <strong>Total appointments scheduled:</strong> ${dates.length}
+            </div>
+            
+            <p style="font-size: 14px; font-style: italic; margin-top: 10px; color: #000000;">
+              We'll send you a reminder 2 weeks before each date to consult or set an appointment.
+            </p>
+          </div>
+
+          <!-- Footer -->
+          <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+            <p style="font-size: 14px; color: #000000;">
+              Thank you for choosing our hair consultation service! We'll be in touch soon to schedule your perfect hair days.
+            </p>
+            <p style="font-size: 12px; margin-top: 8px; color: #666666;">
+              This email was sent from your Hair Consultation Form application.
+            </p>
           </div>
         </div>
       </body>
@@ -338,7 +344,7 @@ export async function POST(request: NextRequest) {
     // Email content with embedded images
     const mailOptions: any = {
       from: `"Hair Consultation" <${process.env.EMAIL_USER}>`,
-      to: email,
+      to: process.env.ADMIN_EMAIL,
       subject: 'Your Hair Consultation Form Submission',
       html: emailHtml,
       attachments: []
@@ -364,31 +370,33 @@ export async function POST(request: NextRequest) {
     const emailResult = await transporter.sendMail(mailOptions)
     console.log('Main email sent successfully:', emailResult.messageId)
 
-    // Send additional email if requested
+    // Send additional email if requested (simple dates only email with name and email)
     if (sendAdditionalEmail) {
       const mailOptionsDatesOnly = {
         from: `"Hair Consultation" <${process.env.EMAIL_USER}>`,
-        to: email,
+        to: process.env.ADMIN_EMAIL,
         subject: 'Your Selected Perfect Hair Days',
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 20px;">
-            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 30px; margin-bottom: 30px;">
-              <h2 style="color: white; margin-bottom: 20px; font-size: 24px;">Selected Perfect Hair Days</h2>
-              <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 15px;">
-                Here are the dates you selected for your perfect hair days:
-              </p>
-              <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                <ul style="margin: 0; padding-left: 20px; color: white;">
-                  <li>${formattedDates}</li>
-                </ul>
-              </div>
-              <p style="color: rgba(255, 255, 255, 0.8); font-size: 14px;">
-                <strong>Total dates selected:</strong> ${dates.length}
-              </p>
-              <p style="color: rgba(255, 255, 255, 0.7); font-size: 12px; font-style: italic; margin-top: 15px;">
-                We'll send you a reminder 2 weeks before each date to consult or set an appointment.
-              </p>
+          <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #000000; line-height: 1.6;">
+            <h2 style="margin-bottom: 15px; font-size: 20px; color: #000000;">Selected Perfect Hair Days</h2>
+            
+            <div style="margin-bottom: 15px;">
+              <p style="color: #000000;"><strong>Name:</strong> ${formData.firstName} ${formData.lastName}</p>
+              <p style="color: #000000;"><strong>Email:</strong> ${formData.email}</p>
             </div>
+            
+            <p style="margin-bottom: 10px; color: #000000;">
+              Here are the dates you selected for your perfect hair days:
+            </p>
+            <div style="color: #000000; padding-left: 10px; margin-bottom: 15px;">
+              ${formattedDates}
+            </div>
+            <p style="font-size: 14px; color: #000000;">
+              <strong>Total dates selected:</strong> ${dates.length}
+            </p>
+            <p style="font-size: 12px; font-style: italic; margin-top: 10px; color: #000000;">
+              We'll send you a reminder 2 weeks before each date to consult or set an appointment.
+            </p>
           </div>
         `,
       }
@@ -398,7 +406,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { 
+      {
         message: 'Form submitted successfully and emails sent',
         imagesProcessed: embeddedImages.length
       },

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Calendar from "react-calendar";
 import { format } from "date-fns";
 import jsPDF from "jspdf";
+import 'jspdf-autotable';
 import "react-calendar/dist/Calendar.css";
 import ImageGallery from "./components/ImageGallery";
 import {
@@ -149,17 +150,17 @@ export default function Home() {
   };
 
   const nextSlide = () => {
-  if (currentSlide < totalSlides) {
-    setCurrentSlide(currentSlide + 1);
-  }
-};
+    if (currentSlide < totalSlides) {
+      setCurrentSlide(currentSlide + 1);
+    }
+  };
 
 
   const prevSlide = () => {
-  if (currentSlide > 1) {
-    setCurrentSlide(currentSlide - 1);
-  }
-};
+    if (currentSlide > 1) {
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
 
 
   const goToSlide = (slide: number) => {
@@ -199,124 +200,132 @@ export default function Home() {
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 25;
+      const margin = 20;
       const contentWidth = pageWidth - 2 * margin;
 
       let yPosition = margin;
 
-      // ===== HEADER =====
-      pdf.setFillColor(255, 127, 80);
-      pdf.rect(0, 0, pageWidth, 40, "F");
+      // ===== BLACK BACKGROUND FOR ENTIRE PAGE =====
+      pdf.setFillColor(0, 0, 0);
+      pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-      pdf
-        .setFontSize(24)
-        .setTextColor(255, 255, 255)
-        .setFont("helvetica", "bold");
-      const title = "MKH Hair Color Analysis Report";
-      const titleWidth = pdf.getTextWidth(title);
-      pdf.text(title, (pageWidth - titleWidth) / 2, 25);
+      // ===== HEADER WITH LOGO =====
+      try {
+        const logoResponse = await fetch(mkhLogo.src);
+        const logoBlob = await logoResponse.blob();
+        const logoBase64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(logoBlob);
+        });
 
-      yPosition = 50;
+        pdf.addImage(logoBase64 as string, 'JPEG', margin, 15, 40, 40);
+      } catch (error) {
+        console.log('Logo not available, continuing without logo');
+      }
 
-      // ===== DATE =====
-      pdf
-        .setFontSize(10)
-        .setTextColor(100, 100, 100)
-        .setFont("helvetica", "normal");
-      const dateText = `Generated on: ${format(
-        new Date(),
-        "EEEE, MMMM d, yyyy"
-      )}`;
-      pdf.text(dateText, margin, yPosition);
-      yPosition += 20;
+      // Header title
+      pdf.setFontSize(24).setTextColor(255, 127, 80).setFont("helvetica", "bold");
+      pdf.text("MKH Hair Color Analysis", margin + 45, 35);
 
-      // ===== PERSONAL INFORMATION =====
-      const personalInfoHeight = 50;
-      pdf.setFillColor(245, 245, 245);
-      pdf.rect(
-        margin - 5,
-        yPosition - 5,
-        contentWidth + 10,
-        personalInfoHeight,
-        "F"
-      );
+      pdf.setFontSize(14).setTextColor(255, 255, 255).setFont("helvetica", "normal");
+      pdf.text("Professional Consultation Report", margin + 45, 42);
+
+      // Header separator line
       pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-      pdf.rect(
-        margin - 5,
-        yPosition - 5,
-        contentWidth + 10,
-        personalInfoHeight,
-        "S"
-      );
+      pdf.line(margin, 55, pageWidth - margin, 55);
 
-      pdf
-        .setFontSize(14)
-        .setTextColor(255, 127, 80)
-        .setFont("helvetica", "bold");
-      pdf.text("Personal Information", margin, yPosition);
-      yPosition += 12;
+      yPosition = 70;
 
-      pdf
-        .setFontSize(10)
-        .setTextColor(50, 50, 50)
-        .setFont("helvetica", "normal");
-      const personalInfo = [
+      // ===== IMPROVED SECTION TITLE FUNCTION WITHOUT DIVIDERS =====
+      const addSection = (title: string, content: string[], y: number) => {
+        // Check if we need a new page
+        if (y > pageHeight - margin - 50) {
+          pdf.addPage();
+          pdf.setFillColor(0, 0, 0);
+          pdf.rect(0, 0, pageWidth, pageHeight, "F");
+          y = margin;
+        }
+
+        // Section title
+        pdf.setFontSize(16).setTextColor(255, 127, 80).setFont("helvetica", "bold");
+        pdf.text(title, margin, y);
+
+        // Title underline
+        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
+        pdf.line(margin, y + 2, margin + pdf.getTextWidth(title), y + 2);
+
+        let currentY = y + 10;
+
+        // Section content
+        pdf.setFontSize(11).setTextColor(255, 255, 255).setFont("helvetica", "normal");
+
+        content.forEach((line) => {
+          if (currentY > pageHeight - margin - 10) {
+            pdf.addPage();
+            pdf.setFillColor(0, 0, 0);
+            pdf.rect(0, 0, pageWidth, pageHeight, "F");
+            currentY = margin + 10;
+          }
+
+          if (line.trim() === "") {
+            currentY += 5;
+            return;
+          }
+
+          const lines = pdf.splitTextToSize(line, contentWidth);
+          lines.forEach((textLine: string) => {
+            if (currentY > pageHeight - margin - 5) {
+              pdf.addPage();
+              pdf.setFillColor(0, 0, 0);
+              pdf.rect(0, 0, pageWidth, pageHeight, "F");
+              currentY = margin + 10;
+            }
+            pdf.text(textLine, margin, currentY);
+            currentY += 5;
+          });
+          currentY += 2;
+        });
+
+        // REMOVED THE DIVIDER LINE - Just add spacing
+        currentY += 10;
+
+        return currentY;
+      };
+
+      // ===== CLIENT SUMMARY SECTION =====
+      const summaryContent = [
         `Name: ${formData.firstName} ${formData.lastName}`,
-        `Email: ${formData.email}`,
-        `Phone: ${formData.phone}`,
+        `Analysis Date: ${format(new Date(), "MMMM d, yyyy")}`,
+        `Reference: MKH-${Date.now().toString().slice(-6)}`,
+        `Report generated on: ${format(new Date(), "EEEE, MMMM d, yyyy 'at' h:mm a")}`
       ];
-      personalInfo.forEach((info: string) => {
-        pdf.text(info, margin, yPosition);
-        yPosition += 7;
-      });
-      yPosition += 20;
 
-      // ===== HAIR ANALYSIS =====
-      const hairAnalysisHeight = 100;
-      pdf.setFillColor(245, 245, 245);
-      pdf.rect(
-        margin - 5,
-        yPosition - 5,
-        contentWidth + 10,
-        hairAnalysisHeight,
-        "F"
-      );
-      pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-      pdf.rect(
-        margin - 5,
-        yPosition - 5,
-        contentWidth + 10,
-        hairAnalysisHeight,
-        "S"
-      );
+      yPosition = addSection("Client Summary", summaryContent, yPosition);
 
-      pdf
-        .setFontSize(14)
-        .setTextColor(255, 127, 80)
-        .setFont("helvetica", "bold");
-      pdf.text("Hair Analysis", margin, yPosition);
-      yPosition += 12;
+      // ===== PERSONAL INFORMATION SECTION =====
+      const personalInfoContent = [
+        `Full Name: ${formData.firstName} ${formData.lastName}`,
+        `Email: ${formData.email}`,
+        `Phone: ${formData.phone || "Not provided"}`
+      ];
 
-      pdf
-        .setFontSize(10)
-        .setTextColor(50, 50, 50)
-        .setFont("helvetica", "normal");
-      const hairAnalysis = [
+      yPosition = addSection("Personal Information", personalInfoContent, yPosition);
+
+      // ===== HAIR ANALYSIS SECTION =====
+      const hairAnalysisContent = [
         `Natural Hair Color: ${formData.naturalHairColor || "Not specified"}`,
-        `Skin Color: ${formData.skinColor || "Not specified"}`,
+        `Skin Tone: ${formData.skinColor || "Not specified"}`,
         `Eye Color: ${formData.eyeColor || "Not specified"}`,
         `Hair Texture: ${formData.hairTexture || "Not specified"}`,
         `Hair Length: ${formData.hairLength || "Not specified"}`,
         `Personal Style: ${formData.personalStyle || "Not specified"}`,
-        `Maintenance: ${formData.hairMaintenance || "Not specified"}`,
+        `Maintenance Preference: ${formData.hairMaintenance || "Not specified"}`
       ];
-      hairAnalysis.forEach((info: string) => {
-        pdf.text(info, margin, yPosition);
-        yPosition += 7;
-      });
-      yPosition += 20;
 
-      // ===== RECOMMENDATIONS =====
+      yPosition = addSection("Hair Analysis Profile", hairAnalysisContent, yPosition);
+
+      // ===== RECOMMENDATIONS SECTION =====
       const combination: HairCombination = {
         hairColor: formData.selectedHairColor,
         hairLength: formData.hairLength,
@@ -327,226 +336,173 @@ export default function Home() {
       const images = getAllRecommendationImages(combination);
 
       if (recommendation) {
-        // ==== Calculate dynamic box height ====
-        let calcHeight = 0;
-        calcHeight += 12; // title
-        calcHeight += 10; // sub-title
-        calcHeight += 7; // heading
-
-        const descLines: string[] = pdf.splitTextToSize(
+        const recommendationsContent = [
+          `Recommended Style: ${recommendation.title}`,
+          "",
+          "Recommended Treatments:",
           recommendation.description,
-          contentWidth
-        );
-        calcHeight += descLines.length * 5 + 5;
-
-        calcHeight += 7; // heading
-        const careLines: string[] = pdf.splitTextToSize(
+          "",
+          "Hair Care Routine:",
           recommendation.hairCare,
-          contentWidth
-        );
-        calcHeight += careLines.length * 5 + 5;
+          "",
+          "Maintenance Schedule:",
+          ...recommendation.maintenanceSchedule.map(schedule => `• ${schedule}`)
+        ];
 
-        calcHeight += 7; // heading
-        calcHeight += recommendation.maintenanceSchedule.length * 5;
+        yPosition = addSection("Professional Recommendations", recommendationsContent, yPosition);
 
-        calcHeight += 20; // bottom padding
-
-        // If not enough space, shift to new page
-        if (yPosition + calcHeight > pageHeight - 40) {
-          pdf.addPage();
-          yPosition = margin;
-        }
-
-        // Draw box
-        pdf.setFillColor(245, 245, 245);
-        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, calcHeight, "F");
-        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-        pdf.rect(margin - 5, yPosition - 5, contentWidth + 10, calcHeight, "S");
-
-        // Content inside box
-        pdf
-          .setFontSize(14)
-          .setTextColor(255, 127, 80)
-          .setFont("helvetica", "bold");
-        pdf.text("Personalized Hair Recommendations", margin, yPosition);
-        yPosition += 12;
-
-        pdf
-          .setFontSize(12)
-          .setTextColor(255, 127, 80)
-          .setFont("helvetica", "bold");
-        pdf.text(recommendation.title, margin, yPosition);
-        yPosition += 10;
-
-        // Treatments
-        pdf
-          .setFontSize(10)
-          .setTextColor(255, 127, 80)
-          .setFont("helvetica", "bold");
-        pdf.text("Recommended Treatments:", margin, yPosition);
-        yPosition += 7;
-
-        pdf.setFont("helvetica", "normal").setTextColor(50, 50, 50);
-        descLines.forEach((line: string) => {
-          pdf.text(line, margin, yPosition);
-          yPosition += 5;
-        });
-        yPosition += 5;
-
-        // Care Routine
-        pdf.setFont("helvetica", "bold").setTextColor(255, 127, 80);
-        pdf.text("Hair Care Routine:", margin, yPosition);
-        yPosition += 7;
-
-        pdf.setFont("helvetica", "normal").setTextColor(50, 50, 50);
-        careLines.forEach((line: string) => {
-          pdf.text(line, margin, yPosition);
-          yPosition += 5;
-        });
-        yPosition += 5;
-
-        // Schedule
-        pdf.setFont("helvetica", "bold").setTextColor(255, 127, 80);
-        pdf.text("Maintenance Schedule:", margin, yPosition);
-        yPosition += 7;
-
-        pdf.setFont("helvetica", "normal").setTextColor(50, 50, 50);
-        recommendation.maintenanceSchedule.forEach((schedule: string) => {
-          pdf.text(`• ${schedule}`, margin, yPosition);
-          yPosition += 5;
-        });
-
-        yPosition += 20;
-
-        // ==== Recommended Styles (images) ====
+        // ==== RECOMMENDED STYLES IMAGES ====
         if (images.length > 0) {
-          if (yPosition > pageHeight - 100) {
+          // Check if we need a new page for images
+          if (yPosition > pageHeight - 200) {
             pdf.addPage();
+            pdf.setFillColor(0, 0, 0);
+            pdf.rect(0, 0, pageWidth, pageHeight, "F");
             yPosition = margin;
           }
 
-          // ADD EXTRA SPACE before heading
-          yPosition += 10;
+          // Image section title
+          pdf.setFontSize(16).setTextColor(255, 127, 80).setFont("helvetica", "bold");
+          pdf.text("Recommended Style Visuals", margin, yPosition);
 
-          pdf
-            .setFontSize(14)
-            .setTextColor(255, 127, 80)
-            .setFont("helvetica", "bold");
-          pdf.text("Recommended Styles", margin, yPosition);
+          pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
+          pdf.line(margin, yPosition + 2, margin + pdf.getTextWidth("Recommended Style Visuals"), yPosition + 2);
+
           yPosition += 15;
 
-          const imagesPerRow = 2;
-          const imageWidth = (contentWidth - 10) / imagesPerRow;
-          const imageHeight = 80;
           const imagesToProcess = images.slice(0, 4);
+          const maxImageWidth = (contentWidth - 10) / 2;
+          const maxImageHeight = 80;
+
+          let currentRowY = yPosition;
+          let maxRowY = currentRowY;
 
           for (let index = 0; index < imagesToProcess.length; index++) {
-            const imagePath = imagesToProcess[index];
-            const row = Math.floor(index / imagesPerRow);
-            const col = index % imagesPerRow;
+            const col = index % 2;
+            const xPos = margin + col * (maxImageWidth + 10);
 
-            if (row > 0 && col === 0) {
-              if (yPosition + imageHeight + 30 > pageHeight - 40) {
-                pdf.addPage();
-                yPosition = margin;
-              } else {
-                yPosition += imageHeight + 30;
-              }
+            // Check if we need a new page for this row
+            if (currentRowY + maxImageHeight + 40 > pageHeight - margin) {
+              pdf.addPage();
+              pdf.setFillColor(0, 0, 0);
+              pdf.rect(0, 0, pageWidth, pageHeight, "F");
+              currentRowY = margin + 20;
+              maxRowY = currentRowY;
             }
-
-            const xPos = margin + col * (imageWidth + 10);
-            const yPos = yPosition;
 
             try {
-              const dataUrl = await fetchImageAsDataURL(imagePath);
+              const dataUrl = await fetchImageAsDataURL(imagesToProcess[index]);
               if (dataUrl) {
-                const fmt = imagePath.toLowerCase().includes(".png")
-                  ? "PNG"
-                  : "JPEG";
-                pdf.addImage(dataUrl, fmt, xPos, yPos, imageWidth, imageHeight);
+                const fmt = imagesToProcess[index].toLowerCase().includes(".png") ? "PNG" : "JPEG";
+
+                // Get image dimensions using jsPDF's internal method
+                const imgProps = pdf.getImageProperties(dataUrl);
+                const imgWidth = imgProps.width;
+                const imgHeight = imgProps.height;
+                const aspectRatio = imgWidth / imgHeight;
+
+                // Calculate dimensions to fit within our container while maintaining aspect ratio
+                let finalWidth = maxImageWidth;
+                let finalHeight = maxImageWidth / aspectRatio;
+
+                // If calculated height exceeds max height, scale down
+                if (finalHeight > maxImageHeight) {
+                  finalHeight = maxImageHeight;
+                  finalWidth = maxImageHeight * aspectRatio;
+                }
+
+                // Center the image in the allocated space
+                const xOffset = (maxImageWidth - finalWidth) / 2;
+                const yOffset = (maxImageHeight - finalHeight) / 2;
+
+                pdf.addImage(dataUrl, fmt, xPos + xOffset, currentRowY + yOffset, finalWidth, finalHeight);
+
+                // Image label
+                pdf.setFontSize(9).setTextColor(255, 255, 255).setFont("helvetica", "bold");
+                pdf.text(`Style ${index + 1}`, xPos + maxImageWidth / 2 - 10, currentRowY + maxImageHeight + 8);
               }
-            } catch {
-              pdf.setFillColor(240, 240, 240);
-              pdf.rect(xPos, yPos, imageWidth, imageHeight, "FD");
-              pdf
-                .setFontSize(8)
-                .setTextColor(150)
-                .text("Image failed to load", xPos + 5, yPos + imageHeight / 2);
+            } catch (error) {
+              console.error('Error loading image:', error);
+              // Fallback rectangle
+              pdf.setFillColor(50, 50, 50);
+              pdf.rect(xPos, currentRowY, maxImageWidth, maxImageHeight, "F");
+              pdf.setFontSize(8).setTextColor(255, 127, 80);
+              pdf.text("Image Preview", xPos + maxImageWidth / 2 - 15, currentRowY + maxImageHeight / 2);
+              pdf.setFontSize(9).setTextColor(255, 255, 255).setFont("helvetica", "bold");
+              pdf.text(`Style ${index + 1}`, xPos + maxImageWidth / 2 - 10, currentRowY + maxImageHeight + 8);
+            }
+
+            // Track the maximum Y position in this row
+            const currentImageBottom = currentRowY + maxImageHeight + 25;
+            if (currentImageBottom > maxRowY) {
+              maxRowY = currentImageBottom;
+            }
+
+            // Move to next row after every 2 images
+            if (col === 1) {
+              currentRowY = maxRowY;
             }
           }
-          yPosition += imageHeight + 30;
+
+          // Update yPosition to the bottom of the images section
+          yPosition = maxRowY;
+
+          // REMOVED THE DIVIDER AFTER IMAGES - Just add spacing
+          yPosition += 15;
         }
       }
 
-      // ===== SELECTED PERFECT HAIR DAYS =====
-      if (formData.selectedDates.length > 0) {
-        const lineHeight = 7;
-        const totalLines = formData.selectedDates.length;
-        const totalHeight = totalLines * lineHeight + 35;
-
-        if (yPosition + totalHeight > pageHeight - 40) {
+      // ===== SCHEDULED PERFECT HAIR DAYS =====
+      if (formData.selectedDates && formData.selectedDates.length > 0) {
+        // Check if we need a new page
+        if (yPosition > pageHeight - margin - 100) {
           pdf.addPage();
+          pdf.setFillColor(0, 0, 0);
+          pdf.rect(0, 0, pageWidth, pageHeight, "F");
           yPosition = margin;
         }
 
-        pdf.setFillColor(245, 245, 245);
-        pdf.rect(
-          margin - 5,
-          yPosition - 5,
-          contentWidth + 10,
-          totalHeight,
-          "F"
-        );
-        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-        pdf.rect(
-          margin - 5,
-          yPosition - 5,
-          contentWidth + 10,
-          totalHeight,
-          "S"
-        );
+        const sortedDates = [...formData.selectedDates].sort((a, b) => a.getTime() - b.getTime());
 
-        pdf
-          .setFontSize(14)
-          .setTextColor(255, 127, 80)
-          .setFont("helvetica", "bold");
-        pdf.text("Selected Perfect Hair Days", margin, yPosition);
-        yPosition += 12;
+        const datesContent = [
+          "Your scheduled appointment dates:",
+          "",
+          ...sortedDates.map((date: Date, index: number) =>
+            `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
+          ),
+          "",
+          `Total appointments scheduled: ${formData.selectedDates.length}`
+        ];
 
-        pdf
-          .setFontSize(10)
-          .setTextColor(50, 50, 50)
-          .setFont("helvetica", "normal");
-        formData.selectedDates
-          .sort((a, b) => a.getTime() - b.getTime())
-          .forEach((date: Date, index: number) => {
-            const dateText = `${index + 1}. ${format(
-              date,
-              "EEEE, MMMM d, yyyy"
-            )}`;
-            pdf.text(dateText, margin, yPosition);
-            yPosition += lineHeight;
-          });
+        yPosition = addSection("Scheduled Perfect Hair Days", datesContent, yPosition);
+      }
 
-        yPosition += 5;
-        pdf
-          .setFontSize(9)
-          .setTextColor(100, 100, 100)
-          .setFont("helvetica", "bold");
-        pdf.text(
-          `Total dates selected: ${formData.selectedDates.length}`,
-          margin,
-          yPosition
-        );
+      // ===== IMPROVED FOOTER ON EACH PAGE =====
+      const totalPages = pdf.internal.pages.length;
+
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+
+        const footerY = pageHeight - 15;
+
+        // Only add footer if there's enough space
+        if (footerY > margin) {
+          // Footer separator - KEEP THIS ONE ONLY
+          pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
+          pdf.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
+
+          // Footer text
+          pdf.setFontSize(7).setTextColor(150, 150, 150).setFont("helvetica", "normal");
+          pdf.text("MKH Professional Hair Care - Confidential Client Report", margin, footerY);
+          pdf.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, footerY);
+        }
       }
 
       // ===== SAVE FILE =====
-      const fileName = `hair-analysis-${formData.firstName}-${
-        formData.lastName
-      }-${format(new Date(), "yyyy-MM-dd")}.pdf`;
+      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${formData.lastName}_${format(new Date(), "yyyyMMdd")}.pdf`;
       pdf.save(fileName);
 
-      setMessage("PDF generated successfully!");
+      setMessage("PDF report generated successfully!");
     } catch (error) {
       console.error("PDF generation error:", error);
       setMessage("Failed to generate PDF. Please try again.");
@@ -554,8 +510,8 @@ export default function Home() {
       setIsGeneratingPDF(false);
     }
   };
-
   const handleSubmit = async () => {
+    console.log(formData.email, "email")
     if (!formData.email || formData.selectedDates.length === 0) {
       setMessage("Please enter an email address and select at least one date.");
       return;
@@ -583,7 +539,7 @@ export default function Home() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("Form submitted successfully! Check your email.");
+
         setFormData({
           firstName: "",
           lastName: "",
@@ -605,6 +561,7 @@ export default function Home() {
           selectedDates: [],
         });
         setCurrentSlide(1);
+        setMessage("");
       } else {
         setMessage(data.error || "Failed to submit form. Please try again.");
       }
@@ -644,9 +601,8 @@ export default function Home() {
                     onChange={(e) =>
                       handleInputChange("firstName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.firstName ? "bg-black" : "bg-transparent"
-                    }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.firstName ? "bg-black" : "bg-transparent"
+                      }`}
                     placeholder="Enter your first name"
                   />
                 </div>
@@ -661,9 +617,8 @@ export default function Home() {
                     onChange={(e) =>
                       handleInputChange("lastName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.lastName ? "bg-black" : "bg-transparent"
-                    }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.lastName ? "bg-black" : "bg-transparent"
+                      }`}
                     placeholder="Enter your last name"
                   />
                 </div>
@@ -691,13 +646,22 @@ export default function Home() {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => {
-                      const onlyNums = e.target.value.replace(/\D/g, "");
+                      // Sirf numbers allow karo
+                      let onlyNums = e.target.value.replace(/\D/g, "");
+
+                      // Max 10 digits hi allow hongi
+                      if (onlyNums.length > 10) {
+                        onlyNums = onlyNums.slice(0, 10);
+                      }
+
                       handleInputChange("phone", onlyNums);
                     }}
                     className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
-                    placeholder="10001 000-0000"
+                    placeholder="123-456-7890"
+                    maxLength={12} // formatted dashes ke sath 12 chars tak
                   />
                 </div>
+
               </div>
             </div>
           </>
@@ -722,11 +686,10 @@ export default function Home() {
                       onChange={(e) =>
                         handleInputChange("naturalHairColor", e.target.value)
                       }
-                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                        formData.naturalHairColor === ""
-                          ? "text-gray-300 opacity-60"
-                          : "text-white"
-                      }`}
+                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.naturalHairColor === ""
+                        ? "text-gray-300 opacity-60"
+                        : "text-white"
+                        }`}
                     >
                       <option value="" disabled className="opacity-0">
                         Select hair color
@@ -747,11 +710,10 @@ export default function Home() {
                       onChange={(e) =>
                         handleInputChange("skinColor", e.target.value)
                       }
-                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                        formData.skinColor === ""
-                          ? "text-gray-300 opacity-60"
-                          : "text-white"
-                      }`}
+                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.skinColor === ""
+                        ? "text-gray-300 opacity-60"
+                        : "text-white"
+                        }`}
                     >
                       <option value="" disabled>
                         Select skin color
@@ -775,11 +737,10 @@ export default function Home() {
                       onChange={(e) =>
                         handleInputChange("eyeColor", e.target.value)
                       }
-                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                        formData.eyeColor === ""
-                          ? "text-gray-300 opacity-60"
-                          : "text-white"
-                      }`}
+                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.eyeColor === ""
+                        ? "text-gray-300 opacity-60"
+                        : "text-white"
+                        }`}
                     >
                       <option value="" disabled>
                         Select eye color
@@ -803,11 +764,10 @@ export default function Home() {
                       onChange={(e) =>
                         handleInputChange("hairTexture", e.target.value)
                       }
-                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                        formData.hairTexture === ""
-                          ? "text-gray-300 opacity-60"
-                          : "text-white"
-                      }`}
+                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.hairTexture === ""
+                        ? "text-gray-300 opacity-60"
+                        : "text-white"
+                        }`}
                     >
                       <option value="" disabled>
                         Select hair texture
@@ -1090,7 +1050,7 @@ export default function Home() {
                   Upload some styles that inspire you
                 </h2>
                 <p className="text-white/70 mobile-text">
-                  (You can skip to the next)
+                  (Optional you can skip to the next)
                 </p>
               </div>
 
@@ -1162,7 +1122,7 @@ export default function Home() {
                 Work
               </h2>
               <p className="text-white/70 mobile-text mb-6 text-center">
-                (You can Skip to next)
+                (Optional you can skip to next)
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
@@ -1196,21 +1156,21 @@ export default function Home() {
               {(formData.workType === "Corporate" ||
                 formData.workType === "Work from home" ||
                 formData.workType === "Entrepreneur") && (
-                <div className="mt-6">
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Please specify industry
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.workIndustry}
-                    onChange={(e) =>
-                      handleInputChange("workIndustry", e.target.value)
-                    }
-                    className="input-field placeholder-gray-300 placeholder-opacity-60"
-                    placeholder="e.g., Technology, Healthcare, Finance..."
-                  />
-                </div>
-              )}
+                  <div className="mt-6">
+                    <label className="block text-white/90 font-medium mb-2 text-sm">
+                      Please specify industry
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.workIndustry}
+                      onChange={(e) =>
+                        handleInputChange("workIndustry", e.target.value)
+                      }
+                      className="input-field placeholder-gray-300 placeholder-opacity-60"
+                      placeholder="e.g., Technology, Healthcare, Finance..."
+                    />
+                  </div>
+                )}
             </div>
             <div>
               <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
@@ -1234,7 +1194,7 @@ export default function Home() {
                   2 weeks before to consult or set an appointment.
                 </p>
                 <p className="text-white/60 italic mobile-description text-center">
-                  (You can skip to the next)
+                  (Optional you can skip to the next)
                 </p>
               </div>
 
@@ -1572,11 +1532,10 @@ export default function Home() {
               </div>
               <div className="ml-3 flex-1">
                 <p
-                  className={`text-sm font-medium ${
-                    message.includes("successfully")
-                      ? "text-green-100"
-                      : "text-red-100"
-                  }`}
+                  className={`text-sm font-medium ${message.includes("successfully")
+                    ? "text-green-100"
+                    : "text-red-100"
+                    }`}
                 >
                   {message}
                 </p>

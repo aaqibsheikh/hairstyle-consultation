@@ -474,11 +474,14 @@
     min-height: 44px !important;
   }
 }
-
 .react-calendar__tile:hover {
-  background: rgba(255, 127, 80, 0.2) !important;
+  background: linear-gradient(135deg, #ff7f50 0%, #ff6347 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
   transform: scale(1.05) !important;
+  box-shadow: 0 4px 12px rgba(255, 127, 80, 0.3) !important;
 }
+
 
 .react-calendar__tile--active {
   background: linear-gradient(135deg, #ff7f50 0%, #ff6347 100%) !important;

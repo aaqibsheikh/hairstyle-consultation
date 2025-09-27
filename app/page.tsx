@@ -72,7 +72,7 @@ export default function Home() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [message, setMessage] = useState("");
 
-  const totalSlides = 12;
+  const totalSlides = 13;
 
   const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -622,18 +622,20 @@ export default function Home() {
       case 1:
         return (
           <>
-            <p className="mt-0 flex justify-center mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed ">
+            <p className="mt-0 flex justify-center mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
               Complete your hair color analysis in just 3 minutes
             </p>
-            <div className="glass-card mobile-card">
-              <div className="text-center mb-6">
+
+            <div className="glass-card mobile-card mb-9">
+              {/* Title */}
+              <div className="text-center mb-12">
                 <h2 className="mobile-heading font-bold text-white mb-4">
                   Tell us a little about yourself
                 </h2>
               </div>
 
               {/* First & Last Name */}
-              <div className="form-grid mb-6">
+              <div className="form-grid gap-6 mb-8">
                 <div>
                   <label className="block text-white/90 font-medium mb-2 text-sm">
                     First Name
@@ -644,7 +646,7 @@ export default function Home() {
                     onChange={(e) =>
                       handleInputChange("firstName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-60 border  border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
                       formData.firstName ? "bg-black" : "bg-transparent"
                     }`}
                     placeholder="Enter your first name"
@@ -661,7 +663,7 @@ export default function Home() {
                     onChange={(e) =>
                       handleInputChange("lastName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-60 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
                       formData.lastName ? "bg-black" : "bg-transparent"
                     }`}
                     placeholder="Enter your last name"
@@ -670,7 +672,7 @@ export default function Home() {
               </div>
 
               {/* Email & Phone */}
-              <div className="form-grid mb-6">
+              <div className="form-grid gap-6 mb-8">
                 <div>
                   <label className="block text-white/90 font-medium mb-2 text-sm">
                     Email
@@ -679,7 +681,7 @@ export default function Home() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
-                    className="input-field placeholder-gray-300 placeholder-opacity-60 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+                    className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
                     placeholder="example@example.com"
                   />
                 </div>
@@ -694,16 +696,25 @@ export default function Home() {
                       const onlyNums = e.target.value.replace(/\D/g, "");
                       handleInputChange("phone", onlyNums);
                     }}
-                    className="input-field placeholder-gray-300 placeholder-opacity-60 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+                    className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
                     placeholder="10001 000-0000"
                   />
                 </div>
               </div>
+            </div>
+          </>
+        );
 
+      case 2:
+        return (
+          <>
+            <div className="glass-card mobile-card mb-9">
               {/* Hair Analysis */}
-              <div className="mb-6">
-                <h3 className="text-white font-semibold mb-4">Hair Analysis</h3>
-                <div className="form-grid mb-4">
+              <div className="mb-8">
+                <h3 className="text-white font-semibold mb-6">Hair Analysis</h3>
+
+                {/* Row 1 */}
+                <div className="form-grid gap-6 mb-6">
                   <div>
                     <label className="block text-white/90 font-medium mb-2 text-sm">
                       Your Natural Hair Color
@@ -719,7 +730,7 @@ export default function Home() {
                           : "text-white"
                       }`}
                     >
-                      <option value="" disabled>
+                      <option value="" disabled className="opacity-0">
                         Select hair color
                       </option>
                       <option value="Black">Black</option>
@@ -755,7 +766,8 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="form-grid">
+                {/* Row 2 */}
+                <div className="form-grid gap-6">
                   <div>
                     <label className="block text-white/90 font-medium mb-2 text-sm">
                       Eye Color
@@ -811,10 +823,15 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
+              </p>
+            </div>
           </>
         );
-
-      case 2:
+      case 3:
         return (
           <>
             <div
@@ -859,439 +876,496 @@ export default function Home() {
             </div>
             <div>
               <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
-                Complete your hair color analysis in just 3 minutes
+                Duration 3 minutes
               </p>
             </div>
           </>
         );
 
-      case 3:
-        return (
-          <div className="glass-card mobile-card">
-            <h2 className="mobile-heading font-bold text-white mb-6 text-center">
-              Your present hair length?
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {["Short", "Medium", "Long", "Extra-long"].map((length) => (
-                <label
-                  key={length}
-                  className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-                >
-                  <input
-                    type="radio"
-                    name="hairLength"
-                    value={length}
-                    checked={formData.hairLength === length}
-                    onChange={(e) =>
-                      handleInputChange("hairLength", e.target.value)
-                    }
-                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                  />
-                  <span className="text-white/90 text-lg font-medium">
-                    {length}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        );
-
       case 4:
         return (
-          <div className="glass-card mobile-card">
-            <h2 className="mobile-heading font-bold text-white mb-6 text-center">
-              Your personal style?
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {["Classic", "Trendy", "Elegant", "Minimal"].map((style) => (
-                <label
-                  key={style}
-                  className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-                >
-                  <input
-                    type="radio"
-                    name="personalStyle"
-                    value={style}
-                    checked={formData.personalStyle === style}
-                    onChange={(e) =>
-                      handleInputChange("personalStyle", e.target.value)
-                    }
-                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                  />
-                  <span className="text-white/90 text-lg font-medium">
-                    {style}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 5:
-        return (
-          <div className="glass-card mobile-card">
-            <h2 className="mobile-heading font-bold text-white mb-6 text-center">
-              Your hair maintenance routine?
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {["Up to 6 weeks", "3 months", "6 months", "Yearly"].map(
-                (maintenance) => (
+          <>
+            <div className="glass-card mobile-card">
+              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+                Your present hair length?
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {["Short", "Medium", "Long", "Extra-long"].map((length) => (
                   <label
-                    key={maintenance}
+                    key={length}
                     className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
                   >
                     <input
                       type="radio"
-                      name="hairMaintenance"
-                      value={maintenance}
-                      checked={formData.hairMaintenance === maintenance}
+                      name="hairLength"
+                      value={length}
+                      checked={formData.hairLength === length}
                       onChange={(e) =>
-                        handleInputChange("hairMaintenance", e.target.value)
+                        handleInputChange("hairLength", e.target.value)
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
                     <span className="text-white/90 text-lg font-medium">
-                      {maintenance}
+                      {length}
                     </span>
                   </label>
-                )
-              )}
+                ))}
+              </div>
             </div>
-          </div>
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
+        );
+
+      case 5:
+        return (
+          <>
+            <div className="glass-card mobile-card">
+              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+                Your personal style?
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {["Classic", "Trendy", "Elegant", "Minimal"].map((style) => (
+                  <label
+                    key={style}
+                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <input
+                      type="radio"
+                      name="personalStyle"
+                      value={style}
+                      checked={formData.personalStyle === style}
+                      onChange={(e) =>
+                        handleInputChange("personalStyle", e.target.value)
+                      }
+                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                    />
+                    <span className="text-white/90 text-lg font-medium">
+                      {style}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
         );
 
       case 6:
         return (
-          <div className="glass-card mobile-card">
-            <h2 className="mobile-heading font-bold text-white mb-6 text-center">
-              Which occasions do you choose your hair treatments frequently?
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                "Birthdays/Anniversary",
-                "Work",
-                "Holiday",
-                "Weddings/Social events",
-              ].map((occasion) => (
-                <label
-                  key={occasion}
-                  className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-                >
-                  <input
-                    type="checkbox"
-                    checked={formData.specialOccasions.includes(occasion)}
-                    onChange={() =>
-                      handleArrayFieldChange("specialOccasions", occasion)
-                    }
-                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                  />
-                  <span className="text-white/90 text-lg font-medium">
-                    {occasion}
-                  </span>
-                </label>
-              ))}
+          <>
+            <div className="glass-card mobile-card">
+              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+                Your hair maintenance routine?
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {["Up to 6 weeks", "3 months", "6 months", "Yearly"].map(
+                  (maintenance) => (
+                    <label
+                      key={maintenance}
+                      className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                    >
+                      <input
+                        type="radio"
+                        name="hairMaintenance"
+                        value={maintenance}
+                        checked={formData.hairMaintenance === maintenance}
+                        onChange={(e) =>
+                          handleInputChange("hairMaintenance", e.target.value)
+                        }
+                        className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                      />
+                      <span className="text-white/90 text-lg font-medium">
+                        {maintenance}
+                      </span>
+                    </label>
+                  )
+                )}
+              </div>
             </div>
-          </div>
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
         );
 
       case 7:
         return (
-          <div className="glass-card mobile-card">
-            <h2 className="mobile-heading font-bold text-white mb-6 text-center">
-              Which treatments do you prefer presently or would like to try in
-              future?
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                "All over color",
-                "Balayage",
-                "Babylights",
-                "Highlights",
-                "Lowlights",
-                "Root melt",
-              ].map((treatment) => (
-                <label
-                  key={treatment}
-                  className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-                >
-                  <input
-                    type="checkbox"
-                    checked={formData.preferredTreatments.includes(treatment)}
-                    onChange={() =>
-                      handleArrayFieldChange("preferredTreatments", treatment)
-                    }
-                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                  />
-                  <span className="text-white/90 text-lg font-medium">
-                    {treatment}
-                  </span>
-                </label>
-              ))}
+          <>
+            <div className="glass-card mobile-card">
+              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+                Which occasions do you choose your hair treatments frequently?
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  "Birthdays/Anniversary",
+                  "Work",
+                  "Holiday",
+                  "Weddings/Social events",
+                ].map((occasion) => (
+                  <label
+                    key={occasion}
+                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.specialOccasions.includes(occasion)}
+                      onChange={() =>
+                        handleArrayFieldChange("specialOccasions", occasion)
+                      }
+                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                    />
+                    <span className="text-white/90 text-lg font-medium">
+                      {occasion}
+                    </span>
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
         );
 
       case 8:
         return (
-          <div className="glass-card mobile-card">
-            <div className="text-center mb-6">
-              <h2 className="mobile-heading font-bold text-white mb-4">
-                Upload some styles that inspire you
+          <>
+            <div className="glass-card mobile-card">
+              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+                Which treatments do you prefer presently or would like to try in
+                future?
               </h2>
-              <p className="text-white/70 mobile-text">
-                (You can skip to the next)
-              </p>
-            </div>
-
-            <div className="border-2 border-dashed border-coral/50 file-upload-area text-center hover:border-coral transition-colors bg-black/20">
-              <div className="text-4xl mb-4">☁️</div>
-              <p className="text-white/90 mb-4 mobile-text">Browse Files</p>
-              <p className="text-white/70 mb-6 mobile-description">
-                Drag and drop Files here
-              </p>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleFileUpload}
-                className="hidden"
-                id="file-upload"
-              />
-              <label
-                htmlFor="file-upload"
-                className="btn-primary cursor-pointer"
-              >
-                Choose Files
-              </label>
-            </div>
-
-            {formData.files.length > 0 && (
-              <div className="mt-6">
-                <h3 className="text-white font-semibold mb-3 mobile-text">
-                  Uploaded Files:
-                </h3>
-                <div className="space-y-2">
-                  {formData.files.map((file, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between bg-black/40 p-3 border border-white/10"
-                    >
-                      <span className="text-white/90 mobile-text truncate mr-2">
-                        {file.name}
-                      </span>
-                      <button
-                        onClick={() => removeFile(index)}
-                        className="text-red-300 hover:text-red-100 mobile-text flex-shrink-0"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  "All over color",
+                  "Balayage",
+                  "Babylights",
+                  "Highlights",
+                  "Lowlights",
+                  "Root melt",
+                ].map((treatment) => (
+                  <label
+                    key={treatment}
+                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.preferredTreatments.includes(treatment)}
+                      onChange={() =>
+                        handleArrayFieldChange("preferredTreatments", treatment)
+                      }
+                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                    />
+                    <span className="text-white/90 text-lg font-medium">
+                      {treatment}
+                    </span>
+                  </label>
+                ))}
               </div>
-            )}
-
-            <p className="text-white/60 mobile-description mt-4 text-center">
-              You can upload up to 5 image files (JPG, PNG, GIF, etc.)
-            </p>
-          </div>
+            </div>
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
         );
 
       case 9:
         return (
-          <div className="glass-card mobile-card">
-            <h2 className="mobile-heading font-bold text-white mb-6 text-center">
-              Work
-            </h2>
-            <p className="text-white/70 mobile-text mb-6 text-center">
-              (You can Skip to next)
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                { value: "Corporate", label: "Corporate" },
-                { value: "Stay at home", label: "Stay at home" },
-                { value: "Work from home", label: "Work from home" },
-                { value: "Entrepreneur", label: "Entrepreneur" },
-                { value: "Student", label: "Student" },
-              ].map((work) => (
-                <label
-                  key={work.value}
-                  className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-                >
-                  <input
-                    type="radio"
-                    name="workType"
-                    value={work.value}
-                    checked={formData.workType === work.value}
-                    onChange={(e) =>
-                      handleInputChange("workType", e.target.value)
-                    }
-                    className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                  />
-                  <span className="text-white/90 text-lg font-medium">
-                    {work.label}
-                  </span>
-                </label>
-              ))}
-            </div>
-
-            {(formData.workType === "Corporate" ||
-              formData.workType === "Work from home" ||
-              formData.workType === "Entrepreneur") && (
-              <div className="mt-6">
-                <label className="block text-white/90 font-medium mb-2 text-sm">
-                  Please specify industry
-                </label>
-                <input
-                  type="text"
-                  value={formData.workIndustry}
-                  onChange={(e) =>
-                    handleInputChange("workIndustry", e.target.value)
-                  }
-                  className="input-field placeholder-gray-300 placeholder-opacity-60"
-                  placeholder="e.g., Technology, Healthcare, Finance..."
-                />
+          <>
+            <div className="glass-card mobile-card">
+              <div className="text-center mb-6">
+                <h2 className="mobile-heading font-bold text-white mb-4">
+                  Upload some styles that inspire you
+                </h2>
+                <p className="text-white/70 mobile-text">
+                  (You can skip to the next)
+                </p>
               </div>
-            )}
-          </div>
+
+              <div className="border-2 border-dashed border-coral/50 file-upload-area text-center hover:border-coral transition-colors bg-black/20">
+                <div className="text-4xl mb-4">☁️</div>
+                <p className="text-white/90 mb-4 mobile-text">Browse Files</p>
+                <p className="text-white/70 mb-6 mobile-description">
+                  Drag and drop Files here
+                </p>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  id="file-upload"
+                />
+                <label
+                  htmlFor="file-upload"
+                  className="btn-primary cursor-pointer"
+                >
+                  Choose Files
+                </label>
+              </div>
+
+              {formData.files.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-white font-semibold mb-3 mobile-text">
+                    Uploaded Files:
+                  </h3>
+                  <div className="space-y-2">
+                    {formData.files.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between bg-black/40 p-3 border border-white/10"
+                      >
+                        <span className="text-white/90 mobile-text truncate mr-2">
+                          {file.name}
+                        </span>
+                        <button
+                          onClick={() => removeFile(index)}
+                          className="text-red-300 hover:text-red-100 mobile-text flex-shrink-0"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <p className="text-white/60 mobile-description mt-4 text-center">
+                You can upload up to 5 image files (JPG, PNG, GIF, etc.)
+              </p>
+            </div>
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
         );
 
       case 10:
         return (
-          <div className="glass-card mobile-card">
-            <div className="mb-6">
-              <h2 className="mobile-heading font-bold text-white mb-4 text-center">
-                Select Your Perfect Hair Days
+          <>
+            <div className="glass-card mobile-card">
+              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+                Work
               </h2>
-              <p className="text-white/80 mobile-text mb-2 text-center">
-                Select some of your most important days of the year when you
-                would like to look your very best. Let us send you a reminder 2
-                weeks before to consult or set an appointment.
+              <p className="text-white/70 mobile-text mb-6 text-center">
+                (You can Skip to next)
               </p>
-              <p className="text-white/60 italic mobile-description text-center">
-                (You can skip to the next)
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { value: "Corporate", label: "Corporate" },
+                  { value: "Stay at home", label: "Stay at home" },
+                  { value: "Work from home", label: "Work from home" },
+                  { value: "Entrepreneur", label: "Entrepreneur" },
+                  { value: "Student", label: "Student" },
+                ].map((work) => (
+                  <label
+                    key={work.value}
+                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <input
+                      type="radio"
+                      name="workType"
+                      value={work.value}
+                      checked={formData.workType === work.value}
+                      onChange={(e) =>
+                        handleInputChange("workType", e.target.value)
+                      }
+                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                    />
+                    <span className="text-white/90 text-lg font-medium">
+                      {work.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
+
+              {(formData.workType === "Corporate" ||
+                formData.workType === "Work from home" ||
+                formData.workType === "Entrepreneur") && (
+                <div className="mt-6">
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Please specify industry
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.workIndustry}
+                    onChange={(e) =>
+                      handleInputChange("workIndustry", e.target.value)
+                    }
+                    className="input-field placeholder-gray-300 placeholder-opacity-60"
+                    placeholder="e.g., Technology, Healthcare, Finance..."
+                  />
+                </div>
+              )}
+            </div>
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
               </p>
             </div>
+          </>
+        );
 
-            <div className="calendar-responsive">
-              <div>
-                <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <h3 className="mobile-heading font-bold text-white">
-                    Calendar
-                  </h3>
-                  <button
-                    onClick={clearSelection}
-                    disabled={formData.selectedDates.length === 0}
-                    className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-                  >
-                    🗑️ Clear All
-                  </button>
-                </div>
+      case 11:
+        return (
+          <>
+            <div className="glass-card mobile-card">
+              <div className="mb-6">
+                <h2 className="mobile-heading font-bold text-white mb-4 text-center">
+                  Select Your Perfect Hair Days
+                </h2>
+                <p className="text-white/80 mobile-text mb-2 text-center">
+                  Select some of your most important days of the year when you
+                  would like to look your very best. Let us send you a reminder
+                  2 weeks before to consult or set an appointment.
+                </p>
+                <p className="text-white/60 italic mobile-description text-center">
+                  (You can skip to the next)
+                </p>
+              </div>
 
-                <div className="bg-black/40 backdrop-blur-sm p-6 border border-white/10">
-                  <Calendar
-                    onClickDay={handleDayClick}
-                    value={null}
-                    tileClassName={tileClassName}
-                    tileContent={({ date, view }) => {
-                      if (view === "month") {
-                        const dateStr = format(date, "yyyy-MM-dd");
-                        const isSelected = formData.selectedDates.some(
-                          (selectedDate) =>
-                            format(selectedDate, "yyyy-MM-dd") === dateStr
-                        );
-                        return isSelected ? (
-                          <span className="calendar-selected-dot" />
-                        ) : null;
-                      }
-                      return null;
-                    }}
-                    className="w-full border-0 bg-transparent text-white"
-                    navigationLabel={({ date }) => format(date, "MMMM yyyy")}
-                    formatShortWeekday={(locale, date) => format(date, "EEE")}
-                  />
+              <div className="calendar-responsive">
+                <div>
+                  <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <h3 className="mobile-heading font-bold text-white">
+                      Calendar
+                    </h3>
+                    <button
+                      onClick={clearSelection}
+                      disabled={formData.selectedDates.length === 0}
+                      className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+                    >
+                      🗑️ Clear All
+                    </button>
+                  </div>
 
-                  <div className="mt-6">
-                    <div className="flex items-center justify-between bg-black/60 backdrop-blur-sm border border-white/10 p-3">
-                      <div className="flex items-center">
-                        <span className="text-white font-semibold text-sm">
-                          <span className="text-xl font-bold text-coral mr-1">
-                            {formData.selectedDates.length}
+                  <div className="bg-black/40 backdrop-blur-sm p-6 border border-white/10">
+                    <Calendar
+                      onClickDay={handleDayClick}
+                      value={null}
+                      tileClassName={tileClassName}
+                      tileContent={({ date, view }) => {
+                        if (view === "month") {
+                          const dateStr = format(date, "yyyy-MM-dd");
+                          const isSelected = formData.selectedDates.some(
+                            (selectedDate) =>
+                              format(selectedDate, "yyyy-MM-dd") === dateStr
+                          );
+                          return isSelected ? (
+                            <span className="calendar-selected-dot" />
+                          ) : null;
+                        }
+                        return null;
+                      }}
+                      className="w-full border-0 bg-transparent text-white"
+                      navigationLabel={({ date }) => format(date, "MMMM yyyy")}
+                      formatShortWeekday={(locale, date) => format(date, "EEE")}
+                    />
+
+                    <div className="mt-6">
+                      <div className="flex items-center justify-between bg-black/60 backdrop-blur-sm border border-white/10 p-3">
+                        <div className="flex items-center">
+                          <span className="text-white font-semibold text-sm">
+                            <span className="text-xl font-bold text-coral mr-1">
+                              {formData.selectedDates.length}
+                            </span>
+                            dates selected
                           </span>
-                          dates selected
-                        </span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div>
-                <h3 className="mobile-heading font-bold text-white mb-4">
-                  Selected Dates
-                </h3>
+                <div>
+                  <h3 className="mobile-heading font-bold text-white mb-4">
+                    Selected Dates
+                  </h3>
 
-                {formData.selectedDates.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="text-6xl mb-4">📅</div>
-                    <p className="text-white/70 mobile-text mb-2">
-                      No dates selected yet
-                    </p>
-                    <p className="text-white/50 mobile-description">
-                      Click on dates in the calendar to select them
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-3 selected-dates-container">
-                    {formData.selectedDates
-                      .sort((a, b) => a.getTime() - b.getTime())
-                      .map((date, index) => (
-                        <div key={index} className="date-card">
-                          <div className="flex items-center justify-between">
-                            <span className="font-semibold text-white mobile-text">
-                              {format(date, "EEEE, MMMM d, yyyy")}
-                            </span>
-                            <button
-                              onClick={() => {
-                                const dateStr = format(date, "yyyy-MM-dd");
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  selectedDates: prev.selectedDates.filter(
-                                    (d) => format(d, "yyyy-MM-dd") !== dateStr
-                                  ),
-                                }));
-                              }}
-                              className="text-red-300 hover:text-red-100 mobile-text font-medium transition-colors duration-300"
-                            >
-                              ✕ Remove
-                            </button>
+                  {formData.selectedDates.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="text-6xl mb-4">📅</div>
+                      <p className="text-white/70 mobile-text mb-2">
+                        No dates selected yet
+                      </p>
+                      <p className="text-white/50 mobile-description">
+                        Click on dates in the calendar to select them
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 selected-dates-container">
+                      {formData.selectedDates
+                        .sort((a, b) => a.getTime() - b.getTime())
+                        .map((date, index) => (
+                          <div key={index} className="date-card">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-white mobile-text">
+                                {format(date, "EEEE, MMMM d, yyyy")}
+                              </span>
+                              <button
+                                onClick={() => {
+                                  const dateStr = format(date, "yyyy-MM-dd");
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    selectedDates: prev.selectedDates.filter(
+                                      (d) => format(d, "yyyy-MM-dd") !== dateStr
+                                    ),
+                                  }));
+                                }}
+                                className="text-red-300 hover:text-red-100 mobile-text font-medium transition-colors duration-300"
+                              >
+                                ✕ Remove
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                  </div>
-                )}
+                        ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
         );
 
-      case 11:
+      case 12:
         // Hidden for now; kept for future use
         return null;
 
-      case 12:
+      case 13:
         return (
-          <div className="glass-card mobile-card">
-            <div className="text-center mb-8">
-              <h2 className="mobile-heading font-bold text-white mb-4">
-                Review & Submit
-              </h2>
-              <p className="text-white/80 mobile-text">
-                Please review your information before submitting
-              </p>
-            </div>
+          <>
+            <div className="glass-card mobile-card">
+              <div className="text-center mb-8">
+                <h2 className="mobile-heading font-bold text-white mb-4">
+                  Review & Submit
+                </h2>
+                <p className="text-white/80 mobile-text">
+                  Please review your information before submitting
+                </p>
+              </div>
 
-            {/* <div className="space-y-6">
+              {/* <div className="space-y-6">
               <div className="bg-black/20 p-4 rounded-lg">
                 <h3 className="text-white font-semibold mb-3">
                   Personal Information
@@ -1347,8 +1421,8 @@ export default function Home() {
               </div>
             </div> */}
 
-            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-              {/* <button
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                {/* <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !formData.email || formData.selectedDates.length === 0}
                 className="mobile-btn bg-gradient-to-r from-coral to-coral-dark hover:from-coral-dark hover:to-coral text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
@@ -1365,31 +1439,37 @@ export default function Home() {
                 )}
               </button> */}
 
-              <button
-                onClick={downloadPDFHandler}
-                disabled={
-                  isSubmitting ||
-                  isGeneratingPDF ||
-                  !formData.firstName ||
-                  !formData.lastName
-                }
-                className="mobile-btn relative overflow-hidden bg-gradient-to-r from-black to-gray-800 hover:from-gray-800 hover:to-black text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full hover:translate-x-full transition-transform duration-1000"></div>
-                {isGeneratingPDF ? (
-                  <span className="flex items-center justify-center relative z-10">
-                    <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
-                    <span className="text-lg">Generating...</span>
-                  </span>
-                ) : (
-                  <span className="flex items-center justify-center relative z-10">
-                    <div className="text-2xl mr-3">📄</div>
-                    <span className="text-lg">Download PDF</span>
-                  </span>
-                )}
-              </button>
+                <button
+                  onClick={downloadPDFHandler}
+                  disabled={
+                    isSubmitting ||
+                    isGeneratingPDF ||
+                    !formData.firstName ||
+                    !formData.lastName
+                  }
+                  className="mobile-btn relative overflow-hidden bg-gradient-to-r from-black to-gray-800 hover:from-gray-800 hover:to-black text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full hover:translate-x-full transition-transform duration-1000"></div>
+                  {isGeneratingPDF ? (
+                    <span className="flex items-center justify-center relative z-10">
+                      <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
+                      <span className="text-lg">Generating...</span>
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center relative z-10">
+                      <div className="text-2xl mr-3">📄</div>
+                      <span className="text-lg">Download PDF</span>
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
+            <div>
+              <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
         );
 
       default:
@@ -1414,7 +1494,7 @@ export default function Home() {
 
       <div className="relative z-10 container mx-auto mobile-container py-4 sm:py-6 lg:py-8">
         <header className="mobile-header">
-          <div className="inline-block p-3 sm:p-4 bg-black/40 backdrop-blur-sm border border-coral/30 mb-4 sm:mb-6">
+          <div className="inline-block p-3 sm:p-4 bg-black/40 backdrop-blur-sm border border-coral/30">
             <div className="mobile-heading font-bold text-white flex flex-row">
               <Image
                 src={mkhLogo}
@@ -1460,36 +1540,30 @@ export default function Home() {
         <div className="max-w-4xl mx-auto mobile-section">
           {renderSlide()}
 
-          {/* Footer Logo – hidden on first slide */}
-          {/* Footer Logo – hidden on first slide */}
+          {/* Sticky Footer Navigation */}
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+            <div
+              className="flex flex-row items-center justify-center gap-6
+                 bg-transparent backdrop-blur-md
+                 px-6 py-3 rounded-2xl"
+            >
+              <button
+                onClick={prevSlide}
+                disabled={currentSlide === 1}
+                className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+              >
+                ← Previous
+              </button>
 
-          <div className="fixed bottom-0 left-0 w-full z-50">
-  <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center sm:space-y-0 space-y-3 
-                  px-6 py-4 
-                  bg-black/10 backdrop-blur-lg 
-                  border-t border-white/10 
-                  shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
-    <button
-      onClick={prevSlide}
-      disabled={currentSlide === 1}
-      className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-    >
-      ← Previous
-    </button>
-
-    <button
-      onClick={nextSlide}
-      disabled={currentSlide === totalSlides}
-      className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-    >
-      Next →
-    </button>
-  </div>
-</div>
-
-
-
-
+              <button
+                onClick={nextSlide}
+                disabled={currentSlide === totalSlides}
+                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Notification */}

@@ -224,12 +224,12 @@ export default function Home() {
         console.log('Logo not available, continuing without logo');
       }
 
-      // Header title
-      pdf.setFontSize(24).setTextColor(255, 127, 80).setFont("helvetica", "bold");
+      // Header title - BIGGER
+      pdf.setFontSize(26).setTextColor(255, 127, 80).setFont("helvetica", "bold");
       pdf.text("MKH Hair Color Analysis", margin + 45, 35);
 
-      pdf.setFontSize(14).setTextColor(255, 255, 255).setFont("helvetica", "normal");
-      pdf.text("Professional Consultation Report", margin + 45, 42);
+      pdf.setFontSize(16).setTextColor(255, 255, 255).setFont("helvetica", "bold");
+      pdf.text("Professional Consultation Report", margin + 45, 45);
 
       // Header separator line
       pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
@@ -237,31 +237,31 @@ export default function Home() {
 
       yPosition = 70;
 
-      // ===== IMPROVED SECTION TITLE FUNCTION WITHOUT DIVIDERS =====
+      // ===== IMPROVED SECTION TITLE FUNCTION WITH BIGGER HEADINGS =====
       const addSection = (title: string, content: string[], y: number) => {
         // Check if we need a new page
-        if (y > pageHeight - margin - 50) {
+        if (y > pageHeight - margin - 60) {
           pdf.addPage();
           pdf.setFillColor(0, 0, 0);
           pdf.rect(0, 0, pageWidth, pageHeight, "F");
           y = margin;
         }
 
-        // Section title
-        pdf.setFontSize(16).setTextColor(255, 127, 80).setFont("helvetica", "bold");
+        // Section title - BIGGER
+        pdf.setFontSize(18).setTextColor(255, 127, 80).setFont("helvetica", "bold");
         pdf.text(title, margin, y);
 
         // Title underline
         pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
         pdf.line(margin, y + 2, margin + pdf.getTextWidth(title), y + 2);
 
-        let currentY = y + 10;
+        let currentY = y + 12;
 
         // Section content
         pdf.setFontSize(11).setTextColor(255, 255, 255).setFont("helvetica", "normal");
 
         content.forEach((line) => {
-          if (currentY > pageHeight - margin - 10) {
+          if (currentY > pageHeight - margin - 15) {
             pdf.addPage();
             pdf.setFillColor(0, 0, 0);
             pdf.rect(0, 0, pageWidth, pageHeight, "F");
@@ -269,25 +269,25 @@ export default function Home() {
           }
 
           if (line.trim() === "") {
-            currentY += 5;
+            currentY += 6;
             return;
           }
 
           const lines = pdf.splitTextToSize(line, contentWidth);
           lines.forEach((textLine: string) => {
-            if (currentY > pageHeight - margin - 5) {
+            if (currentY > pageHeight - margin - 10) {
               pdf.addPage();
               pdf.setFillColor(0, 0, 0);
               pdf.rect(0, 0, pageWidth, pageHeight, "F");
               currentY = margin + 10;
             }
             pdf.text(textLine, margin, currentY);
-            currentY += 5;
+            currentY += 6;
           });
           currentY += 2;
         });
 
-        // REMOVED THE DIVIDER LINE - Just add spacing
+        // Add spacing
         currentY += 10;
 
         return currentY;
@@ -325,6 +325,31 @@ export default function Home() {
 
       yPosition = addSection("Hair Analysis Profile", hairAnalysisContent, yPosition);
 
+      // ===== SCHEDULED PERFECT HAIR DAYS ON SECOND PAGE =====
+      if (formData.selectedDates && formData.selectedDates.length > 0) {
+        // Check if we need a new page for Scheduled Perfect Hair Days
+        if (yPosition > pageHeight - margin - 100) {
+          pdf.addPage();
+          pdf.setFillColor(0, 0, 0);
+          pdf.rect(0, 0, pageWidth, pageHeight, "F");
+          yPosition = margin;
+        }
+
+        const sortedDates = [...formData.selectedDates].sort((a, b) => a.getTime() - b.getTime());
+
+        const datesContent = [
+          "Your scheduled appointment dates:",
+          "",
+          ...sortedDates.map((date: Date, index: number) =>
+            `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
+          ),
+          "",
+          `Total appointments scheduled: ${formData.selectedDates.length}`
+        ];
+
+        yPosition = addSection("Scheduled Perfect Hair Days", datesContent, yPosition);
+      }
+
       // ===== RECOMMENDATIONS SECTION =====
       const combination: HairCombination = {
         hairColor: formData.selectedHairColor,
@@ -350,152 +375,118 @@ export default function Home() {
         ];
 
         yPosition = addSection("Professional Recommendations", recommendationsContent, yPosition);
-
-        // ==== RECOMMENDED STYLES IMAGES ====
-        if (images.length > 0) {
-          // Check if we need a new page for images
-          if (yPosition > pageHeight - 200) {
-            pdf.addPage();
-            pdf.setFillColor(0, 0, 0);
-            pdf.rect(0, 0, pageWidth, pageHeight, "F");
-            yPosition = margin;
-          }
-
-          // Image section title
-          pdf.setFontSize(16).setTextColor(255, 127, 80).setFont("helvetica", "bold");
-          pdf.text("Recommended Style Visuals", margin, yPosition);
-
-          pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-          pdf.line(margin, yPosition + 2, margin + pdf.getTextWidth("Recommended Style Visuals"), yPosition + 2);
-
-          yPosition += 15;
-
-          const imagesToProcess = images.slice(0, 4);
-          const maxImageWidth = (contentWidth - 10) / 2;
-          const maxImageHeight = 80;
-
-          let currentRowY = yPosition;
-          let maxRowY = currentRowY;
-
-          for (let index = 0; index < imagesToProcess.length; index++) {
-            const col = index % 2;
-            const xPos = margin + col * (maxImageWidth + 10);
-
-            // Check if we need a new page for this row
-            if (currentRowY + maxImageHeight + 40 > pageHeight - margin) {
-              pdf.addPage();
-              pdf.setFillColor(0, 0, 0);
-              pdf.rect(0, 0, pageWidth, pageHeight, "F");
-              currentRowY = margin + 20;
-              maxRowY = currentRowY;
-            }
-
-            try {
-              const dataUrl = await fetchImageAsDataURL(imagesToProcess[index]);
-              if (dataUrl) {
-                const fmt = imagesToProcess[index].toLowerCase().includes(".png") ? "PNG" : "JPEG";
-
-                // Get image dimensions using jsPDF's internal method
-                const imgProps = pdf.getImageProperties(dataUrl);
-                const imgWidth = imgProps.width;
-                const imgHeight = imgProps.height;
-                const aspectRatio = imgWidth / imgHeight;
-
-                // Calculate dimensions to fit within our container while maintaining aspect ratio
-                let finalWidth = maxImageWidth;
-                let finalHeight = maxImageWidth / aspectRatio;
-
-                // If calculated height exceeds max height, scale down
-                if (finalHeight > maxImageHeight) {
-                  finalHeight = maxImageHeight;
-                  finalWidth = maxImageHeight * aspectRatio;
-                }
-
-                // Center the image in the allocated space
-                const xOffset = (maxImageWidth - finalWidth) / 2;
-                const yOffset = (maxImageHeight - finalHeight) / 2;
-
-                pdf.addImage(dataUrl, fmt, xPos + xOffset, currentRowY + yOffset, finalWidth, finalHeight);
-
-                // Image label
-                pdf.setFontSize(9).setTextColor(255, 255, 255).setFont("helvetica", "bold");
-                pdf.text(`Style ${index + 1}`, xPos + maxImageWidth / 2 - 10, currentRowY + maxImageHeight + 8);
-              }
-            } catch (error) {
-              console.error('Error loading image:', error);
-              // Fallback rectangle
-              pdf.setFillColor(50, 50, 50);
-              pdf.rect(xPos, currentRowY, maxImageWidth, maxImageHeight, "F");
-              pdf.setFontSize(8).setTextColor(255, 127, 80);
-              pdf.text("Image Preview", xPos + maxImageWidth / 2 - 15, currentRowY + maxImageHeight / 2);
-              pdf.setFontSize(9).setTextColor(255, 255, 255).setFont("helvetica", "bold");
-              pdf.text(`Style ${index + 1}`, xPos + maxImageWidth / 2 - 10, currentRowY + maxImageHeight + 8);
-            }
-
-            // Track the maximum Y position in this row
-            const currentImageBottom = currentRowY + maxImageHeight + 25;
-            if (currentImageBottom > maxRowY) {
-              maxRowY = currentImageBottom;
-            }
-
-            // Move to next row after every 2 images
-            if (col === 1) {
-              currentRowY = maxRowY;
-            }
-          }
-
-          // Update yPosition to the bottom of the images section
-          yPosition = maxRowY;
-
-          // REMOVED THE DIVIDER AFTER IMAGES - Just add spacing
-          yPosition += 15;
-        }
       }
 
-      // ===== SCHEDULED PERFECT HAIR DAYS =====
-      if (formData.selectedDates && formData.selectedDates.length > 0) {
-        // Check if we need a new page
-        if (yPosition > pageHeight - margin - 100) {
+      // ===== RECOMMENDED STYLES IMAGES ON LAST PAGE =====
+      if (images.length > 0) {
+        // Check if we need a new page for images
+        if (yPosition > pageHeight - margin - 150) {
           pdf.addPage();
           pdf.setFillColor(0, 0, 0);
           pdf.rect(0, 0, pageWidth, pageHeight, "F");
           yPosition = margin;
         }
 
-        const sortedDates = [...formData.selectedDates].sort((a, b) => a.getTime() - b.getTime());
+        // Image section title - BIGGER
+        pdf.setFontSize(18).setTextColor(255, 127, 80).setFont("helvetica", "bold");
+        pdf.text("Recommended Style Visuals", margin, yPosition);
 
-        const datesContent = [
-          "Your scheduled appointment dates:",
-          "",
-          ...sortedDates.map((date: Date, index: number) =>
-            `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
-          ),
-          "",
-          `Total appointments scheduled: ${formData.selectedDates.length}`
-        ];
+        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
+        pdf.line(margin, yPosition + 2, margin + pdf.getTextWidth("Recommended Style Visuals"), yPosition + 2);
 
-        yPosition = addSection("Scheduled Perfect Hair Days", datesContent, yPosition);
+        yPosition += 15;
+
+        const imagesToProcess = images.slice(0, 4);
+        const maxImageWidth = (contentWidth - 10) / 2;
+        const maxImageHeight = 80;
+
+        let currentRowY = yPosition;
+        let maxRowY = currentRowY;
+
+        for (let index = 0; index < imagesToProcess.length; index++) {
+          const col = index % 2;
+          const xPos = margin + col * (maxImageWidth + 10);
+
+          // Check if we need a new page for this row
+          if (currentRowY + maxImageHeight + 40 > pageHeight - margin) {
+            pdf.addPage();
+            pdf.setFillColor(0, 0, 0);
+            pdf.rect(0, 0, pageWidth, pageHeight, "F");
+            currentRowY = margin + 20;
+            maxRowY = currentRowY;
+          }
+
+          try {
+            const dataUrl = await fetchImageAsDataURL(imagesToProcess[index]);
+            if (dataUrl) {
+              const fmt = imagesToProcess[index].toLowerCase().includes(".png") ? "PNG" : "JPEG";
+
+              // Get image dimensions using jsPDF's internal method
+              const imgProps = pdf.getImageProperties(dataUrl);
+              const imgWidth = imgProps.width;
+              const imgHeight = imgProps.height;
+              const aspectRatio = imgWidth / imgHeight;
+
+              // Calculate dimensions to fit within our container while maintaining aspect ratio
+              let finalWidth = maxImageWidth;
+              let finalHeight = maxImageWidth / aspectRatio;
+
+              // If calculated height exceeds max height, scale down
+              if (finalHeight > maxImageHeight) {
+                finalHeight = maxImageHeight;
+                finalWidth = maxImageHeight * aspectRatio;
+              }
+
+              // Center the image in the allocated space
+              const xOffset = (maxImageWidth - finalWidth) / 2;
+              const yOffset = (maxImageHeight - finalHeight) / 2;
+
+              pdf.addImage(dataUrl, fmt, xPos + xOffset, currentRowY + yOffset, finalWidth, finalHeight);
+
+              // Image label
+              pdf.setFontSize(10).setTextColor(255, 255, 255).setFont("helvetica", "bold");
+              pdf.text(`Style ${index + 1}`, xPos + maxImageWidth / 2 - 10, currentRowY + maxImageHeight + 10);
+            }
+          } catch (error) {
+            console.error('Error loading image:', error);
+            // Fallback rectangle
+            pdf.setFillColor(50, 50, 50);
+            pdf.rect(xPos, currentRowY, maxImageWidth, maxImageHeight, "F");
+            pdf.setFontSize(9).setTextColor(255, 127, 80);
+            pdf.text("Image Preview", xPos + maxImageWidth / 2 - 15, currentRowY + maxImageHeight / 2);
+            pdf.setFontSize(10).setTextColor(255, 255, 255).setFont("helvetica", "bold");
+            pdf.text(`Style ${index + 1}`, xPos + maxImageWidth / 2 - 10, currentRowY + maxImageHeight + 10);
+          }
+
+          // Track the maximum Y position in this row
+          const currentImageBottom = currentRowY + maxImageHeight + 25;
+          if (currentImageBottom > maxRowY) {
+            maxRowY = currentImageBottom;
+          }
+
+          // Move to next row after every 2 images
+          if (col === 1) {
+            currentRowY = maxRowY;
+          }
+        }
       }
 
-      // ===== IMPROVED FOOTER ON EACH PAGE =====
-      const totalPages = pdf.internal.pages.length;
+      // ===== FIXED FOOTER ON EACH PAGE =====
+const totalPages = (pdf.internal as any).getNumberOfPages();
 
       for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
 
         const footerY = pageHeight - 15;
 
-        // Only add footer if there's enough space
-        if (footerY > margin) {
-          // Footer separator - KEEP THIS ONE ONLY
-          pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
-          pdf.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
+        // Footer separator
+        pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
+        pdf.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
 
-          // Footer text
-          pdf.setFontSize(7).setTextColor(150, 150, 150).setFont("helvetica", "normal");
-          pdf.text("MKH Professional Hair Care - Confidential Client Report", margin, footerY);
-          pdf.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, footerY);
-        }
+        // Footer text - FIXED PAGE NUMBERING
+        pdf.setFontSize(8).setTextColor(150, 150, 150).setFont("helvetica", "normal");
+        pdf.text("MKH Professional Hair Care - Confidential Client Report", margin, footerY);
+        pdf.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, footerY);
       }
 
       // ===== SAVE FILE =====

@@ -72,7 +72,7 @@ export default function Home() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [message, setMessage] = useState("");
 
-  const totalSlides = 13;
+  const totalSlides = 12;
 
   const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -1345,12 +1345,7 @@ export default function Home() {
             </div>
           </>
         );
-
       case 12:
-        // Hidden for now; kept for future use
-        return null;
-
-      case 13:
         return (
           <>
             <div className="glass-card mobile-card">

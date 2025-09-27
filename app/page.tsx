@@ -149,20 +149,18 @@ export default function Home() {
   };
 
   const nextSlide = () => {
-    if (currentSlide < totalSlides) {
-      const next = currentSlide + 1;
-      // Temporarily skip slide 11
-      setCurrentSlide(next === 11 ? 12 : next);
-    }
-  };
+  if (currentSlide < totalSlides) {
+    setCurrentSlide(currentSlide + 1);
+  }
+};
+
 
   const prevSlide = () => {
-    if (currentSlide > 1) {
-      const prev = currentSlide - 1;
-      // Temporarily skip slide 11
-      setCurrentSlide(prev === 11 ? 10 : prev);
-    }
-  };
+  if (currentSlide > 1) {
+    setCurrentSlide(currentSlide - 1);
+  }
+};
+
 
   const goToSlide = (slide: number) => {
     setCurrentSlide(slide);

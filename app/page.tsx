@@ -4,7 +4,7 @@ import { useState } from "react";
 import Calendar from "react-calendar";
 import { format } from "date-fns";
 import jsPDF from "jspdf";
-import 'jspdf-autotable';
+import "jspdf-autotable";
 import "react-calendar/dist/Calendar.css";
 import ImageGallery from "./components/ImageGallery";
 import {
@@ -217,16 +217,22 @@ export default function Home() {
           reader.readAsDataURL(logoBlob);
         });
 
-        pdf.addImage(logoBase64 as string, 'JPEG', margin, 15, 40, 40);
+        pdf.addImage(logoBase64 as string, "JPEG", margin, 15, 40, 40);
       } catch (error) {
-        console.log('Logo not available, continuing without logo');
+        console.log("Logo not available, continuing without logo");
       }
 
       // Header title - BIGGER
-      pdf.setFontSize(26).setTextColor(255, 127, 80).setFont("helvetica", "bold");
+      pdf
+        .setFontSize(26)
+        .setTextColor(255, 127, 80)
+        .setFont("helvetica", "bold");
       pdf.text("MKH Hair Color Analysis", margin + 45, 35);
 
-      pdf.setFontSize(16).setTextColor(255, 255, 255).setFont("helvetica", "bold");
+      pdf
+        .setFontSize(16)
+        .setTextColor(255, 255, 255)
+        .setFont("helvetica", "bold");
       pdf.text("Professional Consultation Report", margin + 45, 45);
 
       // Header separator line
@@ -246,7 +252,10 @@ export default function Home() {
         }
 
         // Section title - BIGGER
-        pdf.setFontSize(18).setTextColor(255, 127, 80).setFont("helvetica", "bold");
+        pdf
+          .setFontSize(18)
+          .setTextColor(255, 127, 80)
+          .setFont("helvetica", "bold");
         pdf.text(title, margin, y);
 
         // Title underline
@@ -256,7 +265,10 @@ export default function Home() {
         let currentY = y + 12;
 
         // Section content
-        pdf.setFontSize(11).setTextColor(255, 255, 255).setFont("helvetica", "normal");
+        pdf
+          .setFontSize(11)
+          .setTextColor(255, 255, 255)
+          .setFont("helvetica", "normal");
 
         content.forEach((line) => {
           if (currentY > pageHeight - margin - 15) {
@@ -296,7 +308,10 @@ export default function Home() {
         `Name: ${formData.firstName} ${formData.lastName}`,
         `Analysis Date: ${format(new Date(), "MMMM d, yyyy")}`,
         `Reference: MKH-${Date.now().toString().slice(-6)}`,
-        `Report generated on: ${format(new Date(), "EEEE, MMMM d, yyyy 'at' h:mm a")}`
+        `Report generated on: ${format(
+          new Date(),
+          "EEEE, MMMM d, yyyy 'at' h:mm a"
+        )}`,
       ];
 
       yPosition = addSection("Client Summary", summaryContent, yPosition);
@@ -305,10 +320,14 @@ export default function Home() {
       const personalInfoContent = [
         `Full Name: ${formData.firstName} ${formData.lastName}`,
         `Email: ${formData.email}`,
-        `Phone: ${formData.phone || "Not provided"}`
+        `Phone: ${formData.phone || "Not provided"}`,
       ];
 
-      yPosition = addSection("Personal Information", personalInfoContent, yPosition);
+      yPosition = addSection(
+        "Personal Information",
+        personalInfoContent,
+        yPosition
+      );
 
       // ===== HAIR ANALYSIS SECTION =====
       const hairAnalysisContent = [
@@ -318,10 +337,16 @@ export default function Home() {
         `Hair Texture: ${formData.hairTexture || "Not specified"}`,
         `Hair Length: ${formData.hairLength || "Not specified"}`,
         `Personal Style: ${formData.personalStyle || "Not specified"}`,
-        `Maintenance Preference: ${formData.hairMaintenance || "Not specified"}`
+        `Maintenance Preference: ${
+          formData.hairMaintenance || "Not specified"
+        }`,
       ];
 
-      yPosition = addSection("Hair Analysis Profile", hairAnalysisContent, yPosition);
+      yPosition = addSection(
+        "Hair Analysis Profile",
+        hairAnalysisContent,
+        yPosition
+      );
 
       // ===== SCHEDULED PERFECT HAIR DAYS ON SECOND PAGE =====
       if (formData.selectedDates && formData.selectedDates.length > 0) {
@@ -333,19 +358,26 @@ export default function Home() {
           yPosition = margin;
         }
 
-        const sortedDates = [...formData.selectedDates].sort((a, b) => a.getTime() - b.getTime());
+        const sortedDates = [...formData.selectedDates].sort(
+          (a, b) => a.getTime() - b.getTime()
+        );
 
         const datesContent = [
           "Your scheduled appointment dates:",
           "",
-          ...sortedDates.map((date: Date, index: number) =>
-            `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
+          ...sortedDates.map(
+            (date: Date, index: number) =>
+              `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
           ),
           "",
-          `Total appointments scheduled: ${formData.selectedDates.length}`
+          `Total appointments scheduled: ${formData.selectedDates.length}`,
         ];
 
-        yPosition = addSection("Scheduled Perfect Hair Days", datesContent, yPosition);
+        yPosition = addSection(
+          "Scheduled Perfect Hair Days",
+          datesContent,
+          yPosition
+        );
       }
 
       // ===== RECOMMENDATIONS SECTION =====
@@ -369,10 +401,16 @@ export default function Home() {
           recommendation.hairCare,
           "",
           "Maintenance Schedule:",
-          ...recommendation.maintenanceSchedule.map(schedule => `• ${schedule}`)
+          ...recommendation.maintenanceSchedule.map(
+            (schedule) => `• ${schedule}`
+          ),
         ];
 
-        yPosition = addSection("Professional Recommendations", recommendationsContent, yPosition);
+        yPosition = addSection(
+          "Professional Recommendations",
+          recommendationsContent,
+          yPosition
+        );
       }
 
       // ===== RECOMMENDED STYLES IMAGES ON LAST PAGE =====
@@ -386,11 +424,19 @@ export default function Home() {
         }
 
         // Image section title - BIGGER
-        pdf.setFontSize(18).setTextColor(255, 127, 80).setFont("helvetica", "bold");
+        pdf
+          .setFontSize(18)
+          .setTextColor(255, 127, 80)
+          .setFont("helvetica", "bold");
         pdf.text("Recommended Style Visuals", margin, yPosition);
 
         pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-        pdf.line(margin, yPosition + 2, margin + pdf.getTextWidth("Recommended Style Visuals"), yPosition + 2);
+        pdf.line(
+          margin,
+          yPosition + 2,
+          margin + pdf.getTextWidth("Recommended Style Visuals"),
+          yPosition + 2
+        );
 
         yPosition += 15;
 
@@ -417,7 +463,9 @@ export default function Home() {
           try {
             const dataUrl = await fetchImageAsDataURL(imagesToProcess[index]);
             if (dataUrl) {
-              const fmt = imagesToProcess[index].toLowerCase().includes(".png") ? "PNG" : "JPEG";
+              const fmt = imagesToProcess[index].toLowerCase().includes(".png")
+                ? "PNG"
+                : "JPEG";
 
               // Get image dimensions using jsPDF's internal method
               const imgProps = pdf.getImageProperties(dataUrl);
@@ -439,21 +487,46 @@ export default function Home() {
               const xOffset = (maxImageWidth - finalWidth) / 2;
               const yOffset = (maxImageHeight - finalHeight) / 2;
 
-              pdf.addImage(dataUrl, fmt, xPos + xOffset, currentRowY + yOffset, finalWidth, finalHeight);
+              pdf.addImage(
+                dataUrl,
+                fmt,
+                xPos + xOffset,
+                currentRowY + yOffset,
+                finalWidth,
+                finalHeight
+              );
 
               // Image label
-              pdf.setFontSize(10).setTextColor(255, 255, 255).setFont("helvetica", "bold");
-              pdf.text(`Style ${index + 1}`, xPos + maxImageWidth / 2 - 10, currentRowY + maxImageHeight + 10);
+              pdf
+                .setFontSize(10)
+                .setTextColor(255, 255, 255)
+                .setFont("helvetica", "bold");
+              pdf.text(
+                `Style ${index + 1}`,
+                xPos + maxImageWidth / 2 - 10,
+                currentRowY + maxImageHeight + 10
+              );
             }
           } catch (error) {
-            console.error('Error loading image:', error);
+            console.error("Error loading image:", error);
             // Fallback rectangle
             pdf.setFillColor(50, 50, 50);
             pdf.rect(xPos, currentRowY, maxImageWidth, maxImageHeight, "F");
             pdf.setFontSize(9).setTextColor(255, 127, 80);
-            pdf.text("Image Preview", xPos + maxImageWidth / 2 - 15, currentRowY + maxImageHeight / 2);
-            pdf.setFontSize(10).setTextColor(255, 255, 255).setFont("helvetica", "bold");
-            pdf.text(`Style ${index + 1}`, xPos + maxImageWidth / 2 - 10, currentRowY + maxImageHeight + 10);
+            pdf.text(
+              "Image Preview",
+              xPos + maxImageWidth / 2 - 15,
+              currentRowY + maxImageHeight / 2
+            );
+            pdf
+              .setFontSize(10)
+              .setTextColor(255, 255, 255)
+              .setFont("helvetica", "bold");
+            pdf.text(
+              `Style ${index + 1}`,
+              xPos + maxImageWidth / 2 - 10,
+              currentRowY + maxImageHeight + 10
+            );
           }
 
           // Track the maximum Y position in this row
@@ -470,7 +543,7 @@ export default function Home() {
       }
 
       // ===== FIXED FOOTER ON EACH PAGE =====
-const totalPages = (pdf.internal as any).getNumberOfPages();
+      const totalPages = (pdf.internal as any).getNumberOfPages();
 
       for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
@@ -482,13 +555,26 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
         pdf.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
 
         // Footer text - FIXED PAGE NUMBERING
-        pdf.setFontSize(8).setTextColor(150, 150, 150).setFont("helvetica", "normal");
-        pdf.text("MKH Professional Hair Care - Confidential Client Report", margin, footerY);
-        pdf.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, footerY);
+        pdf
+          .setFontSize(8)
+          .setTextColor(150, 150, 150)
+          .setFont("helvetica", "normal");
+        pdf.text(
+          "MKH Professional Hair Care - Confidential Client Report",
+          margin,
+          footerY
+        );
+        pdf.text(
+          `Page ${i} of ${totalPages}`,
+          pageWidth - margin - 20,
+          footerY
+        );
       }
 
       // ===== SAVE FILE =====
-      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${formData.lastName}_${format(new Date(), "yyyyMMdd")}.pdf`;
+      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${
+        formData.lastName
+      }_${format(new Date(), "yyyyMMdd")}.pdf`;
       pdf.save(fileName);
 
       setMessage("PDF report generated successfully!");
@@ -500,7 +586,7 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
     }
   };
   const handleSubmit = async () => {
-    console.log(formData.email, "email")
+    console.log(formData.email, "email");
     if (!formData.email || formData.selectedDates.length === 0) {
       setMessage("Please enter an email address and select at least one date.");
       return;
@@ -528,7 +614,6 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       const data = await response.json();
 
       if (response.ok) {
-
         setFormData({
           firstName: "",
           lastName: "",
@@ -573,7 +658,10 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
             <div className="glass-card mobile-card mb-9">
               {/* Title */}
               <div className="text-center mb-12">
-                <h3 className="mobile-heading font-bold text-orange-300 mb-4">
+                <h3
+                  className="mobile-heading font-bold mb-4"
+                  style={{ color: "#ff7f50" }}
+                >
                   Tell us a little about yourself
                 </h3>
               </div>
@@ -590,8 +678,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                     onChange={(e) =>
                       handleInputChange("firstName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.firstName ? "bg-black" : "bg-transparent"
-                      }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+                      formData.firstName ? "bg-black" : "bg-transparent"
+                    }`}
                     placeholder="Enter your first name"
                   />
                 </div>
@@ -606,8 +695,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                     onChange={(e) =>
                       handleInputChange("lastName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.lastName ? "bg-black" : "bg-transparent"
-                      }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+                      formData.lastName ? "bg-black" : "bg-transparent"
+                    }`}
                     placeholder="Enter your last name"
                   />
                 </div>
@@ -650,7 +740,6 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                     maxLength={12} // formatted dashes ke sath 12 chars tak
                   />
                 </div>
-
               </div>
             </div>
           </>
@@ -659,13 +748,18 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       case 2:
         return (
           <>
-            <div className="glass-card mobile-card mb-9">
+            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               {/* Hair Analysis */}
               <div className="mb-8">
-                <h3 className="text-orange-300 font-semibold mb-6">Hair Analysis</h3>
+                <h3
+                  className=" font-semibold mb-6 text-lg md:text-xl"
+                  style={{ color: "#ff7f50" }}
+                >
+                  Hair Analysis
+                </h3>
 
                 {/* Row 1 */}
-                <div className="form-grid gap-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div>
                     <label className="block text-white/90 font-medium mb-2 text-sm">
                       Your Natural Hair Color
@@ -675,12 +769,13 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                       onChange={(e) =>
                         handleInputChange("naturalHairColor", e.target.value)
                       }
-                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.naturalHairColor === ""
-                        ? "text-gray-300 opacity-60"
-                        : "text-white"
-                        }`}
+                      className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                        formData.naturalHairColor === ""
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
+                      }`}
                     >
-                      <option value="" disabled className="opacity-0">
+                      <option value="" disabled className="opacity-60">
                         Select hair color
                       </option>
                       <option value="Black">Black</option>
@@ -699,12 +794,13 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                       onChange={(e) =>
                         handleInputChange("skinColor", e.target.value)
                       }
-                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.skinColor === ""
-                        ? "text-gray-300 opacity-60"
-                        : "text-white"
-                        }`}
+                      className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                        formData.skinColor === ""
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
+                      }`}
                     >
-                      <option value="" disabled>
+                      <option value="" disabled className="opacity-60">
                         Select skin color
                       </option>
                       <option value="Dark">Dark</option>
@@ -716,7 +812,7 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                 </div>
 
                 {/* Row 2 */}
-                <div className="form-grid gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-white/90 font-medium mb-2 text-sm">
                       Eye Color
@@ -726,12 +822,13 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                       onChange={(e) =>
                         handleInputChange("eyeColor", e.target.value)
                       }
-                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.eyeColor === ""
-                        ? "text-gray-300 opacity-60"
-                        : "text-white"
-                        }`}
+                      className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                        formData.eyeColor === ""
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
+                      }`}
                     >
-                      <option value="" disabled>
+                      <option value="" disabled className="opacity-60">
                         Select eye color
                       </option>
                       <option value="Black">Black</option>
@@ -753,12 +850,13 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                       onChange={(e) =>
                         handleInputChange("hairTexture", e.target.value)
                       }
-                      className={`input-field bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.hairTexture === ""
-                        ? "text-gray-300 opacity-60"
-                        : "text-white"
-                        }`}
+                      className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                        formData.hairTexture === ""
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
+                      }`}
                     >
-                      <option value="" disabled>
+                      <option value="" disabled className="opacity-60">
                         Select hair texture
                       </option>
                       <option value="Fine">Fine</option>
@@ -782,11 +880,13 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
         return (
           <>
             <div
-              className="glass-card mobile-card"
-              style={{ marginBottom: "0" }}
+               className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]"
             >
               <div className="text-center mb-6">
-                <h3 className="mobile-heading font-bold text-orange-300 mb-4">
+                <h3
+                  className="mobile-heading font-bold  mb-4"
+                  style={{ color: "#ff7f50" }}
+                >
                   Choose Your Hair Color
                 </h3>
               </div>
@@ -829,8 +929,11 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       case 4:
         return (
           <>
-            <div className="glass-card mobile-card">
-              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
+            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+              <h3
+                className="mobile-heading font-bold mb-6 text-center"
+                style={{ color: "#ff7f50" }}
+              >
                 Your present hair length?
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -867,8 +970,11 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       case 5:
         return (
           <>
-            <div className="glass-card mobile-card">
-              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
+            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+              <h3
+                className="mobile-heading font-bold mb-6 text-center"
+                style={{ color: "#ff7f50" }}
+              >
                 Your personal style?
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -905,8 +1011,11 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       case 6:
         return (
           <>
-            <div className="glass-card mobile-card">
-              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
+            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+              <h3
+                className="mobile-heading font-bold  mb-6 text-center"
+                style={{ color: "#ff7f50" }}
+              >
                 Your hair maintenance routine?
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -945,8 +1054,11 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       case 7:
         return (
           <>
-            <div className="glass-card mobile-card">
-              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
+            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+              <h3
+                className="mobile-heading font-bold mb-6 text-center"
+                style={{ color: "#ff7f50" }}
+              >
                 Which occasions do you choose your hair treatments frequently?
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -986,8 +1098,11 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       case 8:
         return (
           <>
-            <div className="glass-card mobile-card">
-              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
+            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+              <h3
+                className="mobile-heading font-bold  mb-6 text-center"
+                style={{ color: "#ff7f50" }}
+              >
                 Which treatments do you prefer presently or would like to try in
                 future?
               </h3>
@@ -1030,9 +1145,12 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       case 9:
         return (
           <>
-            <div className="glass-card mobile-card">
+            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <div className="text-center mb-6">
-                <h3 className="mobile-heading font-bold text-orange-300 mb-4">
+                <h3
+                  className="mobile-heading font-bold  mb-4"
+                  style={{ color: "#ff7f50" }}
+                >
                   Upload some styles that inspire you
                 </h3>
                 <p className="text-white/70 mobile-text">
@@ -1103,8 +1221,11 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       case 10:
         return (
           <>
-            <div className="glass-card mobile-card">
-              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
+            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+              <h3
+                className="mobile-heading font-bold mb-6 text-center"
+                style={{ color: "#ff7f50" }}
+              >
                 Work
               </h3>
               <p className="text-white/70 mobile-text mb-6 text-center">
@@ -1142,21 +1263,21 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
               {(formData.workType === "Corporate" ||
                 formData.workType === "Work from home" ||
                 formData.workType === "Entrepreneur") && (
-                  <div className="mt-6">
-                    <label className="block text-white/90 font-medium mb-2 text-sm">
-                      Please specify industry
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.workIndustry}
-                      onChange={(e) =>
-                        handleInputChange("workIndustry", e.target.value)
-                      }
-                      className="input-field placeholder-gray-300 placeholder-opacity-60"
-                      placeholder="e.g., Technology, Healthcare, Finance..."
-                    />
-                  </div>
-                )}
+                <div className="mt-6">
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Please specify industry
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.workIndustry}
+                    onChange={(e) =>
+                      handleInputChange("workIndustry", e.target.value)
+                    }
+                    className="input-field placeholder-gray-300 placeholder-opacity-60"
+                    placeholder="e.g., Technology, Healthcare, Finance..."
+                  />
+                </div>
+              )}
             </div>
             <div>
               <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
@@ -1171,7 +1292,10 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
           <>
             <div className="glass-card mobile-card">
               <div className="mb-6">
-                <h3 className="mobile-heading font-bold text-orange-300 mb-4 text-center">
+                <h3
+                  className="mobile-heading font-bold mb-4 text-center"
+                  style={{ color: "#ff7f50" }}
+                >
                   Select Your Perfect Hair Days
                 </h3>
                 <p className="text-white/80 mobile-text mb-2 text-center">
@@ -1294,9 +1418,10 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
       case 12:
         return (
           <>
-            <div className="glass-card mobile-card">
+            <div className="glass-card mobile-card"
+            style={{maxWidth:"896px" , height:"432px"}}>
               <div className="text-center mb-8">
-                <p className="text-orange-300/80 mobile-text">
+                <p className="text-white/80 mobile-text">
                   Please review your information before submitting
                 </p>
               </div>
@@ -1383,9 +1508,14 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                     !formData.firstName ||
                     !formData.lastName
                   }
-                  className="mobile-btn relative overflow-hidden bg-gradient-to-r from-gray-500 to-gray-700 hover:from-gray-800 hover:to-black text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)",
+                    transform: "scale(1.05)",
+                    transition: "all 0.3s ease",
+                  }}
+                  className="relative overflow-hidden text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full hover:translate-x-full transition-transform duration-1000"></div>
                   {isGeneratingPDF ? (
                     <span className="flex items-center justify-center relative z-10 text-white">
                       <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
@@ -1437,7 +1567,7 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                 alt="MKH Logo"
                 className="ml-3 w-16 h-auto opacity-80 rounded-full object-cover"
               />
-              <h1 className="mt-3 ml-5"> MKH Hair Color Analysis </h1>
+              <h1 className="mt-3 ml-5"> MKH </h1>
             </div>
           </div>
         </header>
@@ -1478,31 +1608,30 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
 
           {/* Sticky Footer Navigation */}
           <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
-  <div
-    className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6
+            <div
+              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6
                bg-black/40 backdrop-blur-md border border-white/10
                px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl shadow-lg"
-  >
-    <button
-      onClick={prevSlide}
-      disabled={currentSlide === 1}
-      className="btn-secondary w-full sm:w-auto text-sm sm:text-base
+            >
+              <button
+                onClick={prevSlide}
+                disabled={currentSlide === 1}
+                className="btn-secondary w-full sm:w-auto text-sm sm:text-base
                  disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-    >
-      ← Previous
-    </button>
+              >
+                ← Previous
+              </button>
 
-    <button
-      onClick={nextSlide}
-      disabled={currentSlide === totalSlides}
-      className="btn-primary w-full sm:w-auto text-sm sm:text-base
+              <button
+                onClick={nextSlide}
+                disabled={currentSlide === totalSlides}
+                className="btn-primary w-full sm:w-auto text-sm sm:text-base
                  disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-    >
-      Next →
-    </button>
-  </div>
-</div>
-
+              >
+                Next →
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Notification */}
@@ -1518,10 +1647,11 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
               </div>
               <div className="ml-3 flex-1">
                 <p
-                  className={`text-sm font-medium ${message.includes("successfully")
-                    ? "text-green-100"
-                    : "text-red-100"
-                    }`}
+                  className={`text-sm font-medium ${
+                    message.includes("successfully")
+                      ? "text-green-100"
+                      : "text-red-100"
+                  }`}
                 >
                   {message}
                 </p>

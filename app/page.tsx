@@ -904,7 +904,7 @@ export default function Home() {
           className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral focus:ring-2"
         />
         {/* <span className="text-2xl">{color.emoji}</span> */}
-        <span className="text-white/90 text-lg font-medium " style={{fontSize:"17px"}}>
+        <span className="text-white/90 text-lg font-medium " style={{fontSize:"15px"}}>
           {color.label}
         </span>
       </label>
@@ -946,7 +946,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"17px"}}>
+                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
                       {length}
                     </span>
                   </label>
@@ -987,7 +987,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium">
+                    <span className="text-white/90 text-lg font-medium"style={{fontSize:"15px"}}>
                       {style}
                     </span>
                   </label>
@@ -1029,7 +1029,7 @@ export default function Home() {
                         }
                         className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                       />
-                      <span className="text-white/90 text-lg font-medium">
+                      <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
                         {maintenance}
                       </span>
                     </label>
@@ -1074,7 +1074,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium">
+                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
                       {occasion}
                     </span>
                   </label>
@@ -1121,7 +1121,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium">
+                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
                       {treatment}
                     </span>
                   </label>
@@ -1247,7 +1247,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium">
+                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
                       {work.label}
                     </span>
                   </label>

@@ -652,7 +652,7 @@ export default function Home() {
         return (
           <>
             <p className="mt-0 flex justify-center mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
-              Complete your hair color analysis in just 3 minutes
+              Get your mini hair color analysis in just 3 minutes
             </p>
 
             <div className="glass-card mobile-card mb-9">
@@ -748,122 +748,117 @@ export default function Home() {
       case 2:
         return (
           <>
-            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
-              {/* Hair Analysis */}
-              <div className="mb-8">
-                <h3
-                  className=" font-semibold mb-6 text-lg md:text-xl"
-                  style={{ color: "#ff7f50" }}
-                >
-                  Hair Analysis
-                </h3>
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col">
+              {/* Center the rest */}
+              <div className="flex-1 flex items-center">
+                <div className="w-full">
+                  {/* Row 1 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                    <div>
+                      <label className="block text-white/90 font-medium mb-2 text-sm">
+                        Your Natural Hair Color
+                      </label>
+                      <select
+                        value={formData.naturalHairColor}
+                        onChange={(e) =>
+                          handleInputChange("naturalHairColor", e.target.value)
+                        }
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.naturalHairColor === ""
+                            ? "text-gray-300 opacity-60"
+                            : "text-white"
+                        }`}
+                      >
+                        <option value="" disabled className="opacity-60">
+                          Select hair color
+                        </option>
+                        <option value="Black">Black</option>
+                        <option value="Brown">Brown</option>
+                        <option value="Natural Blonde">Natural Blonde</option>
+                        <option value="Red">Red</option>
+                      </select>
+                    </div>
 
-                {/* Row 1 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label className="block text-white/90 font-medium mb-2 text-sm">
-                      Your Natural Hair Color
-                    </label>
-                    <select
-                      value={formData.naturalHairColor}
-                      onChange={(e) =>
-                        handleInputChange("naturalHairColor", e.target.value)
-                      }
-                      className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                        formData.naturalHairColor === ""
-                          ? "text-gray-300 opacity-60"
-                          : "text-white"
-                      }`}
-                    >
-                      <option value="" disabled className="opacity-60">
-                        Select hair color
-                      </option>
-                      <option value="Black">Black</option>
-                      <option value="Brown">Brown</option>
-                      <option value="Natural Blonde">Natural Blonde</option>
-                      <option value="Red">Red</option>
-                    </select>
+                    <div>
+                      <label className="block text-white/90 font-medium mb-2 text-sm">
+                        Skin Color
+                      </label>
+                      <select
+                        value={formData.skinColor}
+                        onChange={(e) =>
+                          handleInputChange("skinColor", e.target.value)
+                        }
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.skinColor === ""
+                            ? "text-gray-300 opacity-60"
+                            : "text-white"
+                        }`}
+                      >
+                        <option value="" disabled className="opacity-60">
+                          Select skin color
+                        </option>
+                        <option value="Dark">Dark</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Light">Light</option>
+                      </select>
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-white/90 font-medium mb-2 text-sm">
-                      Skin Color
-                    </label>
-                    <select
-                      value={formData.skinColor}
-                      onChange={(e) =>
-                        handleInputChange("skinColor", e.target.value)
-                      }
-                      className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                        formData.skinColor === ""
-                          ? "text-gray-300 opacity-60"
-                          : "text-white"
-                      }`}
-                    >
-                      <option value="" disabled className="opacity-60">
-                        Select skin color
-                      </option>
-                      <option value="Dark">Dark</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Fair">Fair</option>
-                      <option value="Light">Light</option>
-                    </select>
-                  </div>
-                </div>
+                  {/* Row 2 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-white/90 font-medium mb-2 text-sm">
+                        Eye Color
+                      </label>
+                      <select
+                        value={formData.eyeColor}
+                        onChange={(e) =>
+                          handleInputChange("eyeColor", e.target.value)
+                        }
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.eyeColor === ""
+                            ? "text-gray-300 opacity-60"
+                            : "text-white"
+                        }`}
+                      >
+                        <option value="" disabled className="opacity-60">
+                          Select eye color
+                        </option>
+                        <option value="Black">Black</option>
+                        <option value="Dark brown">Dark brown</option>
+                        <option value="Light brown">Light brown</option>
+                        <option value="Hazel">Hazel</option>
+                        <option value="Green">Green</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Grey">Grey</option>
+                      </select>
+                    </div>
 
-                {/* Row 2 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-white/90 font-medium mb-2 text-sm">
-                      Eye Color
-                    </label>
-                    <select
-                      value={formData.eyeColor}
-                      onChange={(e) =>
-                        handleInputChange("eyeColor", e.target.value)
-                      }
-                      className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                        formData.eyeColor === ""
-                          ? "text-gray-300 opacity-60"
-                          : "text-white"
-                      }`}
-                    >
-                      <option value="" disabled className="opacity-60">
-                        Select eye color
-                      </option>
-                      <option value="Black">Black</option>
-                      <option value="Dark brown">Dark brown</option>
-                      <option value="Light brown">Light brown</option>
-                      <option value="Hazel">Hazel</option>
-                      <option value="Green">Green</option>
-                      <option value="Blue">Blue</option>
-                      <option value="Grey">Grey</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-white/90 font-medium mb-2 text-sm">
-                      Hair Texture
-                    </label>
-                    <select
-                      value={formData.hairTexture}
-                      onChange={(e) =>
-                        handleInputChange("hairTexture", e.target.value)
-                      }
-                      className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                        formData.hairTexture === ""
-                          ? "text-gray-300 opacity-60"
-                          : "text-white"
-                      }`}
-                    >
-                      <option value="" disabled className="opacity-60">
-                        Select hair texture
-                      </option>
-                      <option value="Fine">Fine</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Coarse">Coarse</option>
-                      <option value="Resistant">Resistant</option>
-                    </select>
+                    <div>
+                      <label className="block text-white/90 font-medium mb-2 text-sm">
+                        Hair Texture
+                      </label>
+                      <select
+                        value={formData.hairTexture}
+                        onChange={(e) =>
+                          handleInputChange("hairTexture", e.target.value)
+                        }
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.hairTexture === ""
+                            ? "text-gray-300 opacity-60"
+                            : "text-white"
+                        }`}
+                      >
+                        <option value="" disabled className="opacity-60">
+                          Select hair texture
+                        </option>
+                        <option value="Fine">Fine</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Coarse">Coarse</option>
+                        <option value="Resistant">Resistant</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -879,45 +874,44 @@ export default function Home() {
       case 3:
         return (
           <>
-            <div
-               className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]"
-            >
-              <div className="text-center mb-6">
-                <h3
-                  className="mobile-heading font-bold  mb-4"
-                  style={{ color: "#ff7f50" }}
-                >
-                  Choose Your Hair Color
-                </h3>
-              </div>
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+  <div className="text-center mb-6">
+    <h4
+      className="mobile-heading font-bold mb-4"
+      style={{ color: "#ff7f50",marginTop:"60px" }}
+    >
+      Choose Your Hair Color
+    </h4>
+  </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  { value: "Blonde", label: "Blonde", emoji: "💛" },
-                  { value: "Brunette", label: "Brunette", emoji: "🤎" },
-                ].map((color) => (
-                  <label
-                    key={color.value}
-                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-                  >
-                    <input
-                      type="radio"
-                      name="selectedHairColor"
-                      value={color.value}
-                      checked={formData.selectedHairColor === color.value}
-                      onChange={(e) =>
-                        handleInputChange("selectedHairColor", e.target.value)
-                      }
-                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral focus:ring-2"
-                    />
-                    {/* <span className="text-2xl">{color.emoji}</span> */}
-                    <span className="text-white/90 text-lg font-medium">
-                      {color.label}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
+    {[
+      { value: "Blonde", label: "Blonde", emoji: "💛" },
+      { value: "Brunette", label: "Brunette", emoji: "🤎" },
+    ].map((color) => (
+      <label
+        key={color.value}
+        className="flex items-center justify-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+      >
+        <input
+          type="radio"
+          name="selectedHairColor"
+          value={color.value}
+          checked={formData.selectedHairColor === color.value}
+          onChange={(e) =>
+            handleInputChange("selectedHairColor", e.target.value)
+          }
+          className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral focus:ring-2"
+        />
+        {/* <span className="text-2xl">{color.emoji}</span> */}
+        <span className="text-white/90 text-lg font-medium " style={{fontSize:"17px"}}>
+          {color.label}
+        </span>
+      </label>
+    ))}
+  </div>
+</div>
+
             <div>
               <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
                 Duration 3 minutes
@@ -929,14 +923,14 @@ export default function Home() {
       case 4:
         return (
           <>
-            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
-                className="mobile-heading font-bold mb-6 text-center"
-                style={{ color: "#ff7f50" }}
+                className="mobile-heading font-bold text-center"
+                style={{ color: "#ff7f50" ,marginTop:"60px"}}
               >
                 Your present hair length?
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
                 {["Short", "Medium", "Long", "Extra-long"].map((length) => (
                   <label
                     key={length}
@@ -952,7 +946,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium">
+                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"17px"}}>
                       {length}
                     </span>
                   </label>
@@ -970,14 +964,14 @@ export default function Home() {
       case 5:
         return (
           <>
-            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
-                style={{ color: "#ff7f50" }}
+                style={{ color: "#ff7f50" , marginTop:"60px"}}
               >
                 Your personal style?
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
                 {["Classic", "Trendy", "Elegant", "Minimal"].map((style) => (
                   <label
                     key={style}
@@ -1011,14 +1005,14 @@ export default function Home() {
       case 6:
         return (
           <>
-            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold  mb-6 text-center"
-                style={{ color: "#ff7f50" }}
+                style={{ color: "#ff7f50" , marginTop:"60px" }}
               >
                 Your hair maintenance routine?
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
                 {["Up to 6 weeks", "3 months", "6 months", "Yearly"].map(
                   (maintenance) => (
                     <label
@@ -1054,14 +1048,14 @@ export default function Home() {
       case 7:
         return (
           <>
-            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
-                style={{ color: "#ff7f50" }}
+                style={{ color: "#ff7f50" , marginTop:"60px"}}
               >
                 Which occasions do you choose your hair treatments frequently?
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
                 {[
                   "Birthdays/Anniversary",
                   "Work",
@@ -1098,15 +1092,15 @@ export default function Home() {
       case 8:
         return (
           <>
-            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold  mb-6 text-center"
-                style={{ color: "#ff7f50" }}
+                style={{ color: "#ff7f50" , marginTop:"60px" }}
               >
                 Which treatments do you prefer presently or would like to try in
                 future?
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
                 {[
                   "All over color",
                   "Balayage",
@@ -1145,7 +1139,7 @@ export default function Home() {
       case 9:
         return (
           <>
-            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <div className="text-center mb-6">
                 <h3
                   className="mobile-heading font-bold  mb-4"
@@ -1221,17 +1215,17 @@ export default function Home() {
       case 10:
         return (
           <>
-            <div  className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
-                style={{ color: "#ff7f50" }}
+                style={{ color: "#ff7f50" ,marginTop:"20px"}}
               >
                 Work
               </h3>
               <p className="text-white/70 mobile-text mb-6 text-center">
                 (Optional you can skip to next)
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
                 {[
                   { value: "Corporate", label: "Corporate" },
                   { value: "Stay at home", label: "Stay at home" },
@@ -1418,9 +1412,16 @@ export default function Home() {
       case 12:
         return (
           <>
-            <div className="glass-card mobile-card"
-            style={{maxWidth:"896px" , height:"432px"}}>
-              <div className="text-center mb-8">
+            <div
+              className="glass-card mobile-card"
+              style={{ maxWidth: "896px", height: "432px"}}
+            >
+              <div className="text-center mb-8"
+              style={
+                {
+                  marginTop:"130px"
+                }
+              }>
                 <p className="text-white/80 mobile-text">
                   Please review your information before submitting
                 </p>
@@ -1567,7 +1568,7 @@ export default function Home() {
                 alt="MKH Logo"
                 className="ml-3 w-16 h-auto opacity-80 rounded-full object-cover"
               />
-              <h1 className="mt-3 ml-5"> MKH </h1>
+              <h2 className="mt-3 ml-5"> MKH </h2>
             </div>
           </div>
         </header>

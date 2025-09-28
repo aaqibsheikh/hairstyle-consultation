@@ -155,13 +155,11 @@ export default function Home() {
     }
   };
 
-
   const prevSlide = () => {
     if (currentSlide > 1) {
       setCurrentSlide(currentSlide - 1);
     }
   };
-
 
   const goToSlide = (slide: number) => {
     setCurrentSlide(slide);
@@ -575,9 +573,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
             <div className="glass-card mobile-card mb-9">
               {/* Title */}
               <div className="text-center mb-12">
-                <h2 className="mobile-heading font-bold text-white mb-4">
+                <h3 className="mobile-heading font-bold text-orange-300 mb-4">
                   Tell us a little about yourself
-                </h2>
+                </h3>
               </div>
 
               {/* First & Last Name */}
@@ -664,7 +662,7 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
             <div className="glass-card mobile-card mb-9">
               {/* Hair Analysis */}
               <div className="mb-8">
-                <h3 className="text-white font-semibold mb-6">Hair Analysis</h3>
+                <h3 className="text-orange-300 font-semibold mb-6">Hair Analysis</h3>
 
                 {/* Row 1 */}
                 <div className="form-grid gap-6 mb-6">
@@ -788,12 +786,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
               style={{ marginBottom: "0" }}
             >
               <div className="text-center mb-6">
-                <h2 className="mobile-heading font-bold text-white mb-4">
+                <h3 className="mobile-heading font-bold text-orange-300 mb-4">
                   Choose Your Hair Color
-                </h2>
-                <p className="text-white/80 mobile-text">
-                  Select the hair color category you're most interested in
-                </p>
+                </h3>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -835,9 +830,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
         return (
           <>
             <div className="glass-card mobile-card">
-              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
                 Your present hair length?
-              </h2>
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {["Short", "Medium", "Long", "Extra-long"].map((length) => (
                   <label
@@ -873,9 +868,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
         return (
           <>
             <div className="glass-card mobile-card">
-              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
                 Your personal style?
-              </h2>
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {["Classic", "Trendy", "Elegant", "Minimal"].map((style) => (
                   <label
@@ -911,9 +906,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
         return (
           <>
             <div className="glass-card mobile-card">
-              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
                 Your hair maintenance routine?
-              </h2>
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {["Up to 6 weeks", "3 months", "6 months", "Yearly"].map(
                   (maintenance) => (
@@ -951,9 +946,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
         return (
           <>
             <div className="glass-card mobile-card">
-              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
                 Which occasions do you choose your hair treatments frequently?
-              </h2>
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
                   "Birthdays/Anniversary",
@@ -992,10 +987,10 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
         return (
           <>
             <div className="glass-card mobile-card">
-              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
                 Which treatments do you prefer presently or would like to try in
                 future?
-              </h2>
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
                   "All over color",
@@ -1037,9 +1032,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
           <>
             <div className="glass-card mobile-card">
               <div className="text-center mb-6">
-                <h2 className="mobile-heading font-bold text-white mb-4">
+                <h3 className="mobile-heading font-bold text-orange-300 mb-4">
                   Upload some styles that inspire you
-                </h2>
+                </h3>
                 <p className="text-white/70 mobile-text">
                   (Optional you can skip to the next)
                 </p>
@@ -1109,9 +1104,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
         return (
           <>
             <div className="glass-card mobile-card">
-              <h2 className="mobile-heading font-bold text-white mb-6 text-center">
+              <h3 className="mobile-heading font-bold text-orange-300 mb-6 text-center">
                 Work
-              </h2>
+              </h3>
               <p className="text-white/70 mobile-text mb-6 text-center">
                 (Optional you can skip to next)
               </p>
@@ -1176,9 +1171,9 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
           <>
             <div className="glass-card mobile-card">
               <div className="mb-6">
-                <h2 className="mobile-heading font-bold text-white mb-4 text-center">
+                <h3 className="mobile-heading font-bold text-orange-300 mb-4 text-center">
                   Select Your Perfect Hair Days
-                </h2>
+                </h3>
                 <p className="text-white/80 mobile-text mb-2 text-center">
                   Select some of your most important days of the year when you
                   would like to look your very best. Let us send you a reminder
@@ -1301,10 +1296,7 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
           <>
             <div className="glass-card mobile-card">
               <div className="text-center mb-8">
-                <h2 className="mobile-heading font-bold text-white mb-4">
-                  Review & Submit
-                </h2>
-                <p className="text-white/80 mobile-text">
+                <p className="text-orange-300/80 mobile-text">
                   Please review your information before submitting
                 </p>
               </div>
@@ -1391,16 +1383,16 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                     !formData.firstName ||
                     !formData.lastName
                   }
-                  className="mobile-btn relative overflow-hidden bg-gradient-to-r from-black to-gray-800 hover:from-gray-800 hover:to-black text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
+                  className="mobile-btn relative overflow-hidden bg-gradient-to-r from-gray-500 to-gray-700 hover:from-gray-800 hover:to-black text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full hover:translate-x-full transition-transform duration-1000"></div>
                   {isGeneratingPDF ? (
-                    <span className="flex items-center justify-center relative z-10">
+                    <span className="flex items-center justify-center relative z-10 text-white">
                       <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
                       <span className="text-lg">Generating...</span>
                     </span>
                   ) : (
-                    <span className="flex items-center justify-center relative z-10">
+                    <span className="flex items-center justify-center relative z-10 text-white">
                       <div className="text-2xl mr-3">📄</div>
                       <span className="text-lg">Download PDF</span>
                     </span>
@@ -1445,7 +1437,7 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
                 alt="MKH Logo"
                 className="ml-3 w-16 h-auto opacity-80 rounded-full object-cover"
               />
-              <h1 className="mt-3 ml-5"> MKH Hair Color Analysis</h1>
+              <h1 className="mt-3 ml-5"> MKH Hair Color Analysis </h1>
             </div>
           </div>
         </header>
@@ -1485,29 +1477,32 @@ const totalPages = (pdf.internal as any).getNumberOfPages();
           {renderSlide()}
 
           {/* Sticky Footer Navigation */}
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-            <div
-              className="flex flex-row items-center justify-center gap-6
-                 bg-transparent backdrop-blur-md
-                 px-6 py-3 rounded-2xl"
-            >
-              <button
-                onClick={prevSlide}
-                disabled={currentSlide === 1}
-                className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-              >
-                ← Previous
-              </button>
+          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
+  <div
+    className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6
+               bg-black/40 backdrop-blur-md border border-white/10
+               px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl shadow-lg"
+  >
+    <button
+      onClick={prevSlide}
+      disabled={currentSlide === 1}
+      className="btn-secondary w-full sm:w-auto text-sm sm:text-base
+                 disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+    >
+      ← Previous
+    </button>
 
-              <button
-                onClick={nextSlide}
-                disabled={currentSlide === totalSlides}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-              >
-                Next →
-              </button>
-            </div>
-          </div>
+    <button
+      onClick={nextSlide}
+      disabled={currentSlide === totalSlides}
+      className="btn-primary w-full sm:w-auto text-sm sm:text-base
+                 disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+    >
+      Next →
+    </button>
+  </div>
+</div>
+
         </div>
 
         {/* Notification */}

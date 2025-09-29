@@ -337,8 +337,7 @@ export default function Home() {
         `Hair Texture: ${formData.hairTexture || "Not specified"}`,
         `Hair Length: ${formData.hairLength || "Not specified"}`,
         `Personal Style: ${formData.personalStyle || "Not specified"}`,
-        `Maintenance Preference: ${
-          formData.hairMaintenance || "Not specified"
+        `Maintenance Preference: ${formData.hairMaintenance || "Not specified"
         }`,
       ];
 
@@ -572,9 +571,8 @@ export default function Home() {
       }
 
       // ===== SAVE FILE =====
-      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${
-        formData.lastName
-      }_${format(new Date(), "yyyyMMdd")}.pdf`;
+      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${formData.lastName
+        }_${format(new Date(), "yyyyMMdd")}.pdf`;
       pdf.save(fileName);
 
       setMessage("PDF report generated successfully!");
@@ -651,13 +649,14 @@ export default function Home() {
       case 1:
         return (
           <>
-            <p className="mt-0 flex justify-center mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
-              Get your mini hair color analysis in just 3 minutes
-            </p>
 
-            <div className="glass-card mobile-card mb-9">
+            <div className="glass-card mobile-card mb-9 md:h-[432px]">
               {/* Title */}
               <div className="text-center mb-12">
+                <p className="mt-0 flex justify-center mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
+                  Get your mini hair color analysis in just 3 minutes
+                </p>
+
                 <h3
                   className="mobile-heading font-bold mb-4"
                   style={{ color: "#ff7f50" }}
@@ -678,9 +677,8 @@ export default function Home() {
                     onChange={(e) =>
                       handleInputChange("firstName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.firstName ? "bg-black" : "bg-transparent"
-                    }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.firstName ? "bg-black" : "bg-transparent"
+                      }`}
                     placeholder="Enter your first name"
                   />
                 </div>
@@ -695,9 +693,8 @@ export default function Home() {
                     onChange={(e) =>
                       handleInputChange("lastName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.lastName ? "bg-black" : "bg-transparent"
-                    }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.lastName ? "bg-black" : "bg-transparent"
+                      }`}
                     placeholder="Enter your last name"
                   />
                 </div>
@@ -763,11 +760,10 @@ export default function Home() {
                         onChange={(e) =>
                           handleInputChange("naturalHairColor", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.naturalHairColor === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
-                        }`}
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.naturalHairColor === ""
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
+                          }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select hair color
@@ -788,11 +784,10 @@ export default function Home() {
                         onChange={(e) =>
                           handleInputChange("skinColor", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.skinColor === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
-                        }`}
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.skinColor === ""
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
+                          }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select skin color
@@ -816,11 +811,10 @@ export default function Home() {
                         onChange={(e) =>
                           handleInputChange("eyeColor", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.eyeColor === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
-                        }`}
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.eyeColor === ""
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
+                          }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select eye color
@@ -844,11 +838,10 @@ export default function Home() {
                         onChange={(e) =>
                           handleInputChange("hairTexture", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.hairTexture === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
-                        }`}
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.hairTexture === ""
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
+                          }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select hair texture
@@ -875,42 +868,42 @@ export default function Home() {
         return (
           <>
             <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
-  <div className="text-center mb-6">
-    <h4
-      className="mobile-heading font-bold mb-4"
-      style={{ color: "#ff7f50",marginTop:"60px" }}
-    >
-      Choose Your Hair Color
-    </h4>
-  </div>
+              <div className="text-center mb-6">
+                <h4
+                  className="mobile-heading font-bold mb-4"
+                  style={{ color: "#ff7f50", marginTop: "10px" }}
+                >
+                  Choose Your Hair Color
+                </h4>
+              </div>
 
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
-    {[
-      { value: "Blonde", label: "Blonde", emoji: "💛" },
-      { value: "Brunette", label: "Brunette", emoji: "🤎" },
-    ].map((color) => (
-      <label
-        key={color.value}
-        className="flex items-center justify-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-      >
-        <input
-          type="radio"
-          name="selectedHairColor"
-          value={color.value}
-          checked={formData.selectedHairColor === color.value}
-          onChange={(e) =>
-            handleInputChange("selectedHairColor", e.target.value)
-          }
-          className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral focus:ring-2"
-        />
-        {/* <span className="text-2xl">{color.emoji}</span> */}
-        <span className="text-white/90 text-lg font-medium " style={{fontSize:"15px"}}>
-          {color.label}
-        </span>
-      </label>
-    ))}
-  </div>
-</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
+                {[
+                  { value: "Blonde", label: "Blonde", emoji: "💛" },
+                  { value: "Brunette", label: "Brunette", emoji: "🤎" },
+                ].map((color) => (
+                  <label
+                    key={color.value}
+                    className="flex items-center justify-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <input
+                      type="radio"
+                      name="selectedHairColor"
+                      value={color.value}
+                      checked={formData.selectedHairColor === color.value}
+                      onChange={(e) =>
+                        handleInputChange("selectedHairColor", e.target.value)
+                      }
+                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral focus:ring-2"
+                    />
+                    {/* <span className="text-2xl">{color.emoji}</span> */}
+                    <span className="text-white/90 text-lg font-medium " style={{ fontSize: "15px" }}>
+                      {color.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
             <div>
               <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
@@ -926,7 +919,7 @@ export default function Home() {
             <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold text-center"
-                style={{ color: "#ff7f50" ,marginTop:"60px"}}
+                style={{ color: "#ff7f50", marginTop: "10px" }}
               >
                 Your present hair length?
               </h3>
@@ -946,7 +939,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
+                    <span className="text-white/90 text-lg font-medium" style={{ fontSize: "15px" }}>
                       {length}
                     </span>
                   </label>
@@ -967,7 +960,7 @@ export default function Home() {
             <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
-                style={{ color: "#ff7f50" , marginTop:"60px"}}
+                style={{ color: "#ff7f50", marginTop: "10px" }}
               >
                 Your personal style?
               </h3>
@@ -987,7 +980,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium"style={{fontSize:"15px"}}>
+                    <span className="text-white/90 text-lg font-medium" style={{ fontSize: "15px" }}>
                       {style}
                     </span>
                   </label>
@@ -1008,7 +1001,7 @@ export default function Home() {
             <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold  mb-6 text-center"
-                style={{ color: "#ff7f50" , marginTop:"60px" }}
+                style={{ color: "#ff7f50", marginTop: "10px" }}
               >
                 Your hair maintenance routine?
               </h3>
@@ -1029,7 +1022,7 @@ export default function Home() {
                         }
                         className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                       />
-                      <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
+                      <span className="text-white/90 text-lg font-medium" style={{ fontSize: "15px" }}>
                         {maintenance}
                       </span>
                     </label>
@@ -1051,7 +1044,7 @@ export default function Home() {
             <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
-                style={{ color: "#ff7f50" , marginTop:"60px"}}
+                style={{ color: "#ff7f50", marginTop: "10px" }}
               >
                 Which occasions do you choose your hair treatments frequently?
               </h3>
@@ -1074,7 +1067,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
+                    <span className="text-white/90 text-lg font-medium" style={{ fontSize: "15px" }}>
                       {occasion}
                     </span>
                   </label>
@@ -1095,7 +1088,7 @@ export default function Home() {
             <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
               <h3
                 className="mobile-heading font-bold  mb-6 text-center"
-                style={{ color: "#ff7f50" , marginTop:"60px" }}
+                style={{ color: "#ff7f50", marginTop: "10px" }}
               >
                 Which treatments do you prefer presently or would like to try in
                 future?
@@ -1121,7 +1114,7 @@ export default function Home() {
                       }
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
+                    <span className="text-white/90 text-lg font-medium" style={{ fontSize: "15px" }}>
                       {treatment}
                     </span>
                   </label>
@@ -1215,10 +1208,17 @@ export default function Home() {
       case 10:
         return (
           <>
-            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px]">
+            <div
+              className={`glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 
+      ${formData.workType === "Corporate" ||
+                  formData.workType === "Work from home" ||
+                  formData.workType === "Entrepreneur"
+                  ? "md:h-auto"
+                  : "md:h-[432px]"} `}
+            >
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
-                style={{ color: "#ff7f50" ,marginTop:"20px"}}
+                style={{ color: "#ff7f50", marginTop: "10px" }}
               >
                 Work
               </h3>
@@ -1242,12 +1242,13 @@ export default function Home() {
                       name="workType"
                       value={work.value}
                       checked={formData.workType === work.value}
-                      onChange={(e) =>
-                        handleInputChange("workType", e.target.value)
-                      }
+                      onChange={(e) => handleInputChange("workType", e.target.value)}
                       className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                     />
-                    <span className="text-white/90 text-lg font-medium" style={{fontSize:"15px"}}>
+                    <span
+                      className="text-white/90 text-lg font-medium"
+                      style={{ fontSize: "15px" }}
+                    >
                       {work.label}
                     </span>
                   </label>
@@ -1257,22 +1258,21 @@ export default function Home() {
               {(formData.workType === "Corporate" ||
                 formData.workType === "Work from home" ||
                 formData.workType === "Entrepreneur") && (
-                <div className="mt-6">
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Please specify industry
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.workIndustry}
-                    onChange={(e) =>
-                      handleInputChange("workIndustry", e.target.value)
-                    }
-                    className="input-field placeholder-gray-300 placeholder-opacity-60"
-                    placeholder="e.g., Technology, Healthcare, Finance..."
-                  />
-                </div>
-              )}
+                  <div className="mt-6">
+                    <label className="block text-white/90 font-medium mb-2 text-sm">
+                      Please specify industry
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.workIndustry}
+                      onChange={(e) => handleInputChange("workIndustry", e.target.value)}
+                      className="input-field placeholder-gray-300 placeholder-opacity-60"
+                      placeholder="e.g., Technology, Healthcare, Finance..."
+                    />
+                  </div>
+                )}
             </div>
+
             <div>
               <p className="mt-0 flex justify-end mobile-text mb-10 text-white/25 ">
                 Duration 3 minutes
@@ -1414,17 +1414,17 @@ export default function Home() {
           <>
             <div
               className="glass-card mobile-card"
-              style={{ maxWidth: "896px", height: "432px"}}
+              style={{ maxWidth: "896px", height: "432px" }}
             >
               <div className="text-center mb-8"
-              style={
-                {
-                  marginTop:"130px"
-                }
-              }>
-                <p className="text-white/80 mobile-text">
+                style={
+                  {
+                    marginTop: "140px"
+                  }
+                }>
+                {/* <p className="text-white/80 mobile-text">
                   Please review your information before submitting
-                </p>
+                </p> */}
               </div>
 
               {/* <div className="space-y-6">
@@ -1562,14 +1562,17 @@ export default function Home() {
       <div className="relative z-10 container mx-auto mobile-container py-4 sm:py-6 lg:py-8">
         <header className="mobile-header">
           <div className="inline-block p-3 sm:p-4 bg-black/40 backdrop-blur-sm border border-coral/30">
-            <div className="mobile-heading font-bold text-white flex flex-row">
+            <div className="mobile-heading font-bold text-white flex items-center">
               <Image
                 src={mkhLogo}
                 alt="MKH Logo"
-                className="ml-3 w-16 h-auto opacity-80 rounded-full object-cover"
+                className="w-24 h-24 object-cover rounded-md"
               />
-              <h2 className="mt-3 ml-5"> MKH </h2>
+              <h2 className="ml-4 text-base sm:text-lg font-semibold">
+                MKH Hair Color Analysis
+              </h2>
             </div>
+
           </div>
         </header>
 
@@ -1648,11 +1651,10 @@ export default function Home() {
               </div>
               <div className="ml-3 flex-1">
                 <p
-                  className={`text-sm font-medium ${
-                    message.includes("successfully")
-                      ? "text-green-100"
-                      : "text-red-100"
-                  }`}
+                  className={`text-sm font-medium ${message.includes("successfully")
+                    ? "text-green-100"
+                    : "text-red-100"
+                    }`}
                 >
                   {message}
                 </p>

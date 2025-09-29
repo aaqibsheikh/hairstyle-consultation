@@ -347,37 +347,6 @@ export default function Home() {
         yPosition
       );
 
-      // ===== SCHEDULED PERFECT HAIR DAYS ON SECOND PAGE =====
-      if (formData.selectedDates && formData.selectedDates.length > 0) {
-        // Check if we need a new page for Scheduled Perfect Hair Days
-        if (yPosition > pageHeight - margin - 100) {
-          pdf.addPage();
-          pdf.setFillColor(0, 0, 0);
-          pdf.rect(0, 0, pageWidth, pageHeight, "F");
-          yPosition = margin;
-        }
-
-        const sortedDates = [...formData.selectedDates].sort(
-          (a, b) => a.getTime() - b.getTime()
-        );
-
-        const datesContent = [
-          "Your scheduled appointment dates:",
-          "",
-          ...sortedDates.map(
-            (date: Date, index: number) =>
-              `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
-          ),
-          "",
-          `Total appointments scheduled: ${formData.selectedDates.length}`,
-        ];
-
-        yPosition = addSection(
-          "Scheduled Perfect Hair Days",
-          datesContent,
-          yPosition
-        );
-      }
 
       // ===== RECOMMENDATIONS SECTION =====
       const combination: HairCombination = {
@@ -411,6 +380,32 @@ export default function Home() {
           yPosition
         );
       }
+
+      // ===== SCHEDULED PERFECT HAIR DAYS ON SECOND PAGE =====
+      if (formData.selectedDates && formData.selectedDates.length > 0) {
+        // Check if we need a new page for Scheduled Perfect Hair Days
+        if (yPosition > pageHeight - margin - 100) {
+          pdf.addPage();
+          pdf.setFillColor(0, 0, 0);
+          pdf.rect(0, 0, pageWidth, pageHeight, "F");
+          yPosition = margin;
+        }
+
+        const sortedDates = [...formData.selectedDates].sort((a, b) => a.getTime() - b.getTime());
+
+        const datesContent = [
+          "Your scheduled appointment dates:",
+          "",
+          ...sortedDates.map((date: Date, index: number) =>
+            `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
+          ),
+          "",
+          `Total appointments scheduled: ${formData.selectedDates.length}`
+        ];
+
+        yPosition = addSection("Scheduled Perfect Hair Days", datesContent, yPosition);
+      }
+
 
       // ===== RECOMMENDED STYLES IMAGES ON LAST PAGE =====
       if (images.length > 0) {

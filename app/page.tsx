@@ -651,7 +651,7 @@ export default function Home() {
       case 1:
         return (
           <>
-            <div className="glass-card mobile-card mb-9 md:h-[432px]">
+            <div className="glass-card mobile-card mt-0 mb-9 md:h-[432px]">
               {/* Title */}
               <div className="text-center mb-12">
                 <p className="mt-0 flex justify-center mobile-text text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
@@ -748,7 +748,7 @@ export default function Home() {
       case 2:
         return (
   <>
-    <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
+    <div className="glass-card mobile-card mt-0 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
       {/* Top content */}
       <div className="flex-1 flex items-center">
         <div className="w-full">
@@ -874,7 +874,7 @@ export default function Home() {
       case 3:
         return (
   <>
-    <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
+    <div className="glass-card mobile-card mt-0 mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
       {/* Header */}
       <div className="text-center mb-6">
         <h4
@@ -927,7 +927,7 @@ export default function Home() {
       case 4:
         return (
   <>
-    <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
+    <div className="glass-card mobile-card mt-0 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
       {/* Header */}
       <h3
         className="mobile-heading font-bold text-center"
@@ -975,7 +975,7 @@ export default function Home() {
       case 5:
        return (
   <>
-    <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
+    <div className="glass-card mobile-card mt-0 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
       {/* Header */}
       <h3
         className="mobile-heading font-bold mb-6 text-center"
@@ -1023,7 +1023,7 @@ export default function Home() {
       case 6:
         return (
   <>
-    <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
+    <div className="glass-card mobile-card mt-0 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
       {/* Header */}
       <h3
         className="mobile-heading font-bold mb-6 text-center"
@@ -1177,79 +1177,66 @@ export default function Home() {
       case 9:
         return (
   <>
-    <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] overflow-auto flex flex-col justify-between">
-      {/* Header */}
-      <div className="text-center mb-6">
-        <h3
-          className="mobile-heading font-bold mb-4"
-          style={{ color: "#ff7f50" }}
-        >
-          Upload some styles that inspire you
-        </h3>
-        <p className="text-white/70 mobile-text">
-          (Optional - You can skip to the next)
-        </p>
-      </div>
+   <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-[500px] p-6 flex flex-col overflow-y-auto">
+  {/* Header */}
+  <div className="text-center mb-6 flex-shrink-0">
+    <h3 className="mobile-heading font-bold mb-4" style={{ color: "#ff7f50" }}>
+      Upload some styles that inspire you
+    </h3>
+    <p className="text-white/70 mobile-text">(Optional - You can skip to the next)</p>
+  </div>
 
-      {/* File upload area */}
-      <div className="border-2 border-dashed border-coral/50 file-upload-area text-center hover:border-coral transition-colors bg-black/20">
-        <div className="text-4xl mb-4">☁️</div>
-        <p className="text-white/90 mb-4 mobile-text">Browse Files</p>
-        <p className="text-white/70 mb-6 mobile-description">
-          Drag and drop Files here
-        </p>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleFileUpload}
-          className="hidden"
-          id="file-upload"
-        />
-        <label
-          htmlFor="file-upload"
-          className="btn-primary cursor-pointer"
-        >
-          Choose Files
-        </label>
-      </div>
+  {/* File upload area - fixed height */}
+  <div className="border-2 border-dashed border-coral/50 file-upload-area text-center hover:border-coral transition-colors bg-black/20 p-6 mb-2 flex-shrink-0">
+    <div className="text-4xl mb-4">☁️</div>
+    <p className="text-white/90 mb-2 mobile-text">Browse Files</p>
+    <p className="text-white/70 mb-4 mobile-description">Drag and drop Files here</p>
+    <input
+      type="file"
+      multiple
+      accept="image/*"
+      onChange={handleFileUpload}
+      className="hidden"
+      id="file-upload"
+    />
+    <label htmlFor="file-upload" className="btn-primary cursor-pointer">
+      Choose Files
+    </label>
+  </div>
 
-      {/* Uploaded files */}
-      {formData.files.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-white font-semibold mb-3 mobile-text">
-            Uploaded Files:
-          </h3>
-          <div className="space-y-2">
-            {formData.files.map((file, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between bg-black/40 p-3 border border-white/10"
-              >
-                <span className="text-white/90 mobile-text truncate mr-2">
-                  {file.name}
-                </span>
-                <button
-                  onClick={() => removeFile(index)}
-                  className="text-red-300 hover:text-red-100 mobile-text flex-shrink-0"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
+  {/* Info line */}
+  <p className="text-white/60 mobile-description mb-2 text-center flex-shrink-0">
+    You can upload up to 5 image files (JPG, PNG, GIF, etc.)
+  </p>
+
+  {/* Uploaded files - now takes full remaining space */}
+  {formData.files.length > 0 && (
+    <div className="flex-1">
+      {formData.files.map((file, index) => (
+        <div
+          key={index}
+          className="flex items-center justify-between bg-black/40 p-3 border border-white/10 mb-2"
+        >
+          <span className="text-white/90 mobile-text truncate mr-2">{file.name}</span>
+          <button
+            onClick={() => removeFile(index)}
+            className="text-red-300 hover:text-red-100 mobile-text flex-shrink-0"
+          >
+            Remove
+          </button>
         </div>
-      )}
-
-      <p className="text-white/60 mobile-description mt-4 text-center">
-        You can upload up to 5 image files (JPG, PNG, GIF, etc.)
-      </p>
-
-      {/* Duration at bottom-right */}
-      <div className="flex justify-end mt-4">
-        <p className="text-white/70 text-sm">Duration 3 minutes</p>
-      </div>
+      ))}
     </div>
+  )}
+
+  {/* Duration at bottom-right */}
+  <div className="flex justify-end mt-4 flex-shrink-0">
+    <p className="text-white/70 text-sm">Duration 3 minutes</p>
+  </div>
+</div>
+
+
+
   </>
 );
 
@@ -1537,30 +1524,33 @@ export default function Home() {
         ></div>
       </div>
 
-      <div className="relative z-10 container mx-auto mobile-container py-4 sm:py-6 lg:py-8">
-        <header className="mobile-header">
-          <div className="inline-block w-[350px] bg-black/40 backdrop-blur-sm border border-coral/30">
-            <div className="mobile-heading font-bold text-white flex">
-              {/* Image */}
-              <Image
-                src={mkhLogo}
-                alt="MKH Logo"
-                className="w-24 h-24 object-cover"
-              />
+      <div className="relative z-10 container mx-auto mobile-container py-0 sm:py-0 lg:py-0">
+        <header className="mobile-header mt-8 mb-0">
+  <div className="inline-block w-[350px] bg-black/40 backdrop-blur-sm border border-coral/30 p-4">
+    <div className="mobile-heading font-bold text-white flex items-center">
+      
+      {/* Image */}
+      <Image
+        src={mkhLogo}
+        alt="MKH Logo"
+        className="w-24 h-24 object-cover"
+      />
 
-              {/* Text stacked vertically */}
-              <div className="ml-4 flex flex-col justify-center">
-                <span className="text-base sm:text-xl font-bold">MKH</span>
-                <span
-                  className="text-base sm:text-xl font-semibold"
-                  style={{ color: "#ff6347" }}
-                >
-                  Hair Color Analysis
-                </span>
-              </div>
-            </div>
-          </div>
-        </header>
+      {/* Text stacked vertically, moved slightly right with bigger size */}
+      <div className="ml-6 flex flex-col justify-center">
+        <span className="text-2xl sm:text-3xl font-bold">MKH</span>
+        <span
+          className="text-2xl sm:text-3xl font-semibold"
+          style={{ color: "#ff6347", lineHeight: "1.2" }}
+        >
+          Hair Color <br /> Analysis
+        </span>
+      </div>
+
+    </div>
+  </div>
+</header>
+
 
         {/* Progress Bar */}
         {/* <div className="max-w-4xl mx-auto mb-8">

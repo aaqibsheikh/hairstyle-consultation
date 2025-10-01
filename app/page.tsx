@@ -1341,145 +1341,151 @@ export default function Home() {
 
 
       case 11:
-        return (
-          <>
-            <div
-              className="glass-card mobile-card relative" // relative for absolute positioning
-              style={{ overflowY: "auto" }} // fixed height and scrollable content
+       return (
+  <>
+    <div
+      className="glass-card mobile-card relative" // relative for absolute positioning
+      style={{ overflowY: "auto" }} // scrollable content
+    >
+      {/* Duration at bottom-right */}
+      <p className="absolute bottom-4 right-4 text-white/70 text-sm">
+        Duration 3 minutes
+      </p>
+
+      <div className="mb-6">
+        <h3
+          className="mobile-heading font-bold mb-4 text-center"
+          style={{ color: "#ff7f50" }}
+        >
+          Select Your Perfect Hair Days
+        </h3>
+        <p className="text-white/80 mobile-text mb-2 text-center">
+          Select some of your most important days of the year when you would
+          like to look your very best. Let us send you a reminder 2 weeks before
+          to consult or set an appointment.
+        </p>
+        <p className="text-white/60 italic mobile-description text-center">
+          (Optional - You can skip to the next)
+        </p>
+      </div>
+
+      <div className="calendar-responsive">
+        <div>
+          {/* Calendar Header */}
+          <div className="mb-4">
+            <h3
+              className="mobile-heading font-bold text-white"
+              style={{ color: "#ff7f50" }}
             >
-              {/* Duration at bottom-right */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm">
-                Duration 3 minutes
-              </p>
+              CALENDAR
+            </h3>
+          </div>
 
-              <div className="mb-6">
-                <h3
-                  className="mobile-heading font-bold mb-4 text-center"
-                  style={{ color: "#ff7f50" }}
-                >
-                  Select Your Perfect Hair Days
-                </h3>
-                <p className="text-white/80 mobile-text mb-2 text-center">
-                  Select some of your most important days of the year when you
-                  would like to look your very best. Let us send you a reminder
-                  2 weeks before to consult or set an appointment.
-                </p>
-                <p className="text-white/60 italic mobile-description text-center">
-                  (Optional you can skip to the next)
-                </p>
-              </div>
+          {/* Calendar */}
+          <div className="bg-black/40 backdrop-blur-sm p-6 border border-white/10">
+            <Calendar
+              onClickDay={handleDayClick}
+              value={null}
+              tileClassName={tileClassName}
+              tileContent={({ date, view }) => {
+                if (view === "month") {
+                  const dateStr = format(date, "yyyy-MM-dd");
+                  const isSelected = formData.selectedDates.some(
+                    (selectedDate) =>
+                      format(selectedDate, "yyyy-MM-dd") === dateStr
+                  );
+                  return isSelected ? (
+                    <span className="calendar-selected-dot" />
+                  ) : null;
+                }
+                return null;
+              }}
+              className="w-full border-0 bg-transparent text-white text-sm sm:text-base"
+              navigationLabel={({ date }) => format(date, "MMMM yyyy")}
+              formatShortWeekday={(locale, date) => format(date, "EEE")}
+              tileDisabled={({ date }) =>
+                date < new Date(new Date().setHours(0, 0, 0, 0))
+              }
+            />
 
-              <div className="calendar-responsive">
-                <div>
-                  <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <h3
-                      className="mobile-heading font-bold text-white"
-                      style={{ color: "#ff7f50" }}
-                    >
-                      CALENDAR
-                    </h3>
-                    <button
-                      onClick={clearSelection}
-                      disabled={formData.selectedDates.length === 0}
-                      className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-                    >
-                      🗑️ Clear All
-                    </button>
-                  </div>
-
-                  <div className="bg-black/40 backdrop-blur-sm p-6 border border-white/10">
-                    <Calendar
-                      onClickDay={handleDayClick}
-                      value={null}
-                      tileClassName={tileClassName}
-                      tileContent={({ date, view }) => {
-                        if (view === "month") {
-                          const dateStr = format(date, "yyyy-MM-dd");
-                          const isSelected = formData.selectedDates.some(
-                            (selectedDate) =>
-                              format(selectedDate, "yyyy-MM-dd") === dateStr
-                          );
-                          return isSelected ? (
-                            <span className="calendar-selected-dot" />
-                          ) : null;
-                        }
-                        return null;
-                      }}
-                      className="w-full border-0 bg-transparent text-white text-sm sm:text-base"
-                      navigationLabel={({ date }) => format(date, "MMMM yyyy")}
-                      formatShortWeekday={(locale, date) => format(date, "EEE")}
-                      tileDisabled={({ date }) =>
-                        date < new Date(new Date().setHours(0, 0, 0, 0))
-                      }
-                    />
-
-                    <div className="mt-6">
-                      <div className="flex items-center justify-between bg-black/60 backdrop-blur-sm border border-white/10 p-3">
-                        <div className="flex items-center">
-                          <span className="text-white font-semibold text-sm">
-                            <span className="text-xl font-bold text-coral mr-1">
-                              {formData.selectedDates.length}
-                            </span>
-                            dates selected
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3
-                    className="mobile-heading font-bold mb-24"
-                    style={{ color: "#ff7f50" }}
-                  >
-                    SELECTED DATES
-                  </h3>
-
-                  {formData.selectedDates.length === 0 ? (
-                    <div className="text-center py-12">
-                      <div className="text-6xl mb-4">📅</div>
-                      <p className="text-white/70 mobile-text mb-2">
-                        No dates selected yet
-                      </p>
-                      <p className="text-white/50 mobile-description">
-                        Click on dates in the calendar to select them
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3 selected-dates-container">
-                      {formData.selectedDates
-                        .sort((a, b) => a.getTime() - b.getTime())
-                        .map((date, index) => (
-                          <div key={index} className="date-card">
-                            <div className="flex items-center justify-between">
-                              <span className="font-semibold text-white mobile-text">
-                                {format(date, "EEEE, MMMM d, yyyy")}
-                              </span>
-                              <button
-                                onClick={() => {
-                                  const dateStr = format(date, "yyyy-MM-dd");
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    selectedDates: prev.selectedDates.filter(
-                                      (d) => format(d, "yyyy-MM-dd") !== dateStr
-                                    ),
-                                  }));
-                                }}
-                                className="text-red-300 hover:text-red-100 mobile-text font-medium transition-colors duration-300"
-                              >
-                                ✕ Remove
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  )}
-                </div>
-              </div>
+            {/* Dates Selected */}
+            <div className="mt-6 bg-black/60 backdrop-blur-sm border border-white/10 p-3">
+              <span className="text-white font-semibold text-sm">
+                <span className="text-xl font-bold text-coral mr-1">
+                  {formData.selectedDates.length}
+                </span>
+                dates selected
+              </span>
             </div>
-          </>
-        );
+
+            {/* Clear All Button */}
+            <div className="mt-3">
+              <button
+                onClick={clearSelection}
+                disabled={formData.selectedDates.length === 0}
+                className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn w-full sm:w-auto"
+              >
+                🗑️ Clear All
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Selected Dates Section */}
+        <div>
+          <h3
+            className="mobile-heading font-bold mb-24"
+            style={{ color: "#ff7f50" }}
+          >
+            SELECTED DATES
+          </h3>
+
+          {formData.selectedDates.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">📅</div>
+              <p className="text-white/70 mobile-text mb-2">
+                No dates selected yet
+              </p>
+              <p className="text-white/50 mobile-description">
+                Click on dates in the calendar to select them
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3 selected-dates-container">
+              {formData.selectedDates
+                .sort((a, b) => a.getTime() - b.getTime())
+                .map((date, index) => (
+                  <div key={index} className="date-card">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-white mobile-text">
+                        {format(date, "EEEE, MMMM d, yyyy")}
+                      </span>
+                      <button
+                        onClick={() => {
+                          const dateStr = format(date, "yyyy-MM-dd");
+                          setFormData((prev) => ({
+                            ...prev,
+                            selectedDates: prev.selectedDates.filter(
+                              (d) => format(d, "yyyy-MM-dd") !== dateStr
+                            ),
+                          }));
+                        }}
+                        className="text-red-300 hover:text-red-100 mobile-text font-medium transition-colors duration-300"
+                      >
+                        ✕ Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </>
+);
+
+
 
       case 12:
         return (

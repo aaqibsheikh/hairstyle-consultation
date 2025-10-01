@@ -1083,10 +1083,7 @@ export default function Home() {
         return (
           <>
             <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between relative">
-              {/* Duration at bottom-right */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm">
-                Duration 3 minutes
-              </p>
+            
 
               {/* Header */}
               <h3
@@ -1267,18 +1264,13 @@ export default function Home() {
         );
 
       case 10:
-       return (
+  return (
   <>
     {/* Main Card */}
     <div
       className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
       style={{ height: "443px", overflowY: "auto" }}
     >
-      {/* Duration (only desktop/tablet inside card) */}
-      <p className="absolute bottom-4 right-4 text-white/70 text-sm hidden sm:block">
-        Duration 3 minutes
-      </p>
-
       <h3
         className="mobile-heading font-bold mb-6 text-center"
         style={{ color: "#ff7f50", marginTop: "10px" }}
@@ -1335,14 +1327,17 @@ export default function Home() {
           />
         </div>
       )}
-    </div>
 
-    {/* Duration for mobile (outside card, bottom) */}
-    <p className="text-white/70 text-sm text-center mt-3 block sm:hidden">
-      Duration 3 minutes
-    </p>
+      {/* Duration text under options, bottom-right */}
+      <p className="text-white/70 text-sm mt-6 text-right">
+        Duration 3 minutes
+      </p>
+    </div>
   </>
 );
+
+
+
 
 
       case 11:
@@ -1561,7 +1556,7 @@ export default function Home() {
           <div className="w-full max-w-sm mx-auto bg-black/40 backdrop-blur-sm border border-coral/30 p-0">
             <div className="mobile-heading font-bold text-white flex items-center">
               {/* Image */}
-              <div className="bg-black/40 backdrop-blur-sm border border-coral/30 border-r-0 p-3 sm:p-4">
+              <div className="bg-black/40 backdrop-blur-sm  p-3 sm:p-4">
                 <Image
                   src={mkhLogo}
                   alt="MKH Logo"

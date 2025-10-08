@@ -1365,7 +1365,7 @@ export default function Home() {
           Select Your Perfect Hair Days
         </h3>
         <p className="text-white/80 mobile-text mb-2 text-center">
-          Select some of your most important days of the year when you would
+          Choose some of your most important days of the year when you would
           like to look your very best. Let us send you a reminder 2 weeks before
           to consult or set an appointment.
         </p>

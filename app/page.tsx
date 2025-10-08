@@ -1365,9 +1365,7 @@ export default function Home() {
           Select Your Perfect Hair Days
         </h3>
         <p className="text-white/80 mobile-text mb-2 text-center">
-          Choose some of your most important days of the year when you would
-          like to look your very best. Let us send you a reminder 2 weeks before
-          to consult or set an appointment.
+          Choose your important dates do we can send you reminders if you want to schedule a special delivery at 10% off through the year 
         </p>
         <p className="text-white/60 italic mobile-description text-center">
           (Optional - You can skip to the next)
@@ -1497,7 +1495,7 @@ export default function Home() {
       <div className="text-center mb-12">
         
         <h3 className="mobile-heading font-bold mb-4" style={{ color: "#ff7f50" }}>
-         Some Personal Information
+          Personal Information
         </h3>
       </div>
 

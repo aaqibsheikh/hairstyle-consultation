@@ -42,8 +42,8 @@ interface FormData {
   workType: string;
   workIndustry: string;
   favoriteProduct: string;
-  hearAboutUs: string ;
-  suggestions: string ;
+  hearAboutUs: string;
+  suggestions: string;
 
   // Files and Calendar
   files: File[];
@@ -70,8 +70,8 @@ export default function Home() {
     workType: "",
     workIndustry: "",
     favoriteProduct: "",
-    hearAboutUs:"",
-    suggestions:"",
+    hearAboutUs: "",
+    suggestions: "",
     files: [],
     selectedDates: [],
   });
@@ -639,9 +639,9 @@ export default function Home() {
           workIndustry: "",
           files: [],
           selectedDates: [],
-          favoriteProduct:"",
-          hearAboutUs:"",
-          suggestions:"",
+          favoriteProduct: "",
+          hearAboutUs: "",
+          suggestions: "",
         });
         setCurrentSlide(1);
         setMessage("");
@@ -905,14 +905,14 @@ export default function Home() {
               </div>
 
               {/* Hair color options */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mt-12">
                 {[
                   { value: "Blonde", label: "Blonde", emoji: "💛" },
                   { value: "Brunette", label: "Brunette", emoji: "🤎" },
                 ].map((color) => (
                   <label
                     key={color.value}
-                    className="mb-5 space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                    className="space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
                   >
                     <input
                       type="radio"
@@ -944,156 +944,151 @@ export default function Home() {
 
       case 4:
         return (
-  <>
-    <div className="glass-card mobile-card max-w-full mb-32 md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
-      {/* Header */}
-      <h3
-        className="mobile-heading font-bold text-center"
-        style={{ color: "#ff7f50", marginTop: "10px" }}
-      >
-        Your present hair length?
-      </h3>
+          <>
+            <div className="glass-card mobile-card max-w-full mb-32 md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
+              {/* Header */}
+              <h3
+                className="mobile-heading font-bold text-center"
+                style={{ color: "#ff7f50", marginTop: "10px" }}
+              >
+                Your present hair length?
+              </h3>
 
-      {/* Hair length options */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
-        {["Short", "Medium", "Long", "Extra-long"].map((length) => (
-          <label
-            key={length}
-            className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-          >
-            <input
-              type="radio"
-              name="hairLength"
-              value={length}
-              checked={formData.hairLength === length}
-              onChange={(e) =>
-                handleInputChange("hairLength", e.target.value)
-              }
-              className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-            />
-            <span
-              className="text-white/90 text-lg font-medium"
-              style={{ fontSize: "15px" }}
-            >
-              {length}
-            </span>
-          </label>
-        ))}
-      </div>
+              {/* Hair length options */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
+                {["Short", "Medium", "Long", "Extra-long"].map((length) => (
+                  <label
+                    key={length}
+                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <input
+                      type="radio"
+                      name="hairLength"
+                      value={length}
+                      checked={formData.hairLength === length}
+                      onChange={(e) =>
+                        handleInputChange("hairLength", e.target.value)
+                      }
+                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                    />
+                    <span
+                      className="text-white/90 text-lg font-medium"
+                      style={{ fontSize: "15px" }}
+                    >
+                      {length}
+                    </span>
+                  </label>
+                ))}
+              </div>
 
-      {/* Duration at the bottom-right */}
-      <div className="flex justify-end mt-4">
-        <p className="text-white/70 text-sm">Duration 3 minutes</p>
-      </div>
-    </div>
-  </>
-);
-
+              {/* Duration at the bottom-right */}
+              <div className="flex justify-end mt-8 md:mt-4">
+                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+              </div>
+            </div>
+          </>
+        );
 
       case 5:
-       return (
-  <>
-    <div className="glass-card mb-30 mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
-      {/* Header */}
-      <h3
-        className="mobile-heading font-bold mb-6 text-center"
-        style={{ color: "#ff7f50", marginTop: "10px" }}
-      >
-        Your personal style?
-      </h3>
+        return (
+          <>
+            <div className="glass-card mb-30 mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
+              {/* Header */}
+              <h3
+                className="mobile-heading font-bold mb-6 text-center"
+                style={{ color: "#ff7f50", marginTop: "10px" }}
+              >
+                Your personal style?
+              </h3>
 
-      {/* Personal style options */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
-        {["Classic", "Trendy", "Elegant", "Minimal"].map((style) => (
-          <label
-            key={style}
-            className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-          >
-            <input
-              type="radio"
-              name="personalStyle"
-              value={style}
-              checked={formData.personalStyle === style}
-              onChange={(e) =>
-                handleInputChange("personalStyle", e.target.value)
-              }
-              className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-            />
-            <span
-              className="text-white/90 text-lg font-medium"
-              style={{ fontSize: "15px" }}
-            >
-              {style}
-            </span>
-          </label>
-        ))}
-      </div>
+              {/* Personal style options */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
+                {["Classic", "Trendy", "Elegant", "Minimal"].map((style) => (
+                  <label
+                    key={style}
+                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <input
+                      type="radio"
+                      name="personalStyle"
+                      value={style}
+                      checked={formData.personalStyle === style}
+                      onChange={(e) =>
+                        handleInputChange("personalStyle", e.target.value)
+                      }
+                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                    />
+                    <span
+                      className="text-white/90 text-lg font-medium"
+                      style={{ fontSize: "15px" }}
+                    >
+                      {style}
+                    </span>
+                  </label>
+                ))}
+              </div>
 
-      {/* Duration at bottom-right */}
-      <div className="flex justify-end mt-4">
-        <p className="text-white/70 text-sm">Duration 3 minutes</p>
-      </div>
-    </div>
-  </>
-);
-
+              {/* Duration at bottom-right */}
+              <div className="flex justify-end mt-4">
+                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+              </div>
+            </div>
+          </>
+        );
 
       case 6:
         return (
-  <>
-    <div className="mb-30 glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
-      {/* Header */}
-      <h3
-        className="mobile-heading font-bold mb-6 text-center"
-        style={{ color: "#ff7f50", marginTop: "10px" }}
-      >
-        Your hair maintenance routine?
-      </h3>
-
-      {/* Hair maintenance options */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
-        {["Up to 6 weeks", "3 months", "6 months", "Yearly"].map(
-          (maintenance) => (
-            <label
-              key={maintenance}
-              className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-            >
-              <input
-                type="radio"
-                name="hairMaintenance"
-                value={maintenance}
-                checked={formData.hairMaintenance === maintenance}
-                onChange={(e) =>
-                  handleInputChange("hairMaintenance", e.target.value)
-                }
-                className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-              />
-              <span
-                className="text-white/90 text-lg font-medium"
-                style={{ fontSize: "15px" }}
+          <>
+            <div className="mb-30 glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
+              {/* Header */}
+              <h3
+                className="mobile-heading font-bold mb-6 text-center"
+                style={{ color: "#ff7f50", marginTop: "10px" }}
               >
-                {maintenance}
-              </span>
-            </label>
-          )
-        )}
-      </div>
+                Your hair maintenance routine?
+              </h3>
 
-      {/* Duration at bottom-right */}
-      <div className="flex justify-end mt-4">
-        <p className="text-white/70 text-sm">Duration 3 minutes</p>
-      </div>
-    </div>
-  </>
-);
+              {/* Hair maintenance options */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12">
+                {["Up to 6 weeks", "3 months", "6 months", "Yearly"].map(
+                  (maintenance) => (
+                    <label
+                      key={maintenance}
+                      className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                    >
+                      <input
+                        type="radio"
+                        name="hairMaintenance"
+                        value={maintenance}
+                        checked={formData.hairMaintenance === maintenance}
+                        onChange={(e) =>
+                          handleInputChange("hairMaintenance", e.target.value)
+                        }
+                        className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                      />
+                      <span
+                        className="text-white/90 text-lg font-medium"
+                        style={{ fontSize: "15px" }}
+                      >
+                        {maintenance}
+                      </span>
+                    </label>
+                  )
+                )}
+              </div>
 
+              {/* Duration at bottom-right */}
+              <div className="flex justify-end mt-4">
+                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+              </div>
+            </div>
+          </>
+        );
 
       case 7:
         return (
           <>
             <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between relative">
-            
-
               {/* Header */}
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
@@ -1144,8 +1139,6 @@ export default function Home() {
         return (
           <>
             <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between relative mb-35">
-              
-
               {/* Header */}
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
@@ -1273,84 +1266,88 @@ export default function Home() {
         );
 
       case 10:
-  return (
-  <>
-    {/* Main Card */}
-    <div
-      className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
-      style={{ height: "443px", overflowY: "auto" }}
-    >
-      <h3
-        className="mobile-heading font-bold mb-6 text-center"
-        style={{ color: "#ff7f50", marginTop: "10px" }}
-      >
-        Work
-      </h3>
-      <p className="text-white/70 mobile-text mb-6 text-center">
-        (Optional - You can skip to next)
-      </p>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-8 sm:mt-12">
-        {[
-          { value: "Corporate", label: "Corporate" },
-          { value: "Stay at home", label: "Stay at home" },
-          { value: "Work from home", label: "Work from home" },
-          { value: "Entrepreneur", label: "Entrepreneur" },
-          { value: "Student", label: "Student" },
-        ].map((work) => (
-          <label
-            key={work.value}
-            className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-          >
-            <input
-              type="radio"
-              name="workType"
-              value={work.value}
-              checked={formData.workType === work.value}
-              onChange={(e) => handleInputChange("workType", e.target.value)}
-              className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-            />
-            <span
-              className="text-white/90 text-lg font-medium"
-              style={{ fontSize: "15px" }}
+        return (
+          <>
+            {/* Main Card */}
+            <div
+              className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
+              style={{ height: "443px", overflowY: "auto" }}
             >
-              {work.label}
-            </span>
-          </label>
-        ))}
-      </div>
+              <h3
+                className="mobile-heading font-bold mb-6 text-center"
+                style={{ color: "#ff7f50", marginTop: "10px" }}
+              >
+                Work
+              </h3>
+              <p className="text-white/70 mobile-text mb-6 text-center">
+                (Optional - You can skip to next)
+              </p>
 
-      {(formData.workType === "Corporate" ||
-        formData.workType === "Work from home" ||
-        formData.workType === "Entrepreneur") && (
-        <div className="mt-6">
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Please specify industry
-          </label>
-          <input
-            type="text"
-            value={formData.workIndustry}
-            onChange={(e) => handleInputChange("workIndustry", e.target.value)}
-            className="input-field placeholder-gray-300 placeholder-opacity-60"
-            placeholder="e.g., Technology, Healthcare, Finance..."
-          />
-        </div>
-      )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-8 sm:mt-12">
+                {[
+                  { value: "Corporate", label: "Corporate" },
+                  { value: "Stay at home", label: "Stay at home" },
+                  { value: "Work from home", label: "Work from home" },
+                  { value: "Entrepreneur", label: "Entrepreneur" },
+                  { value: "Student", label: "Student" },
+                ].map((work) => (
+                  <label
+                    key={work.value}
+                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <input
+                      type="radio"
+                      name="workType"
+                      value={work.value}
+                      checked={formData.workType === work.value}
+                      onChange={(e) =>
+                        handleInputChange("workType", e.target.value)
+                      }
+                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                    />
+                    <span
+                      className="text-white/90 text-lg font-medium"
+                      style={{ fontSize: "15px" }}
+                    >
+                      {work.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
 
-      {/* Duration text under options, bottom-right */}
-      <p className="text-white/70 text-sm mt-6 text-right">
-        Duration 3 minutes
-      </p>
-    </div>
-  </>
-);
+              {(formData.workType === "Corporate" ||
+                formData.workType === "Work from home" ||
+                formData.workType === "Entrepreneur") && (
+                <div className="mt-6">
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Please specify industry
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.workIndustry}
+                    onChange={(e) =>
+                      handleInputChange("workIndustry", e.target.value)
+                    }
+                    className="input-field placeholder-gray-300 placeholder-opacity-60"
+                    placeholder="e.g., Technology, Healthcare, Finance..."
+                  />
+                </div>
+              )}
+
+              {/* Duration text under options, bottom-right */}
+              <p className="text-white/70 text-sm mt-6 text-right">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
+        );
 
       case 11:
        return (
   <>
     <div
-      className="glass-card mobile-card relative" // relative for absolute positioning
-      style={{ overflowY: "auto" }} // scrollable content
+      className="glass-card mobile-card relative"
+      style={{ overflowY: "auto" }}
     >
       {/* Duration at bottom-right */}
       <p className="absolute bottom-4 right-4 text-white/70 text-sm">
@@ -1365,7 +1362,8 @@ export default function Home() {
           Select Your Perfect Hair Days
         </h3>
         <p className="text-white/80 mobile-text mb-2 text-center">
-          Choose your important dates do we can send you reminders if you want to schedule a special delivery at 10% off through the year 
+          Choose your important dates so we can send you reminders if you want
+          to schedule a special delivery at 10% off through the year
         </p>
         <p className="text-white/60 italic mobile-description text-center">
           (Optional - You can skip to the next)
@@ -1437,7 +1435,7 @@ export default function Home() {
         {/* Selected Dates Section */}
         <div>
           <h3
-            className="mobile-heading font-bold mb-24"
+            className="mobile-heading font-bold mb-2 sm:mb-8 md:mb-20"
             style={{ color: "#ff7f50" }}
           >
             SELECTED DATES
@@ -1487,75 +1485,82 @@ export default function Home() {
     </div>
   </>
 );
-  case 12:
+
+
+      case 12:
         return (
-  <>
-    <div className="glass-card mobile-card mt-0 md:h-auto relative mb-32">
-      {/* Header Section */}
-      <div className="text-center mb-12">
-        
-        <h3 className="mobile-heading font-bold mb-4" style={{ color: "#ff7f50" }}>
-          Personal Information
-        </h3>
-      </div>
+          <>
+            <div className="glass-card mobile-card mt-0 md:h-auto relative mb-32">
+              {/* Header Section */}
+              <div className="text-center mb-12">
+                <h3
+                  className="mobile-heading font-bold mb-4"
+                  style={{ color: "#ff7f50" }}
+                >
+                  Personal Information
+                </h3>
+              </div>
 
+              {/* ================== QUESTION 1 ================== */}
+              <div className="mb-8">
+                <label className="block text-white/90 font-medium mb-3 text-sm">
+                  Question 1: Which of our products do you like the most?
+                </label>
+                <input
+                  type="text"
+                  value={formData.favoriteProduct}
+                  onChange={(e) =>
+                    handleInputChange("favoriteProduct", e.target.value)
+                  }
+                  className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white w-full"
+                  placeholder="Enter your favorite product"
+                />
+              </div>
 
-      {/* ================== QUESTION 1 ================== */}
-      <div className="mb-8">
-        <label className="block text-white/90 font-medium mb-3 text-sm">
-          Question 1: Which of our products do you like the most?
-        </label>
-        <input
-          type="text"
-          value={formData.favoriteProduct}
-          onChange={(e) => handleInputChange("favoriteProduct", e.target.value)}
-          className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white w-full"
-          placeholder="Enter your favorite product"
-        />
-      </div>
+              {/* Divider */}
+              <hr className="border-t border-gray-600 my-8" />
 
-      {/* Divider */}
-      <hr className="border-t border-gray-600 my-8" />
+              {/* ================== QUESTION 2 ================== */}
+              <div className="mb-8">
+                <label className="block text-white/90 font-medium mb-3 text-sm">
+                  Question 2: Where did you hear about us?
+                </label>
+                <input
+                  type="text"
+                  value={formData.hearAboutUs}
+                  onChange={(e) =>
+                    handleInputChange("hearAboutUs", e.target.value)
+                  }
+                  className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white w-full"
+                  placeholder="e.g. Instagram, Friend, Website"
+                />
+              </div>
 
-      {/* ================== QUESTION 2 ================== */}
-      <div className="mb-8">
-        <label className="block text-white/90 font-medium mb-3 text-sm">
-          Question 2: Where did you hear about us?
-        </label>
-        <input
-          type="text"
-          value={formData.hearAboutUs}
-          onChange={(e) => handleInputChange("hearAboutUs", e.target.value)}
-          className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white w-full"
-          placeholder="e.g. Instagram, Friend, Website"
-        />
-      </div>
+              {/* Divider */}
+              <hr className="border-t border-gray-600 my-8" />
 
-      {/* Divider */}
-      <hr className="border-t border-gray-600 my-8" />
+              {/* ================== QUESTION 3 ================== */}
+              <div className="mb-8">
+                <label className="block text-white/90 font-medium mb-3 text-sm">
+                  Question 3: What more offerings would you like from us?
+                </label>
+                <textarea
+                  value={formData.suggestions}
+                  onChange={(e) =>
+                    handleInputChange("suggestions", e.target.value)
+                  }
+                  className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white w-full h-24"
+                  placeholder="Your suggestions..."
+                />
+              </div>
 
-      {/* ================== QUESTION 3 ================== */}
-      <div className="mb-8">
-        <label className="block text-white/90 font-medium mb-3 text-sm">
-          Question 3: What more offerings would you like from us?
-        </label>
-        <textarea
-          value={formData.suggestions}
-          onChange={(e) => handleInputChange("suggestions", e.target.value)}
-          className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white w-full h-24"
-          placeholder="Your suggestions..."
-        />
-      </div>
-
-      {/* Duration Note */}
-      <p className="absolute bottom-4 right-4 text-white/70 text-sm">
-        Duration 3 minutes
-      </p>
-    </div>
-  </>
-);
-
-
+              {/* Duration Note */}
+              <p className="absolute bottom-4 right-4 text-white/70 text-sm">
+                Duration 3 minutes
+              </p>
+            </div>
+          </>
+        );
 
       case 13:
         return (

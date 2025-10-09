@@ -663,8 +663,8 @@ export default function Home() {
             <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
               {/* Title */}
               <div className="text-center mb-12">
-                <p className="mt-0 flex justify-center text-sm sm:text-base text-white/90 max-w-2xl mx-auto leading-relaxed mb-6 sm:mb-8 px-4">
-                  Get your mini hair color analysis in just 3 minutes
+                <p className="mt-0 pt-7 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed mb-6 sm:mb-8 bg-black">
+                  Get your mini hair color analysis in just 3 minutes.*
                 </p>
 
                 <h3
@@ -676,7 +676,7 @@ export default function Home() {
               </div>
 
               {/* Duration at bottom-right */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm">
+              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
                 Duration 3 minutes
               </p>
 
@@ -756,10 +756,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Duration at bottom-right */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm">
-                Duration 3 minutes
-              </p>
             </div>
           </>
         );
@@ -884,7 +880,7 @@ export default function Home() {
 
               {/* Duration at the bottom-right */}
               <div className="flex justify-end mt-8">
-                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
               </div>
             </div>
           </>
@@ -936,7 +932,7 @@ export default function Home() {
 
               {/* Duration at the bottom-right */}
               <div className="flex justify-end mt-4">
-                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
               </div>
             </div>
           </>
@@ -983,7 +979,7 @@ export default function Home() {
 
               {/* Duration at the bottom-right */}
               <div className="flex justify-end mt-8 md:mt-4">
-                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
               </div>
             </div>
           </>
@@ -1030,7 +1026,7 @@ export default function Home() {
 
               {/* Duration at bottom-right */}
               <div className="flex justify-end mt-4">
-                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
               </div>
             </div>
           </>
@@ -1079,7 +1075,7 @@ export default function Home() {
 
               {/* Duration at bottom-right */}
               <div className="flex justify-end mt-4">
-                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
               </div>
             </div>
           </>
@@ -1129,7 +1125,7 @@ export default function Home() {
 
               {/* Duration at bottom-right */}
               <div className="flex justify-end mt-4">
-                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
               </div>
             </div>
           </>
@@ -1182,7 +1178,7 @@ export default function Home() {
 
               {/* Duration at bottom-right */}
               <div className="flex justify-end mt-4">
-                <p className="text-white/70 text-sm">Duration 3 minutes</p>
+                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
               </div>
             </div>
           </>
@@ -1193,7 +1189,7 @@ export default function Home() {
           <>
             <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-[500px] p-6 flex flex-col overflow-y-auto relative">
               {/* Duration at bottom-right */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm">
+              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
                 Duration 3 minutes
               </p>
 
@@ -1267,226 +1263,230 @@ export default function Home() {
 
       case 10:
         return (
-  <>
-    {/* Main Card */}
-    <div
-      className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
-      style={{ height: "auto" }} // Automatically adjust height
-    >
-      {/* Heading */}
-      <h3
-        className="mobile-heading font-bold mb-4 text-center"
-        style={{ color: "#ff7f50", marginTop: "10px" }}
-      >
-        Work
-      </h3>
-
-      {/* Optional Text */}
-      <p className="text-white/70 mobile-text mb-6 text-center">
-        (Optional - You can skip to next)
-      </p>
-
-      {/* Work Options */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-10">
-        {[
-          { value: "Corporate", label: "Corporate" },
-          { value: "Stay at home", label: "Stay at home" },
-          { value: "Work from home", label: "Work from home" },
-          { value: "Entrepreneur", label: "Entrepreneur" },
-          { value: "Student", label: "Student" },
-        ].map((work) => (
-          <label
-            key={work.value}
-            className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-          >
-            <input
-              type="radio"
-              name="workType"
-              value={work.value}
-              checked={formData.workType === work.value}
-              onChange={(e) => handleInputChange("workType", e.target.value)}
-              className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-            />
-            <span
-              className="text-white/90 text-lg font-medium"
-              style={{ fontSize: "15px" }}
+          <>
+            {/* Main Card */}
+            <div
+              className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
+              style={{ height: "auto" }} // Automatically adjust height
             >
-              {work.label}
-            </span>
-          </label>
-        ))}
-      </div>
+              {/* Heading */}
+              <h3
+                className="mobile-heading font-bold mb-4 text-center"
+                style={{ color: "#ff7f50", marginTop: "10px" }}
+              >
+                Work
+              </h3>
 
-      {/* Industry Input — Conditional */}
-      {(formData.workType === "Corporate" ||
-        formData.workType === "Work from home" ||
-        formData.workType === "Entrepreneur") && (
-        <div className="mt-6">
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Please specify industry
-          </label>
-          <input
-            type="text"
-            value={formData.workIndustry}
-            onChange={(e) => handleInputChange("workIndustry", e.target.value)}
-            className="input-field placeholder-gray-300 placeholder-opacity-60 w-full"
-            placeholder="e.g., Technology, Healthcare, Finance..."
-          />
-        </div>
-      )}
+              {/* Optional Text */}
+              <p className="text-white/70 mobile-text mb-6 text-center">
+                (Optional - You can skip to next)
+              </p>
 
-      {/* Duration (Bottom-right for large, below for mobile) */}
-      <div className="flex justify-end mt-6 sm:mt-8">
-        <p className="text-white/70 text-sm">Duration 3 minutes</p>
-      </div>
-    </div>
-  </>
-);
+              {/* Work Options */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-10">
+                {[
+                  { value: "Corporate", label: "Corporate" },
+                  { value: "Stay at home", label: "Stay at home" },
+                  { value: "Work from home", label: "Work from home" },
+                  { value: "Entrepreneur", label: "Entrepreneur" },
+                  { value: "Student", label: "Student" },
+                ].map((work) => (
+                  <label
+                    key={work.value}
+                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <input
+                      type="radio"
+                      name="workType"
+                      value={work.value}
+                      checked={formData.workType === work.value}
+                      onChange={(e) =>
+                        handleInputChange("workType", e.target.value)
+                      }
+                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                    />
+                    <span
+                      className="text-white/90 text-lg font-medium"
+                      style={{ fontSize: "15px" }}
+                    >
+                      {work.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
+
+              {/* Industry Input — Conditional */}
+              {(formData.workType === "Corporate" ||
+                formData.workType === "Work from home" ||
+                formData.workType === "Entrepreneur") && (
+                <div className="mt-6">
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Please specify industry
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.workIndustry}
+                    onChange={(e) =>
+                      handleInputChange("workIndustry", e.target.value)
+                    }
+                    className="input-field placeholder-gray-300 placeholder-opacity-60 w-full"
+                    placeholder="e.g., Technology, Healthcare, Finance..."
+                  />
+                </div>
+              )}
+
+              {/* Duration (Bottom-right for large, below for mobile) */}
+              <div className="flex justify-end mt-6 sm:mt-8">
+                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
+              </div>
+            </div>
+          </>
+        );
 
       case 11:
-       return (
-  <>
-    <div
-      className="glass-card mobile-card relative"
-      style={{ overflowY: "auto" }}
-    >
-      {/* Duration at bottom-right */}
-      <p className="absolute bottom-4 right-4 text-white/70 text-sm">
-        Duration 3 minutes
-      </p>
-
-      <div className="mb-6">
-        <h3
-          className="mobile-heading font-bold mb-4 text-center"
-          style={{ color: "#ff7f50" }}
-        >
-          Select Your Perfect Hair Days
-        </h3>
-        <p className="text-white/80 mobile-text mb-2 text-center">
-          Choose your important dates so we can send you reminders if you want
-          to schedule a special delivery at 10% off through the year
-        </p>
-        <p className="text-white/60 italic mobile-description text-center">
-          (Optional - You can skip to the next)
-        </p>
-      </div>
-
-      <div className="calendar-responsive">
-        <div>
-          {/* Calendar Header */}
-          <div className="mb-4">
-            <h3
-              className="mobile-heading font-bold text-white"
-              style={{ color: "#ff7f50" }}
+        return (
+          <>
+            <div
+              className="glass-card mobile-card relative"
+              style={{ overflowY: "auto" }}
             >
-              CALENDAR
-            </h3>
-          </div>
-
-          {/* Calendar */}
-          <div className="bg-black/40 backdrop-blur-sm p-6 border border-white/10">
-            <Calendar
-              onClickDay={handleDayClick}
-              value={null}
-              tileClassName={tileClassName}
-              tileContent={({ date, view }) => {
-                if (view === "month") {
-                  const dateStr = format(date, "yyyy-MM-dd");
-                  const isSelected = formData.selectedDates.some(
-                    (selectedDate) =>
-                      format(selectedDate, "yyyy-MM-dd") === dateStr
-                  );
-                  return isSelected ? (
-                    <span className="calendar-selected-dot" />
-                  ) : null;
-                }
-                return null;
-              }}
-              className="w-full border-0 bg-transparent text-white text-sm sm:text-base"
-              navigationLabel={({ date }) => format(date, "MMMM yyyy")}
-              formatShortWeekday={(locale, date) => format(date, "EEE")}
-              tileDisabled={({ date }) =>
-                date < new Date(new Date().setHours(0, 0, 0, 0))
-              }
-            />
-
-            {/* Dates Selected */}
-            <div className="mt-6 bg-black/60 backdrop-blur-sm border border-white/10 p-3">
-              <span className="text-white font-semibold text-sm">
-                <span className="text-xl font-bold text-coral mr-1">
-                  {formData.selectedDates.length}
-                </span>
-                dates selected
-              </span>
-            </div>
-
-            {/* Clear All Button */}
-            <div className="mt-3">
-              <button
-                onClick={clearSelection}
-                disabled={formData.selectedDates.length === 0}
-                className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn w-full sm:w-auto"
-              >
-                🗑️ Clear All
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Selected Dates Section */}
-        <div>
-          <h3
-            className="mobile-heading font-bold mb-2 sm:mb-8 md:mb-20"
-            style={{ color: "#ff7f50" }}
-          >
-            SELECTED DATES
-          </h3>
-
-          {formData.selectedDates.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📅</div>
-              <p className="text-white/70 mobile-text mb-2">
-                No dates selected yet
+              {/* Duration at bottom-right */}
+              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
+                Duration 3 minutes
               </p>
-              <p className="text-white/50 mobile-description">
-                Click on dates in the calendar to select them
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3 selected-dates-container">
-              {formData.selectedDates
-                .sort((a, b) => a.getTime() - b.getTime())
-                .map((date, index) => (
-                  <div key={index} className="date-card">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-white mobile-text">
-                        {format(date, "EEEE, MMMM d, yyyy")}
-                      </span>
-                      <button
-                        onClick={() => {
+
+              <div className="mb-6">
+                <h3
+                  className="mobile-heading font-bold mb-4 text-center"
+                  style={{ color: "#ff7f50" }}
+                >
+                  Select Your Perfect Hair Days
+                </h3>
+                <p className="text-white/80 mobile-text mb-2 text-center">
+                  Choose your important dates so we can send you reminders if
+                  you want to schedule a special delivery at 10% off through the
+                  year
+                </p>
+                <p className="text-white/60 italic mobile-description text-center">
+                  (Optional - You can skip to the next)
+                </p>
+              </div>
+
+              <div className="calendar-responsive">
+                <div>
+                  {/* Calendar Header */}
+                  <div className="mb-4">
+                    <h3
+                      className="mobile-heading font-bold text-white"
+                      style={{ color: "#ff7f50" }}
+                    >
+                      CALENDAR
+                    </h3>
+                  </div>
+
+                  {/* Calendar */}
+                  <div className="bg-black/40 backdrop-blur-sm p-6 border border-white/10">
+                    <Calendar
+                      onClickDay={handleDayClick}
+                      value={null}
+                      tileClassName={tileClassName}
+                      tileContent={({ date, view }) => {
+                        if (view === "month") {
                           const dateStr = format(date, "yyyy-MM-dd");
-                          setFormData((prev) => ({
-                            ...prev,
-                            selectedDates: prev.selectedDates.filter(
-                              (d) => format(d, "yyyy-MM-dd") !== dateStr
-                            ),
-                          }));
-                        }}
-                        className="text-red-300 hover:text-red-100 mobile-text font-medium transition-colors duration-300"
+                          const isSelected = formData.selectedDates.some(
+                            (selectedDate) =>
+                              format(selectedDate, "yyyy-MM-dd") === dateStr
+                          );
+                          return isSelected ? (
+                            <span className="calendar-selected-dot" />
+                          ) : null;
+                        }
+                        return null;
+                      }}
+                      className="w-full border-0 bg-transparent text-white text-sm sm:text-base"
+                      navigationLabel={({ date }) => format(date, "MMMM yyyy")}
+                      formatShortWeekday={(locale, date) => format(date, "EEE")}
+                      tileDisabled={({ date }) =>
+                        date < new Date(new Date().setHours(0, 0, 0, 0))
+                      }
+                    />
+
+                    {/* Dates Selected */}
+                    <div className="mt-6 bg-black/60 backdrop-blur-sm border border-white/10 p-3">
+                      <span className="text-white font-semibold text-sm">
+                        <span className="text-xl font-bold text-coral mr-1">
+                          {formData.selectedDates.length}
+                        </span>
+                        dates selected
+                      </span>
+                    </div>
+
+                    {/* Clear All Button */}
+                    <div className="mt-3">
+                      <button
+                        onClick={clearSelection}
+                        disabled={formData.selectedDates.length === 0}
+                        className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed mobile-btn w-full sm:w-auto"
                       >
-                        ✕ Remove
+                        🗑️ Clear All
                       </button>
                     </div>
                   </div>
-                ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </>
-);
+                </div>
 
+                {/* Selected Dates Section */}
+                <div>
+                  <h3
+                    className="mobile-heading font-bold mb-2 sm:mb-8 md:mb-20"
+                    style={{ color: "#ff7f50" }}
+                  >
+                    SELECTED DATES
+                  </h3>
+
+                  {formData.selectedDates.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="text-6xl mb-4">📅</div>
+                      <p className="text-white/70 mobile-text mb-2">
+                        No dates selected yet
+                      </p>
+                      <p className="text-white/50 mobile-description">
+                        Click on dates in the calendar to select them
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 selected-dates-container">
+                      {formData.selectedDates
+                        .sort((a, b) => a.getTime() - b.getTime())
+                        .map((date, index) => (
+                          <div key={index} className="date-card">
+                            <div className="flex items-center justify-between">
+                              <span className="font-semibold text-white mobile-text">
+                                {format(date, "EEEE, MMMM d, yyyy")}
+                              </span>
+                              <button
+                                onClick={() => {
+                                  const dateStr = format(date, "yyyy-MM-dd");
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    selectedDates: prev.selectedDates.filter(
+                                      (d) => format(d, "yyyy-MM-dd") !== dateStr
+                                    ),
+                                  }));
+                                }}
+                                className="text-red-300 hover:text-red-100 mobile-text font-medium transition-colors duration-300"
+                              >
+                                ✕ Remove
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        );
 
       case 12:
         return (
@@ -1556,7 +1556,7 @@ export default function Home() {
               </div>
 
               {/* Duration Note */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm">
+              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
                 Duration 3 minutes
               </p>
             </div>
@@ -1571,7 +1571,7 @@ export default function Home() {
               style={{ maxWidth: "896px", height: "432px" }}
             >
               {/* Duration at bottom-right */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm">
+              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
                 Duration 3 minutes
               </p>
 
@@ -1638,7 +1638,7 @@ export default function Home() {
           <div className="w-full max-w-sm mx-auto bg-black/40 backdrop-blur-sm border border-coral/30 p-0">
             <div className="mobile-heading font-bold text-white flex items-center">
               {/* Image */}
-              <div className="bg-black/40 backdrop-blur-sm  p-3 sm:p-4">
+              <div className="bg-black/40 backdrop-blur-sm p-3 sm:p-4">
                 <Image
                   src={mkhLogo}
                   alt="MKH Logo"
@@ -1647,13 +1647,15 @@ export default function Home() {
               </div>
 
               {/* Text stacked vertically */}
-              <div className="ml-6 sm:ml-8 flex flex-col justify-center flex-1 text-left p-3 sm:p-4">
-                <span className="text-lg sm:text-xl font-bold">MKH</span>
+              <div className="flex flex-col justify-center flex-1 text-left pl-3 sm:pl-5">
+                <span className="text-3xl sm:text-4xl font-bold leading-tight text-left">
+                  HAIR COLOR
+                </span>
                 <span
-                  className="text-lg sm:text-xl font-semibold"
-                  style={{ color: "#ff6347", lineHeight: "1.1" }}
+                  className="text-3xl sm:text-4xl font-extrabold text-left"
+                  style={{ color: "#ff5533", lineHeight: "1.1" }}
                 >
-                  Hair Color <br /> Analysis
+                  ANALYSIS
                 </span>
               </div>
             </div>
@@ -1691,55 +1693,65 @@ export default function Home() {
         </div> */}
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto mobile-section">
-          {renderSlide()}
+       <div className="max-w-4xl mx-auto mobile-section relative">
+  {renderSlide()}
 
-          {/* Sticky Footer Navigation */}
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
-            <div
-              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6
-     bg-black/40 backdrop-blur-md border border-white/10
-     px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl shadow-lg"
-            >
-              <button
-                onClick={prevSlide}
-                disabled={currentSlide === 1}
-                className="btn-secondary w-full sm:w-auto text-sm sm:text-base
-       disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-              >
-                ← Previous
-              </button>
+  {/* Sticky Footer Navigation */}
+  <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
+  <div
+    className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6
+    bg-black/40 backdrop-blur-md border border-white/10
+    px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl shadow-lg relative"
+  >
+    <button
+      onClick={prevSlide}
+      disabled={currentSlide === 1}
+      className="btn-secondary w-full sm:w-auto text-sm sm:text-base
+      disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+    >
+      ← Previous
+    </button>
 
-              <button
-                onClick={nextSlide}
-                disabled={
-                  currentSlide === totalSlides ||
-                  (currentSlide === 1 &&
-                    (!formData.firstName ||
-                      !formData.lastName ||
-                      !formData.email)) ||
-                  (currentSlide === 2 &&
-                    (!formData.naturalHairColor ||
-                      !formData.skinColor ||
-                      !formData.eyeColor ||
-                      !formData.hairTexture)) ||
-                  (currentSlide === 3 && !formData.selectedHairColor) ||
-                  (currentSlide === 4 && !formData.hairLength) ||
-                  (currentSlide === 5 && !formData.personalStyle) ||
-                  (currentSlide === 6 && !formData.hairMaintenance) ||
-                  (currentSlide === 7 &&
-                    formData.specialOccasions?.length === 0) || // ✅ fixed
-                  (currentSlide === 8 &&
-                    formData.preferredTreatments?.length === 0) // ✅ fixed
-                }
-                className="btn-primary w-full sm:w-auto text-sm sm:text-base
-   disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
-              >
-                Next →
-              </button>
-            </div>
-          </div>
-        </div>
+    <button
+      onClick={nextSlide}
+      disabled={
+        currentSlide === totalSlides ||
+        (currentSlide === 1 &&
+          (!formData.firstName ||
+            !formData.lastName ||
+            !formData.email)) ||
+        (currentSlide === 2 &&
+          (!formData.naturalHairColor ||
+            !formData.skinColor ||
+            !formData.eyeColor ||
+            !formData.hairTexture)) ||
+        (currentSlide === 3 && !formData.selectedHairColor) ||
+        (currentSlide === 4 && !formData.hairLength) ||
+        (currentSlide === 5 && !formData.personalStyle) ||
+        (currentSlide === 6 && !formData.hairMaintenance) ||
+        (currentSlide === 7 &&
+          formData.specialOccasions?.length === 0) ||
+        (currentSlide === 8 &&
+          formData.preferredTreatments?.length === 0)
+      }
+      className="btn-primary w-full sm:w-auto text-sm sm:text-base
+      disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+    >
+      Next →
+    </button>
+  </div>
+
+  {/* Duration at bottom-right (compact background) */}
+  <div className="flex justify-end mt-2 pr-2">
+    <span className="text-white/70 text-sm bg-black/70 px-2 py-1 rounded-md">
+      Duration 3 minutes
+    </span>
+  </div>
+</div>
+
+
+</div>
+
 
         {/* Notification */}
         {message && (

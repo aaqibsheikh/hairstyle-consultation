@@ -1267,80 +1267,81 @@ export default function Home() {
 
       case 10:
         return (
-          <>
-            {/* Main Card */}
-            <div
-              className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
-              style={{ height: "443px", overflowY: "auto" }}
+  <>
+    {/* Main Card */}
+    <div
+      className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
+      style={{ height: "auto" }} // Automatically adjust height
+    >
+      {/* Heading */}
+      <h3
+        className="mobile-heading font-bold mb-4 text-center"
+        style={{ color: "#ff7f50", marginTop: "10px" }}
+      >
+        Work
+      </h3>
+
+      {/* Optional Text */}
+      <p className="text-white/70 mobile-text mb-6 text-center">
+        (Optional - You can skip to next)
+      </p>
+
+      {/* Work Options */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-10">
+        {[
+          { value: "Corporate", label: "Corporate" },
+          { value: "Stay at home", label: "Stay at home" },
+          { value: "Work from home", label: "Work from home" },
+          { value: "Entrepreneur", label: "Entrepreneur" },
+          { value: "Student", label: "Student" },
+        ].map((work) => (
+          <label
+            key={work.value}
+            className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+          >
+            <input
+              type="radio"
+              name="workType"
+              value={work.value}
+              checked={formData.workType === work.value}
+              onChange={(e) => handleInputChange("workType", e.target.value)}
+              className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+            />
+            <span
+              className="text-white/90 text-lg font-medium"
+              style={{ fontSize: "15px" }}
             >
-              <h3
-                className="mobile-heading font-bold mb-6 text-center"
-                style={{ color: "#ff7f50", marginTop: "10px" }}
-              >
-                Work
-              </h3>
-              <p className="text-white/70 mobile-text mb-6 text-center">
-                (Optional - You can skip to next)
-              </p>
+              {work.label}
+            </span>
+          </label>
+        ))}
+      </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-8 sm:mt-12">
-                {[
-                  { value: "Corporate", label: "Corporate" },
-                  { value: "Stay at home", label: "Stay at home" },
-                  { value: "Work from home", label: "Work from home" },
-                  { value: "Entrepreneur", label: "Entrepreneur" },
-                  { value: "Student", label: "Student" },
-                ].map((work) => (
-                  <label
-                    key={work.value}
-                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-                  >
-                    <input
-                      type="radio"
-                      name="workType"
-                      value={work.value}
-                      checked={formData.workType === work.value}
-                      onChange={(e) =>
-                        handleInputChange("workType", e.target.value)
-                      }
-                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                    />
-                    <span
-                      className="text-white/90 text-lg font-medium"
-                      style={{ fontSize: "15px" }}
-                    >
-                      {work.label}
-                    </span>
-                  </label>
-                ))}
-              </div>
+      {/* Industry Input — Conditional */}
+      {(formData.workType === "Corporate" ||
+        formData.workType === "Work from home" ||
+        formData.workType === "Entrepreneur") && (
+        <div className="mt-6">
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Please specify industry
+          </label>
+          <input
+            type="text"
+            value={formData.workIndustry}
+            onChange={(e) => handleInputChange("workIndustry", e.target.value)}
+            className="input-field placeholder-gray-300 placeholder-opacity-60 w-full"
+            placeholder="e.g., Technology, Healthcare, Finance..."
+          />
+        </div>
+      )}
 
-              {(formData.workType === "Corporate" ||
-                formData.workType === "Work from home" ||
-                formData.workType === "Entrepreneur") && (
-                <div className="mt-6">
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Please specify industry
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.workIndustry}
-                    onChange={(e) =>
-                      handleInputChange("workIndustry", e.target.value)
-                    }
-                    className="input-field placeholder-gray-300 placeholder-opacity-60"
-                    placeholder="e.g., Technology, Healthcare, Finance..."
-                  />
-                </div>
-              )}
-
-              {/* Duration text under options, bottom-right */}
-              <p className="text-white/70 text-sm mt-6 text-right">
-                Duration 3 minutes
-              </p>
-            </div>
-          </>
-        );
+      {/* Duration (Bottom-right for large, below for mobile) */}
+      <div className="flex justify-end mt-6 sm:mt-8">
+        <p className="text-white/70 text-sm">Duration 3 minutes</p>
+      </div>
+    </div>
+  </>
+);
 
       case 11:
        return (

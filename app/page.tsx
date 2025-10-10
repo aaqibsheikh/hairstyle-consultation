@@ -660,7 +660,7 @@ export default function Home() {
       case 1:
        return (
   <>
-    <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
+    <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-12">
       {/* Title */}
       <div className="text-center mb-12">
         <p className="mt-0 pt-7 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed mb-6 sm:mb-8 ">
@@ -757,7 +757,7 @@ export default function Home() {
       case 2:
         return (
           <>
-            <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between mb-32">
+            <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between mb-12">
               {/* Top content */}
               <div className="flex-1 flex items-center">
                 <div className="w-full">
@@ -935,7 +935,7 @@ export default function Home() {
       case 4:
         return (
           <>
-            <div className="glass-card mobile-card max-w-full mb-32 md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
+            <div className="glass-card mobile-card max-w-full mb-12 md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
               {/* Header */}
               <h3
                 className="mobile-heading font-bold text-center"
@@ -982,7 +982,7 @@ export default function Home() {
       case 5:
         return (
           <>
-            <div className="glass-card mb-30 mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
+            <div className="glass-card mb-12 mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
               {/* Header */}
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
@@ -1029,7 +1029,7 @@ export default function Home() {
       case 6:
         return (
           <>
-            <div className="mb-30 glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
+            <div className="mb-12 glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
               {/* Header */}
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
@@ -1485,7 +1485,7 @@ Your Lifestyle
       case 12:
         return (
           <>
-            <div className="glass-card mobile-card mt-0 md:h-auto relative mb-32">
+            <div className="glass-card mobile-card mt-0 md:h-auto relative mb-12">
               {/* Header Section */}
               <div className="text-center mb-12">
                 <h3
@@ -1702,21 +1702,59 @@ Your Lifestyle
         </div> */}
 
         {/* Main Content */}
-     <div className="max-w-4xl mx-auto mobile-section relative">
+   <div className="max-w-4xl mx-auto mobile-section relative">
+  {/* Slide Content */}
   {renderSlide()}
 
-  {/* Sticky Footer Navigation */}
-  <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
+  {/* ---- New Buttons Section (Download + 2 Buttons) ---- */}
+  <div className="bg-none mt-2 px-3 py-4 text-center pb-20">
+  {/* Two Buttons Side by Side */}
+  <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
+    {/* Button 1 */}
+    <div className="text-center flex-1 min-w-[130px]">
+      <p className="text-white/70 text-xs mb-1 leading-tight">
+        Full Hair Color Analysis at a special offer now
+      </p>
+      <button
+        onClick={() => window.open("https://example.com/book-now", "_blank")}
+        className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+      >
+        Book Now
+      </button>
+    </div>
+
+    {/* Button 2 */}
+    <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-0">
+      <p className="text-white/70 text-xs mb-1 leading-tight">
+        Book hair services now
+      </p>
+      <button
+        onClick={() =>
+          window.open("https://example.com/book-appointment", "_blank")
+        }
+        className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+      >
+        Book Appointment
+      </button>
+    </div>
+  </div>
+</div>
+
+
+  {/* ---- Navigation Buttons (Fixed to Bottom) ---- */}
+  <div
+    className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6"
+  >
     <div
-      className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6
+      className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6
       bg-black/40 backdrop-blur-md border border-white/10
-      px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl shadow-lg relative"
+      px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-2xl shadow-lg"
     >
       <button
         onClick={prevSlide}
         disabled={currentSlide === 1}
-        className="btn-secondary w-full sm:w-auto text-sm sm:text-base
-        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+        className="btn-secondary w-full sm:w-auto text-xs sm:text-base
+        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
       >
         ← Previous
       </button>
@@ -1739,58 +1777,29 @@ Your Lifestyle
           (currentSlide === 4 && !formData.hairLength) ||
           (currentSlide === 5 && !formData.personalStyle) ||
           (currentSlide === 6 && !formData.hairMaintenance) ||
-          (currentSlide === 7 &&
-            formData.specialOccasions?.length === 0) ||
-          (currentSlide === 8 &&
-            formData.preferredTreatments?.length === 0)
+          (currentSlide === 7 && formData.specialOccasions?.length === 0) ||
+          (currentSlide === 8 && formData.preferredTreatments?.length === 0)
         }
-        className="btn-primary w-full sm:w-auto text-sm sm:text-base
-        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+        className="btn-primary w-full sm:w-auto text-xs sm:text-base
+        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
       >
         Next →
       </button>
     </div>
-
-    {/* Duration at bottom-right (compact background) */}
-    <div className="flex justify-end mt-2 pr-2">
-      <span className="text-white/70 text-sm bg-black/70 px-2 py-1 rounded-md">
-        Duration 3 minutes
-      </span>
-    </div>
-
-    {/* ---- New Buttons Section ---- */}
-    <div className="flex flex-row flex-wrap items-center justify-center gap-3 px-2 mt-2">
-  {/* Button 1 */}
-  <div className="text-center">
-    <p className="text-white/70 text-xs mb-1 leading-tight">
-      Full Hair Color Analysis at a special offer now
-    </p>
-    <button
-      onClick={() => window.open("https://example.com/book-now", "_blank")}
-      className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all"
-    >
-      Book Now
-    </button>
   </div>
 
-  {/* Button 2 */}
-  <div className="text-center">
-    <p className="text-white/70 text-xs mb-1 leading-tight">
-      Book hair services now
-    </p>
-    <button
-      onClick={() =>
-        window.open("https://example.com/book-appointment", "_blank")
-      }
-      className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all"
-    >
-      Book Appointment
-    </button>
+  {/* Duration */}
+  <div className="flex justify-end mt-2 pr-2">
+    <span className="text-white/70 text-[11px] bg-black/70 px-2 py-0.5 rounded-md">
+      Duration 3 minutes
+    </span>
   </div>
 </div>
 
-  </div>
-</div>
+
+
+
+
 
 
 

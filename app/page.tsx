@@ -734,20 +734,30 @@ export default function Home() {
           />
         </div>
 
-        <div>
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            value={formData.phone}
-            onChange={(e) =>
-              handleInputChange("phone", e.target.value)
-            }
-            className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
-            placeholder="Enter your phone number"
-          />
-        </div>
+       <div>
+  <label className="block text-white/90 font-medium mb-2 text-sm">
+    Phone Number <span className="text-red-500">*</span>
+  </label>
+  <input
+    type="tel"
+    value={formData.phone}
+    onChange={(e) => {
+      const value = e.target.value;
+
+      // Allow only digits and limit to 10
+      if (/^\d{0,10}$/.test(value)) {
+        handleInputChange("phone", value);
+      }
+    }}
+    maxLength={10}
+    required
+    className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+    placeholder="Enter your phone number"
+  />
+</div>
+
+
+
       </div>
     </div>
   </>
@@ -1558,37 +1568,29 @@ Your Lifestyle
         );
 
       case 13:
-       return (
+      return (
   <>
     <div
-      className="glass-card mobile-card relative flex flex-col items-center justify-between"
+      className="glass-card mobile-card relative flex flex-col items-center justify-center text-center"
       style={{
         maxWidth: "896px",
         height: "432px",
         padding: "20px",
       }}
     >
-      {/* Duration hidden placeholder (to keep layout stable) */}
-      <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
-        Duration 3 minutes
-      </p>
-
-      {/* Heading stays in same place */}
-      <div className="text-center">
+      {/* Heading stays fixed at top */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 text-center">
         <h3
-          className="mobile-heading font-bold mb-4"
+          className="mobile-heading font-bold mb-2"
           style={{ color: "#ff7f50" }}
         >
-          Download your Mini Hair Color Analysis 
-
+          Download your Mini Hair Color Analysis
         </h3>
       </div>
 
-      {/* Centered Button Section */}
-      <div
-        className="flex flex-col items-center justify-center flex-1 w-full"
-        style={{ marginBottom: "80px" }}
-      >
+      {/* ---- Centered Content ---- */}
+      <div className="flex flex-col items-center justify-center w-full mt-10">
+        {/* Download PDF Button */}
         <button
           onClick={downloadPDFHandler}
           disabled={
@@ -1616,10 +1618,47 @@ Your Lifestyle
             </span>
           )}
         </button>
+
+        {/* ---- Two Buttons Section (Centered Below) ---- */}
+        <div className="mt-6 px-3 py-2 text-center mt-8">
+          <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
+            {/* Button 1 */}
+            <div className="text-center flex-1 min-w-[130px]">
+              <p className="text-white/70 text-xs mb-1 leading-tight">
+                Full Hair Color Analysis at a special offer now
+              </p>
+              <button
+                onClick={() => window.open("https://example.com/book-now", "_blank")}
+                className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+              >
+                Book Now
+              </button>
+            </div>
+
+            {/* Button 2 */}
+            <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-4">
+              <p className="text-white/70 text-xs mb-1 leading-tight">
+                Book hair services now
+              </p>
+              <button
+                onClick={() => window.open("https://example.com/book-appointment", "_blank")}
+                className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Duration hidden placeholder (for layout stability) */}
+      <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
+        Duration 3 minutes
+      </p>
     </div>
   </>
 );
+
 
 
       default:
@@ -1706,41 +1745,6 @@ Your Lifestyle
   {/* Slide Content */}
   {renderSlide()}
 
-  {/* ---- New Buttons Section (Download + 2 Buttons) ---- */}
-  <div className="bg-none mt-2 px-3 py-4 text-center pb-20">
-  {/* Two Buttons Side by Side */}
-  <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
-    {/* Button 1 */}
-    <div className="text-center flex-1 min-w-[130px]">
-      <p className="text-white/70 text-xs mb-1 leading-tight">
-        Full Hair Color Analysis at a special offer now
-      </p>
-      <button
-        onClick={() => window.open("https://example.com/book-now", "_blank")}
-        className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
-      >
-        Book Now
-      </button>
-    </div>
-
-    {/* Button 2 */}
-    <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-0">
-      <p className="text-white/70 text-xs mb-1 leading-tight">
-        Book hair services now
-      </p>
-      <button
-        onClick={() =>
-          window.open("https://example.com/book-appointment", "_blank")
-        }
-        className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
-      >
-        Book Appointment
-      </button>
-    </div>
-  </div>
-</div>
-
-
   {/* ---- Navigation Buttons (Fixed to Bottom) ---- */}
   <div
     className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6"
@@ -1786,15 +1790,16 @@ Your Lifestyle
         Next →
       </button>
     </div>
-  </div>
 
-  {/* Duration */}
-  <div className="flex justify-end mt-2 pr-2">
-    <span className="text-white/70 text-[11px] bg-black/70 px-2 py-0.5 rounded-md">
-      Duration 3 minutes
-    </span>
+    {/* Duration (moved below buttons) */}
+    <div className="flex justify-end mt-2 pr-2">
+      <span className="text-white/70 text-[11px] bg-black/70 px-2 py-0.5 rounded-md">
+        Duration 3 minutes
+      </span>
+    </div>
   </div>
 </div>
+
 
 
 

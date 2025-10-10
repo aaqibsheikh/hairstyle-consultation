@@ -658,107 +658,101 @@ export default function Home() {
   const renderSlide = () => {
     switch (currentSlide) {
       case 1:
-        return (
-          <>
-            <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
-              {/* Title */}
-              <div className="text-center mb-12">
-                <p className="mt-0 pt-7 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed mb-6 sm:mb-8 ">
-                  Get your hair color analysis in 3 minutes.*
-                </p>
+       return (
+  <>
+    <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
+      {/* Title */}
+      <div className="text-center mb-12">
+        <p className="mt-0 pt-7 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed mb-6 sm:mb-8 ">
+          Get your hair color analysis in 3 minutes.*
+        </p>
 
-                <h3
-                  className="mobile-heading font-bold mb-4"
-                  style={{ color: "#ff7f50" }}
-                >
-                  Tell us a little about yourself
-                </h3>
-              </div>
+        <h3
+          className="mobile-heading font-bold mb-4"
+          style={{ color: "#ff7f50" }}
+        >
+          Tell us a little about yourself
+        </h3>
+      </div>
 
-              {/* Duration at bottom-right */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
-                Duration 3 minutes
-              </p>
+      {/* Duration at bottom-right */}
+      <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
+        Duration 3 minutes
+      </p>
 
-              {/* First & Last Name */}
-              <div className="form-grid gap-6 mb-8">
-                <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      handleInputChange("firstName", e.target.value)
-                    }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.firstName ? "bg-black" : "bg-transparent"
-                    }`}
-                    placeholder="Enter your first name"
-                  />
-                </div>
+      {/* First & Last Name */}
+      <div className="form-grid gap-6 mb-8">
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            First Name
+          </label>
+          <input
+            type="text"
+            value={formData.firstName}
+            onChange={(e) =>
+              handleInputChange("firstName", e.target.value)
+            }
+            className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+              formData.firstName ? "bg-black" : "bg-transparent"
+            }`}
+            placeholder="Enter your first name"
+          />
+        </div>
 
-                <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) =>
-                      handleInputChange("lastName", e.target.value)
-                    }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.lastName ? "bg-black" : "bg-transparent"
-                    }`}
-                    placeholder="Enter your last name"
-                  />
-                </div>
-              </div>
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Last Name
+          </label>
+          <input
+            type="text"
+            value={formData.lastName}
+            onChange={(e) =>
+              handleInputChange("lastName", e.target.value)
+            }
+            className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+              formData.lastName ? "bg-black" : "bg-transparent"
+            }`}
+            placeholder="Enter your last name"
+          />
+        </div>
+      </div>
 
-              {/* Email & Phone */}
-              <div className="form-grid gap-6 mb-8">
-                <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
-                    placeholder="example@example.com"
-                  />
-                </div>
-                <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => {
-                      // Sirf numbers allow karo
-                      let onlyNums = e.target.value.replace(/\D/g, "");
+      {/* Email & Phone */}
+      <div className="form-grid gap-6 mb-8">
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Email
+          </label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) =>
+              handleInputChange("email", e.target.value)
+            }
+            className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+            placeholder="example@example.com"
+          />
+        </div>
 
-                      // Max 10 digits hi allow hongi
-                      if (onlyNums.length > 10) {
-                        onlyNums = onlyNums.slice(0, 10);
-                      }
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Phone Number
+          </label>
+          <input
+            type="tel"
+            value={formData.phone}
+            onChange={(e) =>
+              handleInputChange("phone", e.target.value)
+            }
+            className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+            placeholder="Enter your phone number"
+          />
+        </div>
+      </div>
+    </div>
+  </>
+);
 
-                      handleInputChange("phone", onlyNums);
-                    }}
-                    className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
-                    placeholder="123-456-7890"
-                    maxLength={12} // formatted dashes ke sath 12 chars tak
-                  />
-                </div>
-              </div>
-
-            </div>
-          </>
-        );
 
       case 2:
         return (
@@ -1041,7 +1035,8 @@ export default function Home() {
                 className="mobile-heading font-bold mb-6 text-center"
                 style={{ color: "#ff7f50", marginTop: "10px" }}
               >
-                Your hair maintenance routine?
+                How often you get your hair services?
+
               </h3>
 
               {/* Hair maintenance options */}
@@ -1090,7 +1085,7 @@ export default function Home() {
                 className="mobile-heading font-bold mb-6 text-center"
                 style={{ color: "#ff7f50", marginTop: "10px" }}
               >
-                Which occasions do you choose your hair treatments frequently?
+                Apart from your usual routine, which special occasions you choose your hair services frequently?
               </h3>
 
               {/* Special occasions options */}
@@ -1274,7 +1269,8 @@ export default function Home() {
                 className="mobile-heading font-bold mb-4 text-center"
                 style={{ color: "#ff7f50", marginTop: "10px" }}
               >
-                Work
+                
+Your Lifestyle
               </h3>
 
               {/* Optional Text */}
@@ -1363,9 +1359,7 @@ export default function Home() {
                   Select Your Perfect Hair Days
                 </h3>
                 <p className="text-white/80 mobile-text mb-2 text-center">
-                  Choose your important dates so we can send you reminders if
-                  you want to schedule a special delivery at 10% off through the
-                  year
+                  Choose your important dates so we can send you reminders 3 weeks before with a special offer plus 10% off your hair services.
                 </p>
                 <p className="text-white/60 italic mobile-description text-center">
                   (Optional - You can skip to the next)
@@ -1564,54 +1558,69 @@ export default function Home() {
         );
 
       case 13:
-        return (
-          <>
-            <div
-              className="glass-card mobile-card relative" // added relative for positioning
-              style={{ maxWidth: "896px", height: "432px" }}
-            >
-              {/* Duration at bottom-right */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
-                Duration 3 minutes
-              </p>
+       return (
+  <>
+    <div
+      className="glass-card mobile-card relative flex flex-col items-center justify-between"
+      style={{
+        maxWidth: "896px",
+        height: "432px",
+        padding: "20px",
+      }}
+    >
+      {/* Duration hidden placeholder (to keep layout stable) */}
+      <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
+        Duration 3 minutes
+      </p>
 
-              <div className="text-center mb-8" style={{ marginTop: "140px" }}>
-                {/* Top content or heading */}
-              </div>
+      {/* Heading stays in same place */}
+      <div className="text-center">
+        <h3
+          className="mobile-heading font-bold mb-4"
+          style={{ color: "#ff7f50" }}
+        >
+          Download your Mini Hair Color Analysis 
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={downloadPDFHandler}
-                  disabled={
-                    isSubmitting ||
-                    isGeneratingPDF ||
-                    !formData.firstName ||
-                    !formData.lastName
-                  }
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)",
-                    transform: "scale(1.05)",
-                    transition: "all 0.3s ease",
-                  }}
-                  className="relative overflow-hidden text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
-                >
-                  {isGeneratingPDF ? (
-                    <span className="flex items-center justify-center relative z-10 text-white">
-                      <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
-                      <span className="text-lg">Generating...</span>
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center relative z-10 text-white">
-                      <div className="text-2xl mr-3">📄</div>
-                      <span className="text-lg">Download PDF</span>
-                    </span>
-                  )}
-                </button>
-              </div>
-            </div>
-          </>
-        );
+        </h3>
+      </div>
+
+      {/* Centered Button Section */}
+      <div
+        className="flex flex-col items-center justify-center flex-1 w-full"
+        style={{ marginBottom: "80px" }}
+      >
+        <button
+          onClick={downloadPDFHandler}
+          disabled={
+            isSubmitting ||
+            isGeneratingPDF ||
+            !formData.firstName ||
+            !formData.lastName
+          }
+          style={{
+            background: "linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)",
+            transform: "scale(1.05)",
+            transition: "all 0.3s ease",
+          }}
+          className="relative overflow-hidden text-white font-bold py-4 px-8 shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 disabled:opacity-80 disabled:cursor-not-allowed disabled:transform-none border-2 border-white/20 hover:border-white/40"
+        >
+          {isGeneratingPDF ? (
+            <span className="flex items-center justify-center relative z-10 text-white">
+              <div className="animate-spin rounded-full h-6 w-6 border-3 border-white mr-3"></div>
+              <span className="text-lg">Generating...</span>
+            </span>
+          ) : (
+            <span className="flex items-center justify-center relative z-10 text-white">
+              <div className="text-2xl mr-3">📄</div>
+              <span className="text-lg">Download PDF</span>
+            </span>
+          )}
+        </button>
+      </div>
+    </div>
+  </>
+);
+
 
       default:
         return null;
@@ -1693,64 +1702,97 @@ export default function Home() {
         </div> */}
 
         {/* Main Content */}
-       <div className="max-w-4xl mx-auto mobile-section relative">
+     <div className="max-w-4xl mx-auto mobile-section relative">
   {renderSlide()}
 
   {/* Sticky Footer Navigation */}
   <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
-  <div
-    className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6
-    bg-black/40 backdrop-blur-md border border-white/10
-    px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl shadow-lg relative"
-  >
-    <button
-      onClick={prevSlide}
-      disabled={currentSlide === 1}
-      className="btn-secondary w-full sm:w-auto text-sm sm:text-base
-      disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+    <div
+      className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6
+      bg-black/40 backdrop-blur-md border border-white/10
+      px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl shadow-lg relative"
     >
-      ← Previous
-    </button>
+      <button
+        onClick={prevSlide}
+        disabled={currentSlide === 1}
+        className="btn-secondary w-full sm:w-auto text-sm sm:text-base
+        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+      >
+        ← Previous
+      </button>
 
+      <button
+        onClick={nextSlide}
+        disabled={
+          currentSlide === totalSlides ||
+          (currentSlide === 1 &&
+            (!formData.firstName ||
+              !formData.lastName ||
+              !formData.email ||
+              !formData.phone)) ||
+          (currentSlide === 2 &&
+            (!formData.naturalHairColor ||
+              !formData.skinColor ||
+              !formData.eyeColor ||
+              !formData.hairTexture)) ||
+          (currentSlide === 3 && !formData.selectedHairColor) ||
+          (currentSlide === 4 && !formData.hairLength) ||
+          (currentSlide === 5 && !formData.personalStyle) ||
+          (currentSlide === 6 && !formData.hairMaintenance) ||
+          (currentSlide === 7 &&
+            formData.specialOccasions?.length === 0) ||
+          (currentSlide === 8 &&
+            formData.preferredTreatments?.length === 0)
+        }
+        className="btn-primary w-full sm:w-auto text-sm sm:text-base
+        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+      >
+        Next →
+      </button>
+    </div>
+
+    {/* Duration at bottom-right (compact background) */}
+    <div className="flex justify-end mt-2 pr-2">
+      <span className="text-white/70 text-sm bg-black/70 px-2 py-1 rounded-md">
+        Duration 3 minutes
+      </span>
+    </div>
+
+    {/* ---- New Buttons Section ---- */}
+    <div className="flex flex-row flex-wrap items-center justify-center gap-3 px-2 mt-2">
+  {/* Button 1 */}
+  <div className="text-center">
+    <p className="text-white/70 text-xs mb-1 leading-tight">
+      Full Hair Color Analysis at a special offer now
+    </p>
     <button
-      onClick={nextSlide}
-      disabled={
-        currentSlide === totalSlides ||
-        (currentSlide === 1 &&
-          (!formData.firstName ||
-            !formData.lastName ||
-            !formData.email)) ||
-        (currentSlide === 2 &&
-          (!formData.naturalHairColor ||
-            !formData.skinColor ||
-            !formData.eyeColor ||
-            !formData.hairTexture)) ||
-        (currentSlide === 3 && !formData.selectedHairColor) ||
-        (currentSlide === 4 && !formData.hairLength) ||
-        (currentSlide === 5 && !formData.personalStyle) ||
-        (currentSlide === 6 && !formData.hairMaintenance) ||
-        (currentSlide === 7 &&
-          formData.specialOccasions?.length === 0) ||
-        (currentSlide === 8 &&
-          formData.preferredTreatments?.length === 0)
+      onClick={() => window.open("https://example.com/book-now", "_blank")}
+      className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all"
+    >
+      Book Now
+    </button>
+  </div>
+
+  {/* Button 2 */}
+  <div className="text-center">
+    <p className="text-white/70 text-xs mb-1 leading-tight">
+      Book hair services now
+    </p>
+    <button
+      onClick={() =>
+        window.open("https://example.com/book-appointment", "_blank")
       }
-      className="btn-primary w-full sm:w-auto text-sm sm:text-base
-      disabled:opacity-50 disabled:cursor-not-allowed mobile-btn"
+      className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all"
     >
-      Next →
+      Book Appointment
     </button>
   </div>
+</div>
 
-  {/* Duration at bottom-right (compact background) */}
-  <div className="flex justify-end mt-2 pr-2">
-    <span className="text-white/70 text-sm bg-black/70 px-2 py-1 rounded-md">
-      Duration 3 minutes
-    </span>
   </div>
 </div>
 
 
-</div>
 
 
         {/* Notification */}

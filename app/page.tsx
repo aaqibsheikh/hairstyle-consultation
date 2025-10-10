@@ -1568,18 +1568,17 @@ Your Lifestyle
         );
 
       case 13:
-   return (
+      return (
   <>
-    {/* ---- Main Glass Card ---- */}
     <div
-      className="glass-card mobile-card relative flex flex-col items-center justify-center text-center"
+      className="glass-card mobile-card relative flex flex-col items-center justify-between text-center"
       style={{
         maxWidth: "896px",
         height: "432px",
         padding: "20px",
       }}
     >
-      {/* ---- Heading ---- */}
+      {/* ---- Heading (Top) ---- */}
       <div className="absolute top-6 left-1/2 -translate-x-1/2 text-center">
         <h3
           className="mobile-heading font-bold mb-2"
@@ -1589,8 +1588,8 @@ Your Lifestyle
         </h3>
       </div>
 
-      {/* ---- Centered Content ---- */}
-      <div className="flex flex-col items-center justify-center w-full mt-10">
+      {/* ---- Centered Button ---- */}
+      <div className="flex flex-col items-center justify-center w-full mt-10 flex-grow">
         <button
           onClick={downloadPDFHandler}
           disabled={
@@ -1619,49 +1618,42 @@ Your Lifestyle
           )}
         </button>
       </div>
-    </div>
 
-    {/* ---- Two Buttons Section (Outside Parent) ---- */}
-    <div
-      className="mt-8 px-3 py-4 text-center"
-      style={{ marginBottom: "100px" }}
-    >
-      <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
-        {/* ---- Button 1 ---- */}
-        <div className="text-center flex-1 min-w-[130px]">
-          <p className="text-white/70 text-xs mb-1 leading-tight">
-            Full Hair Color Analysis at a special offer now
-          </p>
-          <button
-            onClick={() =>
-              window.open("https://example.com/book-now", "_blank")
-            }
-            className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
-          >
-            Book Now
-          </button>
-        </div>
+      {/* ---- Buttons at Bottom ---- */}
+      <div className="w-full px-3 py-3 text-center absolute bottom-6 left-1/2 -translate-x-1/2">
+        <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
+          {/* ---- Button 1 ---- */}
+          <div className="text-center flex-1 min-w-[130px]">
+            <p className="text-white/70 text-xs mb-1 leading-tight">
+              Full Hair Color Analysis at a special offer now
+            </p>
+            <button
+              onClick={() => window.open("https://example.com/book-now", "_blank")}
+              className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+            >
+              Book Now
+            </button>
+          </div>
 
-        {/* ---- Button 2 ---- */}
-        <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-0">
-          <p className="text-white/70 text-xs mb-1 leading-tight">
-            Book hair services now
-          </p>
-          <button
-            onClick={() =>
-              window.open("https://example.com/book-appointment", "_blank")
-            }
-            className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
-          >
-            Book Appointment
-          </button>
+          {/* ---- Button 2 ---- */}
+          <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-0">
+            <p className="text-white/70 text-xs mb-1 leading-tight">
+              Book hair services now
+            </p>
+            <button
+              onClick={() =>
+                window.open("https://example.com/book-appointment", "_blank")
+              }
+              className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+            >
+              Book Appointment
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </>
 );
-
-
 
 
 

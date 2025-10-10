@@ -1568,8 +1568,9 @@ Your Lifestyle
         );
 
       case 13:
-      return (
+   return (
   <>
+    {/* ---- Main Glass Card ---- */}
     <div
       className="glass-card mobile-card relative flex flex-col items-center justify-center text-center"
       style={{
@@ -1578,7 +1579,7 @@ Your Lifestyle
         padding: "20px",
       }}
     >
-      {/* Heading stays fixed at top */}
+      {/* ---- Heading ---- */}
       <div className="absolute top-6 left-1/2 -translate-x-1/2 text-center">
         <h3
           className="mobile-heading font-bold mb-2"
@@ -1590,7 +1591,6 @@ Your Lifestyle
 
       {/* ---- Centered Content ---- */}
       <div className="flex flex-col items-center justify-center w-full mt-10">
-        {/* Download PDF Button */}
         <button
           onClick={downloadPDFHandler}
           disabled={
@@ -1618,46 +1618,51 @@ Your Lifestyle
             </span>
           )}
         </button>
+      </div>
+    </div>
 
-        {/* ---- Two Buttons Section (Centered Below) ---- */}
-        <div className="mt-6 px-3 py-2 text-center mt-8">
-          <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
-            {/* Button 1 */}
-            <div className="text-center flex-1 min-w-[130px]">
-              <p className="text-white/70 text-xs mb-1 leading-tight">
-                Full Hair Color Analysis at a special offer now
-              </p>
-              <button
-                onClick={() => window.open("https://example.com/book-now", "_blank")}
-                className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
-              >
-                Book Now
-              </button>
-            </div>
+    {/* ---- Two Buttons Section (Outside Parent) ---- */}
+    <div
+      className="mt-8 px-3 py-4 text-center"
+      style={{ marginBottom: "100px" }}
+    >
+      <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
+        {/* ---- Button 1 ---- */}
+        <div className="text-center flex-1 min-w-[130px]">
+          <p className="text-white/70 text-xs mb-1 leading-tight">
+            Full Hair Color Analysis at a special offer now
+          </p>
+          <button
+            onClick={() =>
+              window.open("https://example.com/book-now", "_blank")
+            }
+            className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+          >
+            Book Now
+          </button>
+        </div>
 
-            {/* Button 2 */}
-            <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-4">
-              <p className="text-white/70 text-xs mb-1 leading-tight">
-                Book hair services now
-              </p>
-              <button
-                onClick={() => window.open("https://example.com/book-appointment", "_blank")}
-                className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
-              >
-                Book Appointment
-              </button>
-            </div>
-          </div>
+        {/* ---- Button 2 ---- */}
+        <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-0">
+          <p className="text-white/70 text-xs mb-1 leading-tight">
+            Book hair services now
+          </p>
+          <button
+            onClick={() =>
+              window.open("https://example.com/book-appointment", "_blank")
+            }
+            className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+          >
+            Book Appointment
+          </button>
         </div>
       </div>
-
-      {/* Duration hidden placeholder (for layout stability) */}
-      <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
-        Duration 3 minutes
-      </p>
     </div>
   </>
 );
+
+
+
 
 
 

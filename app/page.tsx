@@ -684,7 +684,7 @@ export default function Home() {
       <div className="form-grid gap-6 mb-8">
         <div>
           <label className="block text-white/90 font-medium mb-2 text-sm">
-            First Name
+            First Name<span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -701,7 +701,7 @@ export default function Home() {
 
         <div>
           <label className="block text-white/90 font-medium mb-2 text-sm">
-            Last Name
+            Last Name<span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -721,7 +721,7 @@ export default function Home() {
       <div className="form-grid gap-6 mb-8">
         <div>
           <label className="block text-white/90 font-medium mb-2 text-sm">
-            Email
+            Email<span className="text-red-500">*</span>
           </label>
           <input
             type="email"
@@ -775,7 +775,7 @@ export default function Home() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                     <div>
                       <label className="block text-white/90 font-medium mb-2 text-sm">
-                        Your Natural Hair Color
+                        Your Natural Hair Color <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={formData.naturalHairColor}
@@ -800,7 +800,7 @@ export default function Home() {
 
                     <div>
                       <label className="block text-white/90 font-medium mb-2 text-sm">
-                        Skin Color
+                        Skin Color<span className="text-red-500">*</span>
                       </label>
                       <select
                         value={formData.skinColor}
@@ -814,7 +814,7 @@ export default function Home() {
                         }`}
                       >
                         <option value="" disabled className="opacity-60">
-                          Select skin color
+                          Select skin color<span className="text-red-500">*</span>
                         </option>
                         <option value="Dark">Dark</option>
                         <option value="Medium">Medium</option>
@@ -828,7 +828,7 @@ export default function Home() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-white/90 font-medium mb-2 text-sm">
-                        Eye Color
+                        Eye Color <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={formData.eyeColor}
@@ -856,7 +856,7 @@ export default function Home() {
 
                     <div>
                       <label className="block text-white/90 font-medium mb-2 text-sm">
-                        Hair Texture
+                        Hair Texture <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={formData.hairTexture}

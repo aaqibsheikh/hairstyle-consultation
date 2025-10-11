@@ -1704,7 +1704,7 @@ export default function Home() {
                   alt="MKH Logo" // ✅ alt required hota hai
                   width={80}
                   height={80}
-                  className="w-36 h-36 sm:w-28 sm:h-28 object-cover flex-shrink-0"
+                  className="w-28 h-28 sm:w-28 sm:h-28 object-cover flex-shrink-0"
                 />
               </div>
 

@@ -1,5 +1,5 @@
 "use client";
-
+import InputMask from "react-input-mask";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import { format } from "date-fns";
@@ -660,7 +660,7 @@ export default function Home() {
       case 1:
        return (
   <>
-    <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-12">
+    <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
       {/* Title */}
       <div className="text-center mb-12">
         <p className="mt-0 pt-7 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed mb-6 sm:mb-8 ">
@@ -734,27 +734,30 @@ export default function Home() {
           />
         </div>
 
-       <div>
+<div>
   <label className="block text-white/90 font-medium mb-2 text-sm">
     Phone Number <span className="text-red-500">*</span>
   </label>
-  <input
-    type="tel"
-    value={formData.phone}
-    onChange={(e) => {
-      const value = e.target.value;
 
-      // Allow only digits and limit to 10
-      if (/^\d{0,10}$/.test(value)) {
-        handleInputChange("phone", value);
-      }
-    }}
-    maxLength={10}
-    required
-    className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
-    placeholder="Enter your phone number"
-  />
+  <InputMask
+    mask="+1 (999) 999-9999"
+    value={formData.phone}
+    onChange={(e) => handleInputChange("phone", e.target.value)}
+  >
+    {(inputProps) => (
+      <input
+        {...inputProps}
+        type="tel"
+        required
+        placeholder="+1 (555) 123-4567"
+        className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+      />
+    )}
+  </InputMask>
 </div>
+
+
+
 
 
 
@@ -891,57 +894,58 @@ export default function Home() {
         );
 
       case 3:
-        return (
-          <>
-            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
-              {/* Header */}
-              <div className="text-center mb-6">
-                <h4
-                  className="mobile-heading font-bold mb-4"
-                  style={{ color: "#ff7f50", marginTop: "10px" }}
-                >
-                  Choose Your Hair Color
-                </h4>
-              </div>
+       return (
+  <>
+    <div
+      className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full min-h-[430px] md:h-[432px] p-6 flex flex-col justify-between"
+    >
+      {/* Header */}
+      <div className="text-center mb-6">
+        <h4
+          className="mobile-heading font-bold mb-4"
+          style={{ color: "#ff7f50", marginTop: "10px" }}
+        >
+          Choose Your Hair Color
+        </h4>
+      </div>
 
-              {/* Hair color options */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mt-12">
-                {[
-                  { value: "Blonde", label: "Blonde", emoji: "💛" },
-                  { value: "Brunette", label: "Brunette", emoji: "🤎" },
-                ].map((color) => (
-                  <label
-                    key={color.value}
-                    className="space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-                  >
-                    <input
-                      type="radio"
-                      name="selectedHairColor"
-                      value={color.value}
-                      checked={formData.selectedHairColor === color.value}
-                      onChange={(e) =>
-                        handleInputChange("selectedHairColor", e.target.value)
-                      }
-                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral focus:ring-2"
-                    />
-                    <span
-                      className="text-white/90 text-lg font-medium"
-                      style={{ fontSize: "15px" }}
-                    >
-                      {color.label}
-                    </span>
-                  </label>
-                ))}
-              </div>
+      {/* Hair color options */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mt-12">
+        {[
+          { value: "Blonde", label: "Blonde", emoji: "💛" },
+          { value: "Brunette", label: "Brunette", emoji: "🤎" },
+        ].map((color) => (
+          <label
+            key={color.value}
+            className="space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+          >
+            <input
+              type="radio"
+              name="selectedHairColor"
+              value={color.value}
+              checked={formData.selectedHairColor === color.value}
+              onChange={(e) =>
+                handleInputChange("selectedHairColor", e.target.value)
+              }
+              className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral focus:ring-2"
+            />
+            <span
+              className="text-white/90 text-lg font-medium"
+              style={{ fontSize: "15px" }}
+            >
+              {color.label}
+            </span>
+          </label>
+        ))}
+      </div>
 
-              {/* Duration at the bottom-right */}
-              <div className="flex justify-end mt-4">
-                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
-              </div>
-            </div>
-          </>
-        );
-
+      {/* Duration at the bottom-right */}
+      <div className="flex justify-end mt-4">
+        <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
+      </div>
+    </div>
+  </>
+);
       case 4:
         return (
           <>
@@ -1139,7 +1143,7 @@ export default function Home() {
       case 8:
         return (
           <>
-            <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between relative mb-35">
+            <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between relative mb-32">
               {/* Header */}
               <h3
                 className="mobile-heading font-bold mb-6 text-center"
@@ -1353,7 +1357,7 @@ Your Lifestyle
         return (
           <>
             <div
-              className="glass-card mobile-card relative"
+              className="glass-card mobile-card relative mb-44"
               style={{ overflowY: "auto" }}
             >
               {/* Duration at bottom-right */}
@@ -1655,9 +1659,6 @@ Your Lifestyle
   </>
 );
 
-
-
-
       default:
         return null;
     }
@@ -1796,15 +1797,6 @@ Your Lifestyle
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
 
         {/* Notification */}
         {message && (

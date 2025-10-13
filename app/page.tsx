@@ -41,10 +41,6 @@ interface FormData {
   preferredTreatments: string[];
   workType: string;
   workIndustry: string;
-  favoriteProduct: string;
-  hearAboutUs: string;
-  suggestions: string;
-
   // Files and Calendar
   files: File[];
   selectedDates: Date[];
@@ -69,9 +65,6 @@ export default function Home() {
     preferredTreatments: [],
     workType: "",
     workIndustry: "",
-    favoriteProduct: "",
-    hearAboutUs: "",
-    suggestions: "",
     files: [],
     selectedDates: [],
   });
@@ -79,7 +72,7 @@ export default function Home() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [message, setMessage] = useState("");
 
-  const totalSlides = 13;
+  const totalSlides = 12;
 
   const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -343,8 +336,7 @@ export default function Home() {
         `Hair Texture: ${formData.hairTexture || "Not specified"}`,
         `Hair Length: ${formData.hairLength || "Not specified"}`,
         `Personal Style: ${formData.personalStyle || "Not specified"}`,
-        `Maintenance Preference: ${
-          formData.hairMaintenance || "Not specified"
+        `Maintenance Preference: ${formData.hairMaintenance || "Not specified"
         }`,
       ];
 
@@ -578,9 +570,8 @@ export default function Home() {
       }
 
       // ===== SAVE FILE =====
-      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${
-        formData.lastName
-      }_${format(new Date(), "yyyyMMdd")}.pdf`;
+      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${formData.lastName
+        }_${format(new Date(), "yyyyMMdd")}.pdf`;
       pdf.save(fileName);
 
       setMessage("PDF report generated successfully!");
@@ -639,9 +630,6 @@ export default function Home() {
           workIndustry: "",
           files: [],
           selectedDates: [],
-          favoriteProduct: "",
-          hearAboutUs: "",
-          suggestions: "",
         });
         setCurrentSlide(1);
         setMessage("");
@@ -692,9 +680,8 @@ export default function Home() {
                     onChange={(e) =>
                       handleInputChange("firstName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.firstName ? "bg-black" : "bg-transparent"
-                    }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.firstName ? "bg-black" : "bg-transparent"
+                      }`}
                     placeholder="Enter your first name"
                   />
                 </div>
@@ -709,9 +696,8 @@ export default function Home() {
                     onChange={(e) =>
                       handleInputChange("lastName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.lastName ? "bg-black" : "bg-transparent"
-                    }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.lastName ? "bg-black" : "bg-transparent"
+                      }`}
                     placeholder="Enter your last name"
                   />
                 </div>
@@ -777,11 +763,10 @@ export default function Home() {
                         onChange={(e) =>
                           handleInputChange("naturalHairColor", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.naturalHairColor === ""
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.naturalHairColor === ""
                             ? "text-gray-300 opacity-60"
                             : "text-white"
-                        }`}
+                          }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select hair color
@@ -802,11 +787,10 @@ export default function Home() {
                         onChange={(e) =>
                           handleInputChange("skinColor", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.skinColor === ""
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.skinColor === ""
                             ? "text-gray-300 opacity-60"
                             : "text-white"
-                        }`}
+                          }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select skin color
@@ -831,11 +815,10 @@ export default function Home() {
                         onChange={(e) =>
                           handleInputChange("eyeColor", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.eyeColor === ""
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.eyeColor === ""
                             ? "text-gray-300 opacity-60"
                             : "text-white"
-                        }`}
+                          }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select eye color
@@ -859,11 +842,10 @@ export default function Home() {
                         onChange={(e) =>
                           handleInputChange("hairTexture", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.hairTexture === ""
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.hairTexture === ""
                             ? "text-gray-300 opacity-60"
                             : "text-white"
-                        }`}
+                          }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select hair texture
@@ -1293,7 +1275,7 @@ export default function Home() {
 
               {/* Optional Text */}
               <p className="text-white/70 mobile-text mb-6 text-center">
-                (Optional - You can skip to next)
+                (Optional - You can skip to next slide)
               </p>
 
               {/* Work Options */}
@@ -1333,21 +1315,21 @@ export default function Home() {
               {(formData.workType === "Corporate" ||
                 formData.workType === "Work from home" ||
                 formData.workType === "Entrepreneur") && (
-                <div className="mt-6">
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Please specify industry
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.workIndustry}
-                    onChange={(e) =>
-                      handleInputChange("workIndustry", e.target.value)
-                    }
-                    className="input-field placeholder-gray-300 placeholder-opacity-60 w-full"
-                    placeholder="e.g., Technology, Healthcare, Finance..."
-                  />
-                </div>
-              )}
+                  <div className="mt-6">
+                    <label className="block text-white/90 font-medium mb-2 text-sm">
+                      Please specify industry
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.workIndustry}
+                      onChange={(e) =>
+                        handleInputChange("workIndustry", e.target.value)
+                      }
+                      className="input-field placeholder-gray-300 placeholder-opacity-60 w-full"
+                      placeholder="e.g., Technology, Healthcare, Finance..."
+                    />
+                  </div>
+                )}
 
               {/* Duration (Bottom-right for large, below for mobile) */}
               <div className="flex justify-end mt-6 sm:mt-8">
@@ -1503,99 +1485,22 @@ export default function Home() {
             </div>
           </>
         );
-
       case 12:
-        return (
-          <>
-            <div className="glass-card mobile-card mt-0 md:h-auto relative mb-12">
-              {/* Header Section */}
-              <div className="text-center mb-12">
-                <h3
-                  className="mobile-heading font-bold mb-4"
-                  style={{ color: "#ff7f50" }}
-                >
-                  Personal Information
-                </h3>
-              </div>
-
-              {/* ================== QUESTION 1 ================== */}
-              <div className="mb-8">
-                <label className="block text-white/90 font-medium mb-3 text-sm">
-                  Question 1: Which of our products do you like the most?
-                </label>
-                <input
-                  type="text"
-                  value={formData.favoriteProduct}
-                  onChange={(e) =>
-                    handleInputChange("favoriteProduct", e.target.value)
-                  }
-                  className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white w-full"
-                  placeholder="Enter your favorite product"
-                />
-              </div>
-
-              {/* Divider */}
-              <hr className="border-t border-gray-600 my-8" />
-
-              {/* ================== QUESTION 2 ================== */}
-              <div className="mb-8">
-                <label className="block text-white/90 font-medium mb-3 text-sm">
-                  Question 2: Where did you hear about us?
-                </label>
-                <input
-                  type="text"
-                  value={formData.hearAboutUs}
-                  onChange={(e) =>
-                    handleInputChange("hearAboutUs", e.target.value)
-                  }
-                  className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white w-full"
-                  placeholder="e.g. Instagram, Friend, Website"
-                />
-              </div>
-
-              {/* Divider */}
-              <hr className="border-t border-gray-600 my-8" />
-
-              {/* ================== QUESTION 3 ================== */}
-              <div className="mb-8">
-                <label className="block text-white/90 font-medium mb-3 text-sm">
-                  Question 3: What more offerings would you like from us?
-                </label>
-                <textarea
-                  value={formData.suggestions}
-                  onChange={(e) =>
-                    handleInputChange("suggestions", e.target.value)
-                  }
-                  className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white w-full h-24"
-                  placeholder="Your suggestions..."
-                />
-              </div>
-
-              {/* Duration Note */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
-                Duration 3 minutes
-              </p>
-            </div>
-          </>
-          
-        );
-
-      case 13:
         return (
           <>
             <div
               className="glass-card mobile-card relative flex flex-col items-center justify-between text-center"
               style={{
                 maxWidth: "896px",
-                height: "432px",
+                height: "500px",
                 padding: "20px",
               }}
             >
               {/* ---- Heading (Top) ---- */}
               {/* isy thira nichy laana and white karna  */}
-              <div className="absolute top-6 left-1/2 -translate-x-1/2 text-center">
+              <div className="absolute top-20 left-1/2 -translate-x-1/2 text-center">
                 <h3
-                  className="mobile-heading font-bold mb-2"
+                  className="mobile-heading  font-bold mb-2"
                   style={{ color: "#ff7f50" }}
                 >
                   Download your Mini Hair Color Analysis
@@ -1642,14 +1547,14 @@ export default function Home() {
                 <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
                   {/* ---- Button 1 ---- */}
                   <div className="text-center flex-1 min-w-[130px]">
-                    <p className="text-white/70 text-xs mb-1 leading-tight">
-                     Get Full Hair Color Analysis at a special offer now
+                    <p className="text-white text-xs mb-1 leading-tight font-bold">
+                      Get Full Hair Color Analysis at a special offer now
                     </p>
                     <button
                       onClick={() =>
                         window.open("https://example.com/book-now", "_blank")
                       }
-                      className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+                      className="bg-white text-black text-xs sm:text-sm font-medium px-3 py-2 rounded-none shadow-md transition-all w-full hover:bg-gray-200"
                     >
                       Book Now
                     </button>
@@ -1657,23 +1562,21 @@ export default function Home() {
 
                   {/* ---- Button 2 ---- */}
                   <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-0">
-                    <p className="text-white/70 text-xs mb-1 leading-tight">
+                    <p className="text-white text-xs mb-1 leading-tight font-bold">
                       Book hair services now with a special offer
                     </p>
                     <button
                       onClick={() =>
-                        window.open(
-                          "https://example.com/book-appointment",
-                          "_blank"
-                        )
+                        window.open("https://example.com/book-appointment", "_blank")
                       }
-                      className="bg-[#ff7f50] hover:bg-[#ff6347] text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full"
+                      className="bg-white text-black text-xs sm:text-sm font-medium px-3 py-2 rounded-none shadow-md transition-all w-full hover:bg-gray-200"
                     >
                       Book Appointment
                     </button>
                   </div>
                 </div>
               </div>
+
             </div>
           </>
         );
@@ -1779,7 +1682,7 @@ export default function Home() {
               >
                 ← Previous
               </button>
-          {/* Go back to make any changes */}
+              {/* Go back to make any changes */}
               <button
                 onClick={nextSlide}
                 disabled={
@@ -1832,11 +1735,10 @@ export default function Home() {
               </div>
               <div className="ml-3 flex-1">
                 <p
-                  className={`text-sm font-medium ${
-                    message.includes("successfully")
+                  className={`text-sm font-medium ${message.includes("successfully")
                       ? "text-green-100"
                       : "text-red-100"
-                  }`}
+                    }`}
                 >
                   {message}
                 </p>

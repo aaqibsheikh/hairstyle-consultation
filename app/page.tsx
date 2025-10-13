@@ -1489,7 +1489,7 @@ export default function Home() {
               {/* isy thira nichy laana and white karna  */}
               <div className="absolute top-20 left-1/2 -translate-x-1/2 text-center">
                 <h3
-                  className="mobile-heading  font-bold mb-2"
+                  className="mobile-heading   text-2xl font-bold mb-2"
                   style={{ color: "#ff7f50" }}
                 >
                   Download your Mini Hair Color Analysis

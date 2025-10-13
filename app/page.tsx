@@ -1099,7 +1099,7 @@ export default function Home() {
                 className="mobile-heading font-bold mb-6 text-center"
                 style={{ color: "#ff7f50", marginTop: "10px" }}
               >
-                Apart from your usual routine, which special occasions you
+                Apart from your usual routine,on which special occasions you
                 choose your hair services frequently?
               </h3>
 
@@ -1216,7 +1216,7 @@ export default function Home() {
                   Upload some styles that inspire you
                 </h3>
                 <p className="text-white/70 mobile-text">
-                  (Optional - You can skip to the next)
+                  (Optional - You can skip to the next slide)
                 </p>
               </div>
 
@@ -1384,7 +1384,7 @@ export default function Home() {
                   your hair services.
                 </p>
                 <p className="text-white/60 italic mobile-description text-center">
-                  (Optional - You can skip to the next)
+                  (Optional - You can skip to the next slide)
                 </p>
               </div>
 
@@ -1577,6 +1577,7 @@ export default function Home() {
               </p>
             </div>
           </>
+          
         );
 
       case 13:
@@ -1591,6 +1592,7 @@ export default function Home() {
               }}
             >
               {/* ---- Heading (Top) ---- */}
+              {/* isy thira nichy laana and white karna  */}
               <div className="absolute top-6 left-1/2 -translate-x-1/2 text-center">
                 <h3
                   className="mobile-heading font-bold mb-2"
@@ -1626,19 +1628,22 @@ export default function Home() {
                   ) : (
                     <span className="flex items-center justify-center relative z-10 text-white">
                       <div className="text-2xl mr-3">📄</div>
-                      <span className="text-lg">Download PDF</span>
+                      <span className="text-lg">Download</span>
                     </span>
                   )}
                 </button>
               </div>
 
               {/* ---- Buttons at Bottom ---- */}
+
+              {/* todo : white button  square with black text */}
+              {/* bold captions  */}
               <div className="w-full px-3 py-3 text-center absolute bottom-6 left-1/2 -translate-x-1/2">
                 <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
                   {/* ---- Button 1 ---- */}
                   <div className="text-center flex-1 min-w-[130px]">
                     <p className="text-white/70 text-xs mb-1 leading-tight">
-                      Full Hair Color Analysis at a special offer now
+                     Get Full Hair Color Analysis at a special offer now
                     </p>
                     <button
                       onClick={() =>
@@ -1653,7 +1658,7 @@ export default function Home() {
                   {/* ---- Button 2 ---- */}
                   <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-0">
                     <p className="text-white/70 text-xs mb-1 leading-tight">
-                      Book hair services now
+                      Book hair services now with a special offer
                     </p>
                     <button
                       onClick={() =>
@@ -1774,7 +1779,7 @@ export default function Home() {
               >
                 ← Previous
               </button>
-
+          {/* Go back to make any changes */}
               <button
                 onClick={nextSlide}
                 disabled={

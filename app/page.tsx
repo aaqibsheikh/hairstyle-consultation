@@ -202,11 +202,11 @@ export default function Home() {
 
       let yPosition = margin;
 
-      // ===== BLACK BACKGROUND FOR ENTIRE PAGE =====
+      // ===== PAGE 1: RECOMMENDATIONS =====
       pdf.setFillColor(0, 0, 0);
       pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-      // ===== HEADER WITH LOGO =====
+      // Header with Logo
       try {
         const logoResponse = await fetch(mkhLogo.src);
         const logoBlob = await logoResponse.blob();
@@ -221,7 +221,7 @@ export default function Home() {
         console.log("Logo not available, continuing without logo");
       }
 
-      // Header title - BIGGER
+      // Header title
       pdf
         .setFontSize(26)
         .setTextColor(255, 127, 80)
@@ -240,9 +240,17 @@ export default function Home() {
 
       yPosition = 70;
 
-      // ===== IMPROVED SECTION TITLE FUNCTION WITH BIGGER HEADINGS =====
+      // ===== RECOMMENDATIONS SECTION - PAGE 1 =====
+      const combination: HairCombination = {
+        hairColor: formData.selectedHairColor,
+        hairLength: formData.hairLength,
+        personalStyle: formData.personalStyle,
+      };
+
+      const recommendation = getHairRecommendation(combination);
+      const images = getAllRecommendationImages(combination);
+
       const addSection = (title: string, content: string[], y: number) => {
-        // Check if we need a new page
         if (y > pageHeight - margin - 60) {
           pdf.addPage();
           pdf.setFillColor(0, 0, 0);
@@ -250,20 +258,17 @@ export default function Home() {
           y = margin;
         }
 
-        // Section title - BIGGER
         pdf
           .setFontSize(18)
           .setTextColor(255, 127, 80)
           .setFont("helvetica", "bold");
         pdf.text(title, margin, y);
 
-        // Title underline
         pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
         pdf.line(margin, y + 2, margin + pdf.getTextWidth(title), y + 2);
 
         let currentY = y + 12;
 
-        // Section content
         pdf
           .setFontSize(11)
           .setTextColor(255, 255, 255)
@@ -296,11 +301,157 @@ export default function Home() {
           currentY += 2;
         });
 
-        // Add spacing
         currentY += 10;
-
         return currentY;
       };
+
+      if (recommendation) {
+        const recommendationsContent = [
+          `Recommended Style: ${recommendation.title}`,
+          "",
+          "Recommended Treatments:",
+          recommendation.description,
+          "",
+          "Hair Care Routine:",
+          recommendation.hairCare,
+          "",
+          "Maintenance Schedule:",
+          ...recommendation.maintenanceSchedule.map(
+            (schedule) => `• ${schedule}`
+          ),
+        ];
+
+        yPosition = addSection(
+          "Professional Recommendations",
+          recommendationsContent,
+          yPosition
+        );
+      }
+
+      // ===== PAGE 2: RECOMMENDED STYLE IMAGES =====
+      pdf.addPage();
+      pdf.setFillColor(0, 0, 0);
+      pdf.rect(0, 0, pageWidth, pageHeight, "F");
+      yPosition = margin;
+
+      if (images.length > 0) {
+        // Image section title
+        pdf
+          .setFontSize(18)
+          .setTextColor(255, 127, 80)
+          .setFont("helvetica", "bold");
+        pdf.text("Recommended Style Visuals", margin, yPosition);
+
+        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
+        pdf.line(
+          margin,
+          yPosition + 2,
+          margin + pdf.getTextWidth("Recommended Style Visuals"),
+          yPosition + 2
+        );
+
+        yPosition += 20;
+
+        const imagesToProcess = images.slice(0, 4);
+        const maxImageWidth = (contentWidth - 10) / 2;
+        const maxImageHeight = 80;
+
+        let currentRowY = yPosition;
+        let maxRowY = currentRowY;
+
+        for (let index = 0; index < imagesToProcess.length; index++) {
+          const col = index % 2;
+          const xPos = margin + col * (maxImageWidth + 10);
+
+          // Check if we need a new page for this row
+          if (currentRowY + maxImageHeight + 40 > pageHeight - margin) {
+            pdf.addPage();
+            pdf.setFillColor(0, 0, 0);
+            pdf.rect(0, 0, pageWidth, pageHeight, "F");
+            currentRowY = margin + 20;
+            maxRowY = currentRowY;
+          }
+
+          try {
+            const dataUrl = await fetchImageAsDataURL(imagesToProcess[index]);
+            if (dataUrl) {
+              const fmt = imagesToProcess[index].toLowerCase().includes(".png")
+                ? "PNG"
+                : "JPEG";
+
+              const imgProps = pdf.getImageProperties(dataUrl);
+              const imgWidth = imgProps.width;
+              const imgHeight = imgProps.height;
+              const aspectRatio = imgWidth / imgHeight;
+
+              let finalWidth = maxImageWidth;
+              let finalHeight = maxImageWidth / aspectRatio;
+
+              if (finalHeight > maxImageHeight) {
+                finalHeight = maxImageHeight;
+                finalWidth = maxImageHeight * aspectRatio;
+              }
+
+              const xOffset = (maxImageWidth - finalWidth) / 2;
+              const yOffset = (maxImageHeight - finalHeight) / 2;
+
+              pdf.addImage(
+                dataUrl,
+                fmt,
+                xPos + xOffset,
+                currentRowY + yOffset,
+                finalWidth,
+                finalHeight
+              );
+
+              // Image label
+              pdf
+                .setFontSize(10)
+                .setTextColor(255, 255, 255)
+                .setFont("helvetica", "bold");
+              pdf.text(
+                `Style ${index + 1}`,
+                xPos + maxImageWidth / 2 - 10,
+                currentRowY + maxImageHeight + 10
+              );
+            }
+          } catch (error) {
+            console.error("Error loading image:", error);
+            pdf.setFillColor(50, 50, 50);
+            pdf.rect(xPos, currentRowY, maxImageWidth, maxImageHeight, "F");
+            pdf.setFontSize(9).setTextColor(255, 127, 80);
+            pdf.text(
+              "Image Preview",
+              xPos + maxImageWidth / 2 - 15,
+              currentRowY + maxImageHeight / 2
+            );
+            pdf
+              .setFontSize(10)
+              .setTextColor(255, 255, 255)
+              .setFont("helvetica", "bold");
+            pdf.text(
+              `Style ${index + 1}`,
+              xPos + maxImageWidth / 2 - 10,
+              currentRowY + maxImageHeight + 10
+            );
+          }
+
+          const currentImageBottom = currentRowY + maxImageHeight + 25;
+          if (currentImageBottom > maxRowY) {
+            maxRowY = currentImageBottom;
+          }
+
+          if (col === 1) {
+            currentRowY = maxRowY;
+          }
+        }
+      }
+
+      // ===== PAGE 3: CLIENT INFORMATION AND SCHEDULE =====
+      pdf.addPage();
+      pdf.setFillColor(0, 0, 0);
+      pdf.rect(0, 0, pageWidth, pageHeight, "F");
+      yPosition = margin;
 
       // ===== CLIENT SUMMARY SECTION =====
       const summaryContent = [
@@ -336,8 +487,7 @@ export default function Home() {
         `Hair Texture: ${formData.hairTexture || "Not specified"}`,
         `Hair Length: ${formData.hairLength || "Not specified"}`,
         `Personal Style: ${formData.personalStyle || "Not specified"}`,
-        `Maintenance Preference: ${formData.hairMaintenance || "Not specified"
-        }`,
+        `Maintenance Preference: ${formData.hairMaintenance || "Not specified"}`,
       ];
 
       yPosition = addSection(
@@ -346,42 +496,8 @@ export default function Home() {
         yPosition
       );
 
-      // ===== RECOMMENDATIONS SECTION =====
-      const combination: HairCombination = {
-        hairColor: formData.selectedHairColor,
-        hairLength: formData.hairLength,
-        personalStyle: formData.personalStyle,
-      };
-
-      const recommendation = getHairRecommendation(combination);
-      const images = getAllRecommendationImages(combination);
-
-      if (recommendation) {
-        const recommendationsContent = [
-          `Recommended Style: ${recommendation.title}`,
-          "",
-          "Recommended Treatments:",
-          recommendation.description,
-          "",
-          "Hair Care Routine:",
-          recommendation.hairCare,
-          "",
-          "Maintenance Schedule:",
-          ...recommendation.maintenanceSchedule.map(
-            (schedule) => `• ${schedule}`
-          ),
-        ];
-
-        yPosition = addSection(
-          "Professional Recommendations",
-          recommendationsContent,
-          yPosition
-        );
-      }
-
-      // ===== SCHEDULED PERFECT HAIR DAYS ON SECOND PAGE =====
+      // ===== SCHEDULED PERFECT HAIR DAYS =====
       if (formData.selectedDates && formData.selectedDates.length > 0) {
-        // Check if we need a new page for Scheduled Perfect Hair Days
         if (yPosition > pageHeight - margin - 100) {
           pdf.addPage();
           pdf.setFillColor(0, 0, 0);
@@ -411,135 +527,6 @@ export default function Home() {
         );
       }
 
-      // ===== RECOMMENDED STYLES IMAGES ON LAST PAGE =====
-      if (images.length > 0) {
-        // Check if we need a new page for images
-        if (yPosition > pageHeight - margin - 150) {
-          pdf.addPage();
-          pdf.setFillColor(0, 0, 0);
-          pdf.rect(0, 0, pageWidth, pageHeight, "F");
-          yPosition = margin;
-        }
-
-        // Image section title - BIGGER
-        pdf
-          .setFontSize(18)
-          .setTextColor(255, 127, 80)
-          .setFont("helvetica", "bold");
-        pdf.text("Recommended Style Visuals", margin, yPosition);
-
-        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-        pdf.line(
-          margin,
-          yPosition + 2,
-          margin + pdf.getTextWidth("Recommended Style Visuals"),
-          yPosition + 2
-        );
-
-        yPosition += 15;
-
-        const imagesToProcess = images.slice(0, 4);
-        const maxImageWidth = (contentWidth - 10) / 2;
-        const maxImageHeight = 80;
-
-        let currentRowY = yPosition;
-        let maxRowY = currentRowY;
-
-        for (let index = 0; index < imagesToProcess.length; index++) {
-          const col = index % 2;
-          const xPos = margin + col * (maxImageWidth + 10);
-
-          // Check if we need a new page for this row
-          if (currentRowY + maxImageHeight + 40 > pageHeight - margin) {
-            pdf.addPage();
-            pdf.setFillColor(0, 0, 0);
-            pdf.rect(0, 0, pageWidth, pageHeight, "F");
-            currentRowY = margin + 20;
-            maxRowY = currentRowY;
-          }
-
-          try {
-            const dataUrl = await fetchImageAsDataURL(imagesToProcess[index]);
-            if (dataUrl) {
-              const fmt = imagesToProcess[index].toLowerCase().includes(".png")
-                ? "PNG"
-                : "JPEG";
-
-              // Get image dimensions using jsPDF's internal method
-              const imgProps = pdf.getImageProperties(dataUrl);
-              const imgWidth = imgProps.width;
-              const imgHeight = imgProps.height;
-              const aspectRatio = imgWidth / imgHeight;
-
-              // Calculate dimensions to fit within our container while maintaining aspect ratio
-              let finalWidth = maxImageWidth;
-              let finalHeight = maxImageWidth / aspectRatio;
-
-              // If calculated height exceeds max height, scale down
-              if (finalHeight > maxImageHeight) {
-                finalHeight = maxImageHeight;
-                finalWidth = maxImageHeight * aspectRatio;
-              }
-
-              // Center the image in the allocated space
-              const xOffset = (maxImageWidth - finalWidth) / 2;
-              const yOffset = (maxImageHeight - finalHeight) / 2;
-
-              pdf.addImage(
-                dataUrl,
-                fmt,
-                xPos + xOffset,
-                currentRowY + yOffset,
-                finalWidth,
-                finalHeight
-              );
-
-              // Image label
-              pdf
-                .setFontSize(10)
-                .setTextColor(255, 255, 255)
-                .setFont("helvetica", "bold");
-              pdf.text(
-                `Style ${index + 1}`,
-                xPos + maxImageWidth / 2 - 10,
-                currentRowY + maxImageHeight + 10
-              );
-            }
-          } catch (error) {
-            console.error("Error loading image:", error);
-            // Fallback rectangle
-            pdf.setFillColor(50, 50, 50);
-            pdf.rect(xPos, currentRowY, maxImageWidth, maxImageHeight, "F");
-            pdf.setFontSize(9).setTextColor(255, 127, 80);
-            pdf.text(
-              "Image Preview",
-              xPos + maxImageWidth / 2 - 15,
-              currentRowY + maxImageHeight / 2
-            );
-            pdf
-              .setFontSize(10)
-              .setTextColor(255, 255, 255)
-              .setFont("helvetica", "bold");
-            pdf.text(
-              `Style ${index + 1}`,
-              xPos + maxImageWidth / 2 - 10,
-              currentRowY + maxImageHeight + 10
-            );
-          }
-
-          // Track the maximum Y position in this row
-          const currentImageBottom = currentRowY + maxImageHeight + 25;
-          if (currentImageBottom > maxRowY) {
-            maxRowY = currentImageBottom;
-          }
-
-          // Move to next row after every 2 images
-          if (col === 1) {
-            currentRowY = maxRowY;
-          }
-        }
-      }
-
       // ===== FIXED FOOTER ON EACH PAGE =====
       const totalPages = (pdf.internal as any).getNumberOfPages();
 
@@ -552,7 +539,7 @@ export default function Home() {
         pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
         pdf.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
 
-        // Footer text - FIXED PAGE NUMBERING
+        // Footer text
         pdf
           .setFontSize(8)
           .setTextColor(150, 150, 150)
@@ -764,8 +751,8 @@ export default function Home() {
                           handleInputChange("naturalHairColor", e.target.value)
                         }
                         className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.naturalHairColor === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
                           }`}
                       >
                         <option value="" disabled className="opacity-60">
@@ -788,8 +775,8 @@ export default function Home() {
                           handleInputChange("skinColor", e.target.value)
                         }
                         className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.skinColor === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
                           }`}
                       >
                         <option value="" disabled className="opacity-60">
@@ -816,8 +803,8 @@ export default function Home() {
                           handleInputChange("eyeColor", e.target.value)
                         }
                         className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.eyeColor === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
                           }`}
                       >
                         <option value="" disabled className="opacity-60">
@@ -843,8 +830,8 @@ export default function Home() {
                           handleInputChange("hairTexture", e.target.value)
                         }
                         className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.hairTexture === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
+                          ? "text-gray-300 opacity-60"
+                          : "text-white"
                           }`}
                       >
                         <option value="" disabled className="opacity-60">
@@ -1263,11 +1250,15 @@ export default function Home() {
             {/* Main Card */}
             <div
               className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
-              style={{ height: "auto" }} // Automatically adjust height
+              style={{
+                height: "auto",
+                maxHeight: "80vh", 
+                overflowY: "auto" 
+              }}
             >
               {/* Heading */}
               <h3
-                className="mobile-heading font-bold mb-4 text-center"
+                className="mobile-heading font-bold mb-4 text-center sticky top-0 bg-black/80 backdrop-blur-sm py-2 z-10"
                 style={{ color: "#ff7f50", marginTop: "10px" }}
               >
                 Your Lifestyle
@@ -1325,15 +1316,15 @@ export default function Home() {
                       onChange={(e) =>
                         handleInputChange("workIndustry", e.target.value)
                       }
-                      className="input-field placeholder-gray-300 placeholder-opacity-60 w-full"
+                      className="input-field placeholder-gray-300 placeholder-opacity-60 w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-coral focus:ring-1 focus:ring-coral"
                       placeholder="e.g., Technology, Healthcare, Finance..."
                     />
                   </div>
                 )}
 
               {/* Duration (Bottom-right for large, below for mobile) */}
-              <div className="flex justify-end mt-6 sm:mt-8">
-                <p className="text-white/70 text-sm opacity-0">
+              <div className="flex justify-end mt-6 sm:mt-8 sticky bottom-0 bg-black/80 backdrop-blur-sm py-2">
+                <p className="text-white/70 text-sm">
                   Duration 3 minutes
                 </p>
               </div>
@@ -1609,7 +1600,7 @@ export default function Home() {
               <div className="bg-black/40 backdrop-blur-sm ">
                 <Image
                   src="/lgag.png"
-                  alt="MKH Logo" // ✅ alt required hota hai
+                  alt="MKH Logo" 
                   width={80}
                   height={80}
                   className="w-28 h-28 sm:w-28 sm:h-28 object-cover flex-shrink-0"
@@ -1680,9 +1671,9 @@ export default function Home() {
                 className="btn-secondary w-full sm:w-auto text-xs sm:text-base
         disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
               >
-                ← Previous
+                {currentSlide === totalSlides ? "← Go back to make any changes" : "← Previous"}
               </button>
-              {/* Go back to make any changes */}
+
               <button
                 onClick={nextSlide}
                 disabled={
@@ -1706,10 +1697,13 @@ export default function Home() {
                   (currentSlide === 8 &&
                     formData.preferredTreatments?.length === 0)
                 }
-                className="btn-primary w-full sm:w-auto text-xs sm:text-base
-        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
+                className={
+                  currentSlide === totalSlides
+                    ? "hidden" 
+                    : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                }
               >
-                Next →
+                {currentSlide === totalSlides ? "" : "Next →"}
               </button>
             </div>
 
@@ -1719,7 +1713,7 @@ export default function Home() {
                 Duration 3 minutes
               </span>
             </div>
-          </div>
+          </div>z
         </div>
 
         {/* Notification */}
@@ -1736,8 +1730,8 @@ export default function Home() {
               <div className="ml-3 flex-1">
                 <p
                   className={`text-sm font-medium ${message.includes("successfully")
-                      ? "text-green-100"
-                      : "text-red-100"
+                    ? "text-green-100"
+                    : "text-red-100"
                     }`}
                 >
                   {message}

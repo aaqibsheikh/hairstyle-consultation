@@ -1247,13 +1247,14 @@ export default function Home() {
       case 10:
         return (
           <>
-            {/* Main Card */}
+            {/* Scrollable Card Container */}
             <div
-              className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
+              className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative overflow-hidden"
               style={{
-                height: "auto",
-                maxHeight: "80vh",
-                overflowY: "auto"
+                height: "calc(100vh - 120px)", // fits within screen height
+                overflowY: "auto",
+                scrollbarWidth: "thin",
+                WebkitOverflowScrolling: "touch",
               }}
             >
               {/* Heading */}
@@ -1306,7 +1307,7 @@ export default function Home() {
               {(formData.workType === "Corporate" ||
                 formData.workType === "Work from home" ||
                 formData.workType === "Entrepreneur") && (
-                  <div className="mt-6">
+                  <div className="mt-6 pb-24"> {/* Added padding-bottom for scroll safety */}
                     <label className="block text-white/90 font-medium mb-2 text-sm">
                       Please specify industry
                     </label>
@@ -1321,10 +1322,12 @@ export default function Home() {
                     />
                   </div>
                 )}
-
-
             </div>
+
+            {/* Bottom Fixed Buttons (Example) */}
+        
           </>
+
         );
 
       case 11:

@@ -1322,12 +1322,7 @@ export default function Home() {
                   </div>
                 )}
 
-              {/* Duration (Bottom-right for large, below for mobile) */}
-              <div className="flex justify-end mt-6 sm:mt-8 sticky bottom-0 bg-black/80 backdrop-blur-sm py-2">
-                <p className="text-white/70 text-sm">
-                  Duration 3 minutes
-                </p>
-              </div>
+              
             </div>
           </>
         );

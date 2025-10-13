@@ -1252,8 +1252,8 @@ export default function Home() {
               className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative"
               style={{
                 height: "auto",
-                maxHeight: "80vh", 
-                overflowY: "auto" 
+                maxHeight: "80vh",
+                overflowY: "auto"
               }}
             >
               {/* Heading */}
@@ -1322,7 +1322,7 @@ export default function Home() {
                   </div>
                 )}
 
-              
+
             </div>
           </>
         );
@@ -1530,9 +1530,9 @@ export default function Home() {
               {/* todo : white button  square with black text */}
               {/* bold captions  */}
               <div className="w-full px-3 py-3 text-center absolute bottom-6 left-1/2 -translate-x-1/2">
-                <div className="flex flex-row items-start justify-center gap-4 flex-wrap">
+                <div className="flex flex-row flex-wrap items-stretch justify-center gap-4 sm:gap-6 max-w-md mx-auto">
                   {/* ---- Button 1 ---- */}
-                  <div className="text-center flex-1 min-w-[130px]">
+                  <div className="flex-1 min-w-[130px]">
                     <p className="text-white text-xs mb-1 leading-tight font-bold">
                       Get Full Hair Color Analysis at a special offer now
                     </p>
@@ -1540,14 +1540,14 @@ export default function Home() {
                       onClick={() =>
                         window.open("https://example.com/book-now", "_blank")
                       }
-                      className="bg-white text-black text-xs sm:text-sm font-medium px-3 py-2 rounded-none shadow-md transition-all w-full hover:bg-gray-200"
+                      className="bg-white text-black text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full hover:bg-gray-200"
                     >
                       Book Now
                     </button>
                   </div>
 
                   {/* ---- Button 2 ---- */}
-                  <div className="text-center flex-1 min-w-[130px] mt-4 sm:mt-0">
+                  <div className="flex-1 min-w-[130px]">
                     <p className="text-white text-xs mb-1 leading-tight font-bold">
                       Book hair services now with a special offer
                     </p>
@@ -1555,7 +1555,7 @@ export default function Home() {
                       onClick={() =>
                         window.open("https://example.com/book-appointment", "_blank")
                       }
-                      className="bg-white text-black text-xs sm:text-sm font-medium px-3 py-2 rounded-none shadow-md transition-all w-full hover:bg-gray-200"
+                      className="bg-white text-black text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full hover:bg-gray-200"
                     >
                       Book Appointment
                     </button>
@@ -1595,7 +1595,7 @@ export default function Home() {
               <div className="bg-black/40 backdrop-blur-sm ">
                 <Image
                   src="/lgag.png"
-                  alt="MKH Logo" 
+                  alt="MKH Logo"
                   width={80}
                   height={80}
                   className="w-28 h-28 sm:w-28 sm:h-28 object-cover flex-shrink-0"
@@ -1694,7 +1694,7 @@ export default function Home() {
                 }
                 className={
                   currentSlide === totalSlides
-                    ? "hidden" 
+                    ? "hidden"
                     : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
                 }
               >

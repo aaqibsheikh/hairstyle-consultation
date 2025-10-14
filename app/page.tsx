@@ -1443,17 +1443,16 @@ export default function Home() {
               }}
             >
               {/* ---- Heading (Top) ---- */}
-              {/* isy thira nichy laana and white karna  */}
-              <div className="absolute top-20 left-1/2 -translate-x-1/2 text-center">
+              <div className="absolute top-24 left-1/2 -translate-x-1/2 text-center">
                 <h3
-                  className="mobile-heading   text-2xl font-bold mb-2"
-                  style={{ color: "#ff7f50" }}
+                  className="mobile-heading text-2xl font-bold mb-2"
+                  style={{ color: "#ffffff" }}
                 >
                   Download your Mini Hair Color Analysis
                 </h3>
               </div>
 
-              {/* ---- Centered Button ---- */}
+              {/* ---- Centered Download Button ---- */}
               <div className="flex flex-col items-center justify-center w-full mt-10 flex-grow">
                 <button
                   onClick={downloadPDFHandler}
@@ -1464,8 +1463,7 @@ export default function Home() {
                     !formData.lastName
                   }
                   style={{
-                    background:
-                      "linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)",
+                    background: "linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)",
                     transform: "scale(1.05)",
                     transition: "all 0.3s ease",
                   }}
@@ -1485,15 +1483,12 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* ---- Buttons at Bottom ---- */}
-
-              {/* todo : white button  square with black text */}
-              {/* bold captions  */}
+              {/* ---- Bottom Buttons ---- */}
               <div className="w-full px-3 py-3 text-center absolute bottom-6 left-1/2 -translate-x-1/2">
-                <div className="flex flex-row flex-wrap items-stretch justify-center gap-4 sm:gap-6 max-w-md mx-auto">
+                <div className="flex flex-row items-end justify-center gap-3 w-full max-w-[500px] mx-auto">
                   {/* ---- Button 1 ---- */}
-                  <div className="flex-1 min-w-[150px]">
-                    <p className="text-white text-sm mb-2 leading-tight font-bold">
+                  <div className="flex flex-col items-center justify-between w-[220px]">
+                    <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
                       Get Full Hair Color Analysis at a special offer now
                     </p>
                     <button
@@ -1507,8 +1502,8 @@ export default function Home() {
                   </div>
 
                   {/* ---- Button 2 ---- */}
-                  <div className="flex-1 min-w-[150px]">
-                    <p className="text-white text-sm mb-2 leading-tight font-bold">
+                  <div className="flex flex-col items-center justify-between w-[220px]">
+                    <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
                       Book hair services now with a special offer
                     </p>
                     <button
@@ -1522,9 +1517,9 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-
             </div>
           </>
+
         );
 
       default:

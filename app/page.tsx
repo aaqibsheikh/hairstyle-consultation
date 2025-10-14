@@ -202,11 +202,11 @@ export default function Home() {
 
       let yPosition = margin;
 
-      // ===== PAGE 1: RECOMMENDATIONS =====
+      // ===== PAGE 1 BACKGROUND =====
       pdf.setFillColor(0, 0, 0);
       pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-      // Header with Logo
+      // ===== HEADER WITH LOGO =====
       try {
         const logoResponse = await fetch(mkhLogo.src);
         const logoBlob = await logoResponse.blob();
@@ -215,41 +215,25 @@ export default function Home() {
           reader.onloadend = () => resolve(reader.result);
           reader.readAsDataURL(logoBlob);
         });
-
         pdf.addImage(logoBase64 as string, "JPEG", margin, 15, 40, 40);
       } catch (error) {
         console.log("Logo not available, continuing without logo");
       }
 
-      // Header title
-      pdf
-        .setFontSize(26)
-        .setTextColor(255, 127, 80)
-        .setFont("helvetica", "bold");
+      // ===== HEADER TITLE =====
+      pdf.setFontSize(26).setTextColor(255, 127, 80).setFont("helvetica", "bold");
       pdf.text("MKH Hair Color Analysis", margin + 45, 35);
 
-      pdf
-        .setFontSize(16)
-        .setTextColor(255, 255, 255)
-        .setFont("helvetica", "bold");
+      pdf.setFontSize(16).setTextColor(255, 255, 255).setFont("helvetica", "bold");
       pdf.text("Professional Consultation Report", margin + 45, 45);
 
-      // Header separator line
+      // Separator Line
       pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
       pdf.line(margin, 55, pageWidth - margin, 55);
 
       yPosition = 70;
 
-      // ===== RECOMMENDATIONS SECTION - PAGE 1 =====
-      const combination: HairCombination = {
-        hairColor: formData.selectedHairColor,
-        hairLength: formData.hairLength,
-        personalStyle: formData.personalStyle,
-      };
-
-      const recommendation = getHairRecommendation(combination);
-      const images = getAllRecommendationImages(combination);
-
+      // ===== HELPER FUNCTION =====
       const addSection = (title: string, content: string[], y: number) => {
         if (y > pageHeight - margin - 60) {
           pdf.addPage();
@@ -305,6 +289,16 @@ export default function Home() {
         return currentY;
       };
 
+      // ===== RECOMMENDATIONS =====
+      const combination: HairCombination = {
+        hairColor: formData.selectedHairColor,
+        hairLength: formData.hairLength,
+        personalStyle: formData.personalStyle,
+      };
+
+      const recommendation = getHairRecommendation(combination);
+      const images = getAllRecommendationImages(combination);
+
       if (recommendation) {
         const recommendationsContent = [
           `Recommended Style: ${recommendation.title}`,
@@ -312,18 +306,47 @@ export default function Home() {
           "Recommended Treatments:",
           recommendation.description,
           "",
+          "Recommended maintenance schedule:",
+          ...recommendation.maintenanceSchedule.map((schedule) => `• ${schedule}`),
+          "",
           "Hair Care Routine:",
           recommendation.hairCare,
-          "",
-          "Maintenance Schedule:",
-          ...recommendation.maintenanceSchedule.map(
-            (schedule) => `• ${schedule}`
-          ),
         ];
 
         yPosition = addSection(
           "Professional Recommendations",
           recommendationsContent,
+          yPosition
+        );
+      }
+
+      // ===== SCHEDULED PERFECT HAIR DAYS (FIRST PAGE) =====
+      if (formData.selectedDates && formData.selectedDates.length > 0) {
+        if (yPosition > pageHeight - margin - 100) {
+          pdf.addPage();
+          pdf.setFillColor(0, 0, 0);
+          pdf.rect(0, 0, pageWidth, pageHeight, "F");
+          yPosition = margin;
+        }
+
+        const sortedDates = [...formData.selectedDates].sort(
+          (a, b) => a.getTime() - b.getTime()
+        );
+
+        const datesContent = [
+          "Your scheduled appointment dates:",
+          "",
+          ...sortedDates.map(
+            (date: Date, index: number) =>
+              `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
+          ),
+          "",
+          `Total appointments scheduled: ${formData.selectedDates.length}`,
+        ];
+
+        yPosition = addSection(
+          "Scheduled Perfect Hair Days",
+          datesContent,
           yPosition
         );
       }
@@ -335,7 +358,6 @@ export default function Home() {
       yPosition = margin;
 
       if (images.length > 0) {
-        // Image section title
         pdf
           .setFontSize(18)
           .setTextColor(255, 127, 80)
@@ -355,7 +377,6 @@ export default function Home() {
         const imagesToProcess = images.slice(0, 4);
         const maxImageWidth = (contentWidth - 10) / 2;
         const maxImageHeight = 80;
-
         let currentRowY = yPosition;
         let maxRowY = currentRowY;
 
@@ -363,7 +384,6 @@ export default function Home() {
           const col = index % 2;
           const xPos = margin + col * (maxImageWidth + 10);
 
-          // Check if we need a new page for this row
           if (currentRowY + maxImageHeight + 40 > pageHeight - margin) {
             pdf.addPage();
             pdf.setFillColor(0, 0, 0);
@@ -404,7 +424,6 @@ export default function Home() {
                 finalHeight
               );
 
-              // Image label
               pdf
                 .setFontSize(10)
                 .setTextColor(255, 255, 255)
@@ -437,23 +456,17 @@ export default function Home() {
           }
 
           const currentImageBottom = currentRowY + maxImageHeight + 25;
-          if (currentImageBottom > maxRowY) {
-            maxRowY = currentImageBottom;
-          }
-
-          if (col === 1) {
-            currentRowY = maxRowY;
-          }
+          if (currentImageBottom > maxRowY) maxRowY = currentImageBottom;
+          if (col === 1) currentRowY = maxRowY;
         }
       }
 
-      // ===== PAGE 3: CLIENT INFORMATION AND SCHEDULE =====
+      // ===== PAGE 3: CLIENT INFORMATION =====
       pdf.addPage();
       pdf.setFillColor(0, 0, 0);
       pdf.rect(0, 0, pageWidth, pageHeight, "F");
       yPosition = margin;
 
-      // ===== CLIENT SUMMARY SECTION =====
       const summaryContent = [
         `Name: ${formData.firstName} ${formData.lastName}`,
         `Analysis Date: ${format(new Date(), "MMMM d, yyyy")}`,
@@ -466,7 +479,6 @@ export default function Home() {
 
       yPosition = addSection("Client Summary", summaryContent, yPosition);
 
-      // ===== PERSONAL INFORMATION SECTION =====
       const personalInfoContent = [
         `Full Name: ${formData.firstName} ${formData.lastName}`,
         `Email: ${formData.email}`,
@@ -479,7 +491,6 @@ export default function Home() {
         yPosition
       );
 
-      // ===== HAIR ANALYSIS SECTION =====
       const hairAnalysisContent = [
         `Natural Hair Color: ${formData.naturalHairColor || "Not specified"}`,
         `Skin Tone: ${formData.skinColor || "Not specified"}`,
@@ -490,56 +501,17 @@ export default function Home() {
         `Maintenance Preference: ${formData.hairMaintenance || "Not specified"}`,
       ];
 
-      yPosition = addSection(
-        "Hair Analysis Profile",
-        hairAnalysisContent,
-        yPosition
-      );
+      addSection("Hair Analysis Profile", hairAnalysisContent, yPosition);
 
-      // ===== SCHEDULED PERFECT HAIR DAYS =====
-      if (formData.selectedDates && formData.selectedDates.length > 0) {
-        if (yPosition > pageHeight - margin - 100) {
-          pdf.addPage();
-          pdf.setFillColor(0, 0, 0);
-          pdf.rect(0, 0, pageWidth, pageHeight, "F");
-          yPosition = margin;
-        }
-
-        const sortedDates = [...formData.selectedDates].sort(
-          (a, b) => a.getTime() - b.getTime()
-        );
-
-        const datesContent = [
-          "Your scheduled appointment dates:",
-          "",
-          ...sortedDates.map(
-            (date: Date, index: number) =>
-              `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
-          ),
-          "",
-          `Total appointments scheduled: ${formData.selectedDates.length}`,
-        ];
-
-        yPosition = addSection(
-          "Scheduled Perfect Hair Days",
-          datesContent,
-          yPosition
-        );
-      }
-
-      // ===== FIXED FOOTER ON EACH PAGE =====
+      // ===== FOOTER ON ALL PAGES =====
       const totalPages = (pdf.internal as any).getNumberOfPages();
-
       for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
-
         const footerY = pageHeight - 15;
 
-        // Footer separator
         pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
         pdf.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
 
-        // Footer text
         pdf
           .setFontSize(8)
           .setTextColor(150, 150, 150)
@@ -549,16 +521,14 @@ export default function Home() {
           margin,
           footerY
         );
-        pdf.text(
-          `Page ${i} of ${totalPages}`,
-          pageWidth - margin - 20,
-          footerY
-        );
+        pdf.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, footerY);
       }
 
       // ===== SAVE FILE =====
-      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${formData.lastName
-        }_${format(new Date(), "yyyyMMdd")}.pdf`;
+      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${formData.lastName}_${format(
+        new Date(),
+        "yyyyMMdd"
+      )}.pdf`;
       pdf.save(fileName);
 
       setMessage("PDF report generated successfully!");
@@ -569,6 +539,7 @@ export default function Home() {
       setIsGeneratingPDF(false);
     }
   };
+
   const handleSubmit = async () => {
     console.log(formData.email, "email");
     if (!formData.email || formData.selectedDates.length === 0) {
@@ -1248,67 +1219,67 @@ export default function Home() {
         return (
           <>
             {/* Scrollable Card Container */}
-         <div
-  className="glass-card mobile-card mb-9 max-w-full md:max-w-xl w-full p-6 relative overflow-hidden"
->
-  {/* Heading */}
-  <h3
-    className="mobile-heading font-bold mb-4 text-center sticky top-0 bg-black/80 backdrop-blur-sm py-2 z-10"
-    style={{ color: "#ff7f50", marginTop: "10px" }}
-  >
-    Your Lifestyle
-  </h3>
+            <div
+              className="glass-card mobile-card mb-9 max-w-full md:max-w-xl w-full p-6 relative overflow-hidden"
+            >
+              {/* Heading */}
+              <h3
+                className="mobile-heading font-bold mb-4 text-center sticky top-0 bg-black/80 backdrop-blur-sm py-2 z-10"
+                style={{ color: "#ff7f50", marginTop: "10px" }}
+              >
+                Your Lifestyle
+              </h3>
 
-  {/* Optional Text */}
-  <p className="text-white/70 mobile-text mb-6 text-center">
-    (Optional - You can skip to next slide)
-  </p>
+              {/* Optional Text */}
+              <p className="text-white/70 mobile-text mb-6 text-center">
+                (Optional - You can skip to next slide)
+              </p>
 
-  {/* Work Options + Inline Industry Field */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-10">
-    {[
-      { value: "Corporate", label: "Corporate" },
-      { value: "Stay at home", label: "Stay at home" },
-      { value: "Work from home", label: "Work from home" },
-      { value: "Entrepreneur", label: "Entrepreneur" },
-      { value: "Student", label: "Student" },
-    ].map((work) => (
-      <div
-        key={work.value}
-        className="flex items-center justify-between space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-      >
-        <label className="flex items-center space-x-3 cursor-pointer">
-          <input
-            type="radio"
-            name="workType"
-            value={work.value}
-            checked={formData.workType === work.value}
-            onChange={(e) => handleInputChange("workType", e.target.value)}
-            className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-          />
-          <span
-            className="text-white/90 text-lg font-medium"
-            style={{ fontSize: "15px" }}
-          >
-            {work.label}
-          </span>
-        </label>
+              {/* Work Options + Inline Industry Field */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-10">
+                {[
+                  { value: "Corporate", label: "Corporate" },
+                  { value: "Stay at home", label: "Stay at home" },
+                  { value: "Work from home", label: "Work from home" },
+                  { value: "Entrepreneur", label: "Entrepreneur" },
+                  { value: "Student", label: "Student" },
+                ].map((work) => (
+                  <div
+                    key={work.value}
+                    className="flex items-center justify-between space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+                  >
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="workType"
+                        value={work.value}
+                        checked={formData.workType === work.value}
+                        onChange={(e) => handleInputChange("workType", e.target.value)}
+                        className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+                      />
+                      <span
+                        className="text-white/90 text-lg font-medium"
+                        style={{ fontSize: "15px" }}
+                      >
+                        {work.label}
+                      </span>
+                    </label>
 
-        {/* Inline Industry Input (only for specific options) */}
-        {(formData.workType === work.value &&
-          ["Corporate", "Work from home", "Entrepreneur"].includes(work.value)) && (
-          <input
-            type="text"
-            value={formData.workIndustry}
-            onChange={(e) => handleInputChange("workIndustry", e.target.value)}
-            className="ml-3 flex-1 min-w-[130px] bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-coral focus:ring-1 focus:ring-coral placeholder-gray-300 placeholder-opacity-60"
-            placeholder="Industry..."
-          />
-        )}
-      </div>
-    ))}
-  </div>
-</div>
+                    {/* Inline Industry Input (only for specific options) */}
+                    {(formData.workType === work.value &&
+                      ["Corporate", "Work from home", "Entrepreneur"].includes(work.value)) && (
+                        <input
+                          type="text"
+                          value={formData.workIndustry}
+                          onChange={(e) => handleInputChange("workIndustry", e.target.value)}
+                          className="ml-3 flex-1 min-w-[130px] bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-coral focus:ring-1 focus:ring-coral placeholder-gray-300 placeholder-opacity-60"
+                          placeholder="Industry..."
+                        />
+                      )}
+                  </div>
+                ))}
+              </div>
+            </div>
 
             {/* Bottom Fixed Buttons (Example) */}
 

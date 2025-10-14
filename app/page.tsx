@@ -627,7 +627,7 @@ export default function Home() {
               </p>
 
               {/* First & Last Name */}
-              <div className="form-grid gap-6 mb-8">
+              <div className="form-grid gap-6 mb-6">
                 <div>
                   <label className="block text-white/90 font-medium mb-2 text-sm">
                     First Name<span className="text-red-500">*</span>
@@ -662,7 +662,7 @@ export default function Home() {
               </div>
 
               {/* Email & Phone */}
-              <div className="form-grid gap-6 mb-8">
+              <div className="form-grid gap-4 mb-6">
                 <div>
                   <label className="block text-white/90 font-medium mb-2 text-sm">
                     Email<span className="text-red-500">*</span>

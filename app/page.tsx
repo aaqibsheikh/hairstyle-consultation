@@ -614,7 +614,7 @@ export default function Home() {
                 </p>
 
                 <h3
-                  className="mobile-heading font-bold mb-1"
+                  className="mobile-heading font-bold mb-3"
                   style={{ color: "#ff7f50" }}
                 >
                   Tell us a little about yourself

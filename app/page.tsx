@@ -609,7 +609,7 @@ export default function Home() {
             <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
               {/* Title */}
               <div className="text-center">
-                <p className="mt-0 pt-7 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed">
+                <p className="mt-0 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed">
                   Get your hair color analysis in 3 minutes.*
                 </p>
 

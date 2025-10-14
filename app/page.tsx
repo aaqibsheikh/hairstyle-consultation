@@ -860,7 +860,7 @@ export default function Home() {
       case 3:
         return (
           <>
-            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full min-h-[430px] md:h-[432px] p-6 flex flex-col justify-between">
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full min-h-[500px] md:h-[432px] p-6 flex flex-col justify-between">
               {/* Header */}
               <div className="text-center mb-6">
                 <h4
@@ -913,7 +913,7 @@ export default function Home() {
       case 4:
         return (
           <>
-            <div className="glass-card mobile-card max-w-full mb-12 md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between">
+            <div className="glass-card mobile-card max-w-full mb-12 md:max-w-4xl w-full h-auto min-h-[500px] p-6 md:h-[442px] flex flex-col justify-between">
               {/* Header */}
               <h3
                 className="mobile-heading font-bold text-center"
@@ -1248,84 +1248,70 @@ export default function Home() {
         return (
           <>
             {/* Scrollable Card Container */}
-            <div
-              className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full p-6 relative overflow-hidden"
-              style={{
-                height: "calc(100vh - 120px)", // fits within screen height
-                overflowY: "auto",
-                scrollbarWidth: "thin",
-                WebkitOverflowScrolling: "touch",
-              }}
-            >
-              {/* Heading */}
-              <h3
-                className="mobile-heading font-bold mb-4 text-center sticky top-0 bg-black/80 backdrop-blur-sm py-2 z-10"
-                style={{ color: "#ff7f50", marginTop: "10px" }}
-              >
-                Your Lifestyle
-              </h3>
+         <div
+  className="glass-card mobile-card mb-9 max-w-full md:max-w-xl w-full p-6 relative overflow-hidden"
+>
+  {/* Heading */}
+  <h3
+    className="mobile-heading font-bold mb-4 text-center sticky top-0 bg-black/80 backdrop-blur-sm py-2 z-10"
+    style={{ color: "#ff7f50", marginTop: "10px" }}
+  >
+    Your Lifestyle
+  </h3>
 
-              {/* Optional Text */}
-              <p className="text-white/70 mobile-text mb-6 text-center">
-                (Optional - You can skip to next slide)
-              </p>
+  {/* Optional Text */}
+  <p className="text-white/70 mobile-text mb-6 text-center">
+    (Optional - You can skip to next slide)
+  </p>
 
-              {/* Work Options */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-10">
-                {[
-                  { value: "Corporate", label: "Corporate" },
-                  { value: "Stay at home", label: "Stay at home" },
-                  { value: "Work from home", label: "Work from home" },
-                  { value: "Entrepreneur", label: "Entrepreneur" },
-                  { value: "Student", label: "Student" },
-                ].map((work) => (
-                  <label
-                    key={work.value}
-                    className="flex items-center space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
-                  >
-                    <input
-                      type="radio"
-                      name="workType"
-                      value={work.value}
-                      checked={formData.workType === work.value}
-                      onChange={(e) =>
-                        handleInputChange("workType", e.target.value)
-                      }
-                      className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
-                    />
-                    <span
-                      className="text-white/90 text-lg font-medium"
-                      style={{ fontSize: "15px" }}
-                    >
-                      {work.label}
-                    </span>
-                  </label>
-                ))}
-              </div>
+  {/* Work Options + Inline Industry Field */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-10">
+    {[
+      { value: "Corporate", label: "Corporate" },
+      { value: "Stay at home", label: "Stay at home" },
+      { value: "Work from home", label: "Work from home" },
+      { value: "Entrepreneur", label: "Entrepreneur" },
+      { value: "Student", label: "Student" },
+    ].map((work) => (
+      <div
+        key={work.value}
+        className="flex items-center justify-between space-x-3 cursor-pointer p-4 bg-black/20 border border-white/10 rounded-lg hover:bg-black/40 transition-all"
+      >
+        <label className="flex items-center space-x-3 cursor-pointer">
+          <input
+            type="radio"
+            name="workType"
+            value={work.value}
+            checked={formData.workType === work.value}
+            onChange={(e) => handleInputChange("workType", e.target.value)}
+            className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
+          />
+          <span
+            className="text-white/90 text-lg font-medium"
+            style={{ fontSize: "15px" }}
+          >
+            {work.label}
+          </span>
+        </label>
 
-              {/* Industry Input — Conditional */}
-              {(formData.workType === "Corporate" ||
-                formData.workType === "Work from home" ||
-                formData.workType === "Entrepreneur") && (
-                  <div className="mt-6 pb-24"> {/* Added padding-bottom for scroll safety */}
-                    <label className="block text-white/90 font-medium mb-2 text-sm">
-                      Please specify industry
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.workIndustry}
-                      onChange={(e) =>
-                        handleInputChange("workIndustry", e.target.value)
-                      }
-                      className="input-field placeholder-gray-300 placeholder-opacity-60 w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-coral focus:ring-1 focus:ring-coral"
-                      placeholder="e.g., Technology, Healthcare, Finance..."
-                    />
-                  </div>
-                )}
-            </div>
+        {/* Inline Industry Input (only for specific options) */}
+        {(formData.workType === work.value &&
+          ["Corporate", "Work from home", "Entrepreneur"].includes(work.value)) && (
+          <input
+            type="text"
+            value={formData.workIndustry}
+            onChange={(e) => handleInputChange("workIndustry", e.target.value)}
+            className="ml-3 flex-1 min-w-[130px] bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-coral focus:ring-1 focus:ring-coral placeholder-gray-300 placeholder-opacity-60"
+            placeholder="Industry..."
+          />
+        )}
+      </div>
+    ))}
+  </div>
+</div>
 
             {/* Bottom Fixed Buttons (Example) */}
-        
+
           </>
 
         );
@@ -1535,30 +1521,30 @@ export default function Home() {
               <div className="w-full px-3 py-3 text-center absolute bottom-6 left-1/2 -translate-x-1/2">
                 <div className="flex flex-row flex-wrap items-stretch justify-center gap-4 sm:gap-6 max-w-md mx-auto">
                   {/* ---- Button 1 ---- */}
-                  <div className="flex-1 min-w-[130px]">
-                    <p className="text-white text-xs mb-1 leading-tight font-bold">
+                  <div className="flex-1 min-w-[150px]">
+                    <p className="text-white text-sm mb-2 leading-tight font-bold">
                       Get Full Hair Color Analysis at a special offer now
                     </p>
                     <button
                       onClick={() =>
                         window.open("https://example.com/book-now", "_blank")
                       }
-                      className="bg-white text-black text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full hover:bg-gray-200"
+                      className="bg-white text-black text-sm sm:text-base font-bold px-6 py-4 shadow-lg transition-all w-full hover:bg-gray-200"
                     >
                       Book Now
                     </button>
                   </div>
 
                   {/* ---- Button 2 ---- */}
-                  <div className="flex-1 min-w-[130px]">
-                    <p className="text-white text-xs mb-1 leading-tight font-bold">
+                  <div className="flex-1 min-w-[150px]">
+                    <p className="text-white text-sm mb-2 leading-tight font-bold">
                       Book hair services now with a special offer
                     </p>
                     <button
                       onClick={() =>
                         window.open("https://example.com/book-appointment", "_blank")
                       }
-                      className="bg-white text-black text-xs sm:text-sm font-medium px-3 py-2 rounded-md shadow-md transition-all w-full hover:bg-gray-200"
+                      className="bg-white text-black text-sm sm:text-base font-bold px-6 py-4 shadow-lg transition-all w-full hover:bg-gray-200"
                     >
                       Book Appointment
                     </button>

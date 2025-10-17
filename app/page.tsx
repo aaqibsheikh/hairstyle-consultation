@@ -189,244 +189,277 @@ export default function Home() {
     handleSubmit();
   };
 
-const generatePDF = async () => {
-  setIsGeneratingPDF(true);
-  setMessage("");
+  const generatePDF = async () => {
+    setIsGeneratingPDF(true);
+    setMessage("");
 
-  try {
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 20;
-    const contentWidth = pageWidth - 2 * margin;
-
-    let yPosition = margin;
-
-    // ===== PAGE 1 BACKGROUND =====
-    pdf.setFillColor(0, 0, 0);
-    pdf.rect(0, 0, pageWidth, pageHeight, "F");
-
-    // ===== HEADER WITH LOGO =====
     try {
-      const logoResponse = await fetch(mkhLogo.src);
-      const logoBlob = await logoResponse.blob();
-      const logoBase64 = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(logoBlob);
-      });
-      pdf.addImage(logoBase64 as string, "JPEG", margin, 15, 40, 40);
-    } catch (error) {
-      console.log("Logo not available, continuing without logo");
-    }
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20;
+      const contentWidth = pageWidth - 2 * margin;
 
-    // ===== HEADER TITLE =====
-    pdf.setFontSize(26).setTextColor(255, 127, 80).setFont("helvetica", "bold");
-    pdf.text("MKH Hair Color Analysis", margin + 45, 35);
+      let yPosition = margin;
 
-    pdf.setFontSize(16).setTextColor(255, 255, 255).setFont("helvetica", "bold");
-    pdf.text("Professional Consultation Report", margin + 45, 45);
+      // ===== PAGE 1 BACKGROUND =====
+      pdf.setFillColor(0, 0, 0);
+      pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-    // Separator Line
-    pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-    pdf.line(margin, 55, pageWidth - margin, 55);
+      // ===== HEADER WITH LOGO =====
+      try {
+        const logoResponse = await fetch(mkhLogo.src);
+        const logoBlob = await logoResponse.blob();
+        const logoBase64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(logoBlob);
+        });
+        pdf.addImage(logoBase64 as string, "JPEG", margin, 15, 40, 40);
+      } catch (error) {
+        console.log("Logo not available, continuing without logo");
+      }
 
-    yPosition = 70;
-
-    // ===== HELPER FUNCTION =====
-   const addSection = (
-  title: string,
-  content: (string | { text: string; bold?: boolean; orange?: boolean })[],
-  y: number
-) => {
-  if (y > pageHeight - margin - 60) {
-    return y; // Don't add new page on first page
-  }
-
-  // === Section Title ===
-  pdf.setFontSize(18)
-    .setTextColor(255, 127, 80) // orange
-    .setFont("helvetica", "bold");
-  pdf.text(title, margin, y);
-
-  pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-  pdf.line(margin, y + 2, margin + pdf.getTextWidth(title), y + 2);
-
-  let currentY = y + 12;
-
-  // === Section Content ===
-  content.forEach((line) => {
-    if (currentY > pageHeight - margin - 15) {
-      return currentY; // Stop if reaching bottom
-    }
-
-    if (typeof line === "string" && line.trim() === "") {
-      currentY += 6;
-      return;
-    }
-
-    // Check if line is styled or plain text
-    const text = typeof line === "string" ? line : line.text;
-    const isBold = typeof line !== "string" && line.bold;
-    const isOrange = typeof line !== "string" && line.orange;
-
-    // Apply styles dynamically
-    pdf.setFont("helvetica", isBold ? "bold" : "normal");
-    pdf.setFontSize(12);
-    pdf.setTextColor(
-      isOrange ? 255 : 255,
-      isOrange ? 127 : 255,
-      isOrange ? 80 : 255
-    );
-
-    const lines = pdf.splitTextToSize(text, contentWidth);
-    lines.forEach((textLine: string) => {
-      if (currentY > pageHeight - margin - 10) return;
-      pdf.text(textLine, margin, currentY);
-      currentY += 6;
-    });
-
-    currentY += 2;
-  });
-
-  currentY += 10;
-  return currentY;
-};
-
-    // ===== RECOMMENDATIONS =====
-    const combination: HairCombination = {
-      hairColor: formData.selectedHairColor,
-      hairLength: formData.hairLength,
-      personalStyle: formData.personalStyle,
-    };
-
-    const recommendation = getHairRecommendation(combination);
-    const images = getAllRecommendationImages(combination);
-
-   if (recommendation) {
-  const recommendationsContent = [
-    "",
-    recommendation.description,
-    "",
-    { text: "Recommended Maintenance Schedule:", bold: true, orange: true },
-    ...recommendation.maintenanceSchedule.map((schedule) => `• ${schedule}`),
-    "",
-    { text: "Hair Care Routine:", bold: true, orange: true },
-    recommendation.hairCare,
-  ];
-
-  yPosition = addSection(
-    "Professional Recommendations",
-    recommendationsContent,
-    yPosition
-  );
-}
-
-
-    // ===== SCHEDULED PERFECT HAIR DAYS (SAME PAGE) =====
-    if (formData.selectedDates && formData.selectedDates.length > 0) {
-      const sortedDates = [...formData.selectedDates].sort(
-        (a, b) => a.getTime() - b.getTime()
-      );
-
-      const datesContent = [
-        "Your scheduled appointment dates:",
-        "",
-        ...sortedDates.map(
-          (date: Date, index: number) =>
-            `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
-        ),
-        "",
-        `Total appointments scheduled: ${formData.selectedDates.length}`,
-      ];
-
-      yPosition = addSection(
-        "Scheduled Perfect Hair Days",
-        datesContent,
-        yPosition
-      );
-    }
-
-    // ===== PAGE 1 FOOTER =====
-    const footerY = pageHeight - 15;
-    pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
-    pdf.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
-
-    pdf
-      .setFontSize(8)
-      .setTextColor(150, 150, 150)
-      .setFont("helvetica", "normal");
-    pdf.text(
-      "MKH Professional Hair Care - Confidential Client Report",
-      margin,
-      footerY
-    );
-    pdf.text("Page 1 of 3", pageWidth - margin - 20, footerY);
-
-    // ===== PAGE 2: RECOMMENDED STYLE IMAGES =====
-    pdf.addPage();
-    pdf.setFillColor(0, 0, 0);
-    pdf.rect(0, 0, pageWidth, pageHeight, "F");
-    yPosition = margin;
-
-    if (images.length > 0) {
+      // ===== HEADER TITLE =====
       pdf
-        .setFontSize(18)
+        .setFontSize(26)
         .setTextColor(255, 127, 80)
         .setFont("helvetica", "bold");
-      pdf.text("Recommended Style Visuals", margin, yPosition);
+      pdf.text("MKH Hair Color Analysis", margin + 45, 35);
 
+      pdf
+        .setFontSize(16)
+        .setTextColor(255, 255, 255)
+        .setFont("helvetica", "bold");
+      pdf.text("Professional Consultation Report", margin + 45, 45);
+
+      // Separator Line
       pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-      pdf.line(
+      pdf.line(margin, 55, pageWidth - margin, 55);
+
+      yPosition = 70;
+
+      // ===== HELPER FUNCTION =====
+      const addSection = (
+        title: string,
+        content: (
+          | string
+          | { text: string; bold?: boolean; orange?: boolean }
+        )[],
+        y: number
+      ) => {
+        if (y > pageHeight - margin - 60) {
+          return y; // Don't add new page on first page
+        }
+
+        // === Section Title ===
+        pdf
+          .setFontSize(18)
+          .setTextColor(255, 127, 80) // orange
+          .setFont("helvetica", "bold");
+        pdf.text(title, margin, y);
+
+        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
+        pdf.line(margin, y + 2, margin + pdf.getTextWidth(title), y + 2);
+
+        let currentY = y + 12;
+
+        // === Section Content ===
+        content.forEach((line) => {
+          if (currentY > pageHeight - margin - 15) {
+            return currentY; // Stop if reaching bottom
+          }
+
+          if (typeof line === "string" && line.trim() === "") {
+            currentY += 6;
+            return;
+          }
+
+          // Check if line is styled or plain text
+          const text = typeof line === "string" ? line : line.text;
+          const isBold = typeof line !== "string" && line.bold;
+          const isOrange = typeof line !== "string" && line.orange;
+
+          // Apply styles dynamically
+          pdf.setFont("helvetica", isBold ? "bold" : "normal");
+          pdf.setFontSize(12);
+          pdf.setTextColor(
+            isOrange ? 255 : 255,
+            isOrange ? 127 : 255,
+            isOrange ? 80 : 255
+          );
+
+          const lines = pdf.splitTextToSize(text, contentWidth);
+          lines.forEach((textLine: string) => {
+            if (currentY > pageHeight - margin - 10) return;
+            pdf.text(textLine, margin, currentY);
+            currentY += 6;
+          });
+
+          currentY += 2;
+        });
+
+        currentY += 10;
+        return currentY;
+      };
+
+      // ===== RECOMMENDATIONS =====
+      const combination: HairCombination = {
+        hairColor: formData.selectedHairColor,
+        hairLength: formData.hairLength,
+        personalStyle: formData.personalStyle,
+      };
+
+      const recommendation = getHairRecommendation(combination);
+      const images = getAllRecommendationImages(combination);
+
+      if (recommendation) {
+        const recommendationsContent = [
+          "",
+          recommendation.description,
+          "",
+          {
+            text: "Recommended Maintenance Schedule:",
+            bold: true,
+            orange: true,
+          },
+          ...recommendation.maintenanceSchedule.map(
+            (schedule) => `• ${schedule}`
+          ),
+          "",
+          { text: "Hair Care Routine:", bold: true, orange: true },
+          recommendation.hairCare,
+        ];
+
+        yPosition = addSection(
+          "Professional Recommendations",
+          recommendationsContent,
+          yPosition
+        );
+      }
+
+      // ===== SCHEDULED PERFECT HAIR DAYS (SAME PAGE) =====
+      if (formData.selectedDates && formData.selectedDates.length > 0) {
+        const sortedDates = [...formData.selectedDates].sort(
+          (a, b) => a.getTime() - b.getTime()
+        );
+
+        const datesContent = [
+          "You will get reminders 3 weeks before your selected important days so you can book an appointment as you choose: ",
+          "",
+          ...sortedDates.map(
+            (date: Date, index: number) =>
+              `${index + 1}. ${format(date, "EEEE, MMMM d, yyyy")}`
+          ),
+        ];
+
+        yPosition = addSection(
+          "Scheduled Perfect Hair Days",
+          datesContent,
+          yPosition
+        );
+      }
+
+      // ===== PAGE 1 FOOTER =====
+      const footerY = pageHeight - 15;
+      pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
+      pdf.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
+
+      pdf
+        .setFontSize(8)
+        .setTextColor(150, 150, 150)
+        .setFont("helvetica", "normal");
+      pdf.text(
+        "MKH Professional Hair Care - Confidential Client Report",
         margin,
-        yPosition + 2,
-        margin + pdf.getTextWidth("Recommended Style Visuals"),
-        yPosition + 2
+        footerY
       );
+      pdf.text("Page 1 of 3", pageWidth - margin - 20, footerY);
 
-      yPosition += 20;
+      // ===== PAGE 2: RECOMMENDED STYLE IMAGES =====
+      pdf.addPage();
+      pdf.setFillColor(0, 0, 0);
+      pdf.rect(0, 0, pageWidth, pageHeight, "F");
+      yPosition = margin;
 
-      const imagesToProcess = images.slice(0, 4);
-      const maxImageWidth = (contentWidth - 10) / 2;
-      const maxImageHeight = 80;
-      let currentRowY = yPosition;
+      if (images.length > 0) {
+        pdf
+          .setFontSize(18)
+          .setTextColor(255, 127, 80)
+          .setFont("helvetica", "bold");
+        pdf.text("Recommended Style Visuals", margin, yPosition);
 
-      for (let index = 0; index < imagesToProcess.length; index++) {
-        const col = index % 2;
-        const xPos = margin + col * (maxImageWidth + 10);
+        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
+        pdf.line(
+          margin,
+          yPosition + 2,
+          margin + pdf.getTextWidth("Hair style choices"),
+          yPosition + 2
+        );
 
-        try {
-          const dataUrl = await fetchImageAsDataURL(imagesToProcess[index]);
-          if (dataUrl) {
-            const fmt = imagesToProcess[index].toLowerCase().includes(".png")
-              ? "PNG"
-              : "JPEG";
+        yPosition += 20;
 
-            const imgProps = pdf.getImageProperties(dataUrl);
-            const imgWidth = imgProps.width;
-            const imgHeight = imgProps.height;
-            const aspectRatio = imgWidth / imgHeight;
+        const imagesToProcess = images.slice(0, 4);
+        const maxImageWidth = (contentWidth - 10) / 2;
+        const maxImageHeight = 80;
+        let currentRowY = yPosition;
 
-            let finalWidth = maxImageWidth;
-            let finalHeight = maxImageWidth / aspectRatio;
+        for (let index = 0; index < imagesToProcess.length; index++) {
+          const col = index % 2;
+          const xPos = margin + col * (maxImageWidth + 10);
 
-            if (finalHeight > maxImageHeight) {
-              finalHeight = maxImageHeight;
-              finalWidth = maxImageHeight * aspectRatio;
+          try {
+            const dataUrl = await fetchImageAsDataURL(imagesToProcess[index]);
+            if (dataUrl) {
+              const fmt = imagesToProcess[index].toLowerCase().includes(".png")
+                ? "PNG"
+                : "JPEG";
+
+              const imgProps = pdf.getImageProperties(dataUrl);
+              const imgWidth = imgProps.width;
+              const imgHeight = imgProps.height;
+              const aspectRatio = imgWidth / imgHeight;
+
+              let finalWidth = maxImageWidth;
+              let finalHeight = maxImageWidth / aspectRatio;
+
+              if (finalHeight > maxImageHeight) {
+                finalHeight = maxImageHeight;
+                finalWidth = maxImageHeight * aspectRatio;
+              }
+
+              const xOffset = (maxImageWidth - finalWidth) / 2;
+              const yOffset = (maxImageHeight - finalHeight) / 2;
+
+              pdf.addImage(
+                dataUrl,
+                fmt,
+                xPos + xOffset,
+                currentRowY + yOffset,
+                finalWidth,
+                finalHeight
+              );
+
+              pdf
+                .setFontSize(10)
+                .setTextColor(255, 255, 255)
+                .setFont("helvetica", "bold");
+              pdf.text(
+                `Style ${index + 1}`,
+                xPos + maxImageWidth / 2 - 10,
+                currentRowY + maxImageHeight + 10
+              );
             }
-
-            const xOffset = (maxImageWidth - finalWidth) / 2;
-            const yOffset = (maxImageHeight - finalHeight) / 2;
-
-            pdf.addImage(
-              dataUrl,
-              fmt,
-              xPos + xOffset,
-              currentRowY + yOffset,
-              finalWidth,
-              finalHeight
+          } catch (error) {
+            console.error("Error loading image:", error);
+            pdf.setFillColor(50, 50, 50);
+            pdf.rect(xPos, currentRowY, maxImageWidth, maxImageHeight, "F");
+            pdf.setFontSize(9).setTextColor(255, 127, 80);
+            pdf.text(
+              "Image Preview",
+              xPos + maxImageWidth / 2 - 15,
+              currentRowY + maxImageHeight / 2
             );
-
             pdf
               .setFontSize(10)
               .setTextColor(255, 255, 255)
@@ -437,159 +470,140 @@ const generatePDF = async () => {
               currentRowY + maxImageHeight + 10
             );
           }
-        } catch (error) {
-          console.error("Error loading image:", error);
-          pdf.setFillColor(50, 50, 50);
-          pdf.rect(xPos, currentRowY, maxImageWidth, maxImageHeight, "F");
-          pdf.setFontSize(9).setTextColor(255, 127, 80);
-          pdf.text(
-            "Image Preview",
-            xPos + maxImageWidth / 2 - 15,
-            currentRowY + maxImageHeight / 2
-          );
-          pdf
-            .setFontSize(10)
-            .setTextColor(255, 255, 255)
-            .setFont("helvetica", "bold");
-          pdf.text(
-            `Style ${index + 1}`,
-            xPos + maxImageWidth / 2 - 10,
-            currentRowY + maxImageHeight + 10
-          );
-        }
 
-        if (col === 1) {
-          currentRowY += maxImageHeight + 30;
+          if (col === 1) {
+            currentRowY += maxImageHeight + 30;
+          }
         }
       }
-    }
 
-    // ===== PAGE 2 FOOTER =====
-    const page2FooterY = pageHeight - 15;
-    pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
-    pdf.line(margin, page2FooterY - 5, pageWidth - margin, page2FooterY - 5);
-
-    pdf
-      .setFontSize(8)
-      .setTextColor(150, 150, 150)
-      .setFont("helvetica", "normal");
-    pdf.text(
-      "MKH Professional Hair Care - Confidential Client Report",
-      margin,
-      page2FooterY
-    );
-    pdf.text("Page 2 of 3", pageWidth - margin - 20, page2FooterY);
-
-    // ===== PAGE 3: CLIENT INFORMATION =====
-    pdf.addPage();
-    pdf.setFillColor(0, 0, 0);
-    pdf.rect(0, 0, pageWidth, pageHeight, "F");
-    yPosition = margin;
-
-    // Helper function for page 3 (allows content to flow naturally)
-    const addPage3Section = (title: string, content: string[], y: number) => {
-      pdf
-        .setFontSize(18)
-        .setTextColor(255, 127, 80)
-        .setFont("helvetica", "bold");
-      pdf.text(title, margin, y);
-
-      pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-      pdf.line(margin, y + 2, margin + pdf.getTextWidth(title), y + 2);
-
-      let currentY = y + 12;
+      // ===== PAGE 2 FOOTER =====
+      const page2FooterY = pageHeight - 15;
+      pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
+      pdf.line(margin, page2FooterY - 5, pageWidth - margin, page2FooterY - 5);
 
       pdf
-        .setFontSize(12)
-        .setTextColor(255, 255, 255)
+        .setFontSize(8)
+        .setTextColor(150, 150, 150)
         .setFont("helvetica", "normal");
+      pdf.text(
+        "MKH Professional Hair Care - Confidential Client Report",
+        margin,
+        page2FooterY
+      );
+      pdf.text("Page 2 of 3", pageWidth - margin - 20, page2FooterY);
 
-      content.forEach((line) => {
-        if (line.trim() === "") {
-          currentY += 6;
-          return;
-        }
+      // ===== PAGE 3: CLIENT INFORMATION =====
+      pdf.addPage();
+      pdf.setFillColor(0, 0, 0);
+      pdf.rect(0, 0, pageWidth, pageHeight, "F");
+      yPosition = margin;
 
-        const lines = pdf.splitTextToSize(line, contentWidth);
-        lines.forEach((textLine: string) => {
-          pdf.text(textLine, margin, currentY);
-          currentY += 6;
+      // Helper function for page 3 (allows content to flow naturally)
+      const addPage3Section = (title: string, content: string[], y: number) => {
+        pdf
+          .setFontSize(18)
+          .setTextColor(255, 127, 80)
+          .setFont("helvetica", "bold");
+        pdf.text(title, margin, y);
+
+        pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
+        pdf.line(margin, y + 2, margin + pdf.getTextWidth(title), y + 2);
+
+        let currentY = y + 12;
+
+        pdf
+          .setFontSize(12)
+          .setTextColor(255, 255, 255)
+          .setFont("helvetica", "normal");
+
+        content.forEach((line) => {
+          if (line.trim() === "") {
+            currentY += 6;
+            return;
+          }
+
+          const lines = pdf.splitTextToSize(line, contentWidth);
+          lines.forEach((textLine: string) => {
+            pdf.text(textLine, margin, currentY);
+            currentY += 6;
+          });
+          currentY += 2;
         });
-        currentY += 2;
-      });
 
-      currentY += 10;
-      return currentY;
-    };
+        currentY += 10;
+        return currentY;
+      };
 
-    // ===== CLIENT SECTIONS =====
-    const summaryContent = [
-      `Name: ${formData.firstName} ${formData.lastName}`,
-      `Analysis Date: ${format(new Date(), "MMMM d, yyyy")}`,
-      `Reference: MKH-${Date.now().toString().slice(-6)}`,
-      `Report generated on: ${format(
-        new Date(),
-        "EEEE, MMMM d, yyyy 'at' h:mm a"
-      )}`,
-    ];
+      // ===== CLIENT SECTIONS =====
+      const summaryContent = [
+        `• Name: ${formData.firstName} ${formData.lastName}`,
+        `• Analysis Date: ${format(new Date(), "MMMM d, yyyy")}`,
+        `• Reference: MKH-${Date.now().toString().slice(-6)}`,
+        `• Report generated on: ${format(
+          new Date(),
+          "EEEE, MMMM d, yyyy 'at' h:mm a"
+        )}`,
+      ];
 
-    yPosition = addPage3Section("Client Summary", summaryContent, yPosition);
+      yPosition = addPage3Section("Client Summary", summaryContent, yPosition);
 
-    const personalInfoContent = [
-      `Full Name: ${formData.firstName} ${formData.lastName}`,
-      `Email: ${formData.email}`,
-      `Phone: ${formData.phone || "Not provided"}`,
-    ];
+      const personalInfoContent = [
+        `• Full Name: ${formData.firstName} ${formData.lastName}`,
+        `• Email: ${formData.email}`,
+        `• Phone: ${formData.phone || "Not provided"}`,
+      ];
 
-    yPosition = addPage3Section(
-      "Personal Information",
-      personalInfoContent,
-      yPosition
-    );
+      yPosition = addPage3Section(
+        "Personal Information",
+        personalInfoContent,
+        yPosition
+      );
 
-    const hairAnalysisContent = [
-      `Natural Hair Color : ${formData.naturalHairColor || "Not specified"}`,
-      `Skin Tone : ${formData.skinColor || "Not specified"}`,
-      `Eye Color : ${formData.eyeColor || "Not specified"}`,
-      `Hair Texture : ${formData.hairTexture || "Not specified"}`,
-      `Hair Length : ${formData.hairLength || "Not specified"}`,
-      `Personal Style : ${formData.personalStyle || "Not specified"}`,
-      `Maintenance Preference : ${formData.hairMaintenance || "Not specified"}`,
-    ];
+      const hairAnalysisContent = [
+        `• Natural Hair Color: ${formData.naturalHairColor || "Not specified"}`,
+        `• Skin Tone: ${formData.skinColor || "Not specified"}`,
+        `• Eye Color: ${formData.eyeColor || "Not specified"}`,
+        `• Hair Texture: ${formData.hairTexture || "Not specified"}`,
+        `• Hair Length: ${formData.hairLength || "Not specified"}`,
+        `• Personal Style: ${formData.personalStyle || "Not specified"}`,
+        `• Maintenance Preference: ${
+          formData.hairMaintenance || "Not specified"
+        }`,
+      ];
 
-    addPage3Section("Hair Analysis Profile", hairAnalysisContent, yPosition);
+      addPage3Section("Hair Analysis Profile", hairAnalysisContent, yPosition);
 
-    // ===== PAGE 3 FOOTER =====
-    const page3FooterY = pageHeight - 15;
-    pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
-    pdf.line(margin, page3FooterY - 5, pageWidth - margin, page3FooterY - 5);
+      // ===== PAGE 3 FOOTER =====
+      const page3FooterY = pageHeight - 15;
+      pdf.setDrawColor(255, 127, 80).setLineWidth(0.2);
+      pdf.line(margin, page3FooterY - 5, pageWidth - margin, page3FooterY - 5);
 
-    pdf
-      .setFontSize(8)
-      .setTextColor(150, 150, 150)
-      .setFont("helvetica", "normal");
-    pdf.text(
-      "MKH Professional Hair Care - Confidential Client Report",
-      margin,
-      page3FooterY
-    );
-    pdf.text("Page 3 of 3", pageWidth - margin - 20, page3FooterY);
+      pdf
+        .setFontSize(8)
+        .setTextColor(150, 150, 150)
+        .setFont("helvetica", "normal");
+      pdf.text(
+        "MKH Professional Hair Care - Confidential Client Report",
+        margin,
+        page3FooterY
+      );
+      pdf.text("Page 3 of 3", pageWidth - margin - 20, page3FooterY);
 
-    // ===== SAVE FILE =====
-    const fileName = `MKH_Hair_Analysis_${formData.firstName}_${formData.lastName}_${format(
-      new Date(),
-      "yyyyMMdd"
-    )}.pdf`;
-    pdf.save(fileName);
+      // ===== SAVE FILE =====
+      const fileName = `MKH_Hair_Analysis_${formData.firstName}_${
+        formData.lastName
+      }_${format(new Date(), "yyyyMMdd")}.pdf`;
+      pdf.save(fileName);
 
-    setMessage("PDF report generated successfully!");
-  } catch (error) {
-    console.error("PDF generation error:", error);
-    setMessage("Failed to generate PDF. Please try again.");
-  } finally {
-    setIsGeneratingPDF(false);
-  }
-};
+      setMessage("PDF report generated successfully!");
+    } catch (error) {
+      console.error("PDF generation error:", error);
+      setMessage("Failed to generate PDF. Please try again.");
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   const handleSubmit = async () => {
     console.log(formData.email, "email");
@@ -661,7 +675,7 @@ const generatePDF = async () => {
               {/* Title */}
               <div className="text-center">
                 <p className="mt-0 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed">
-                  Get your hair color analysis in 3 minutes.*
+                  Get your mini hair color analysis in 3 minutes
                 </p>
 
                 <h3
@@ -689,8 +703,9 @@ const generatePDF = async () => {
                     onChange={(e) =>
                       handleInputChange("firstName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.firstName ? "bg-black" : "bg-transparent"
-                      }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+                      formData.firstName ? "bg-black" : "bg-transparent"
+                    }`}
                     placeholder="Enter your first name"
                   />
                 </div>
@@ -705,8 +720,9 @@ const generatePDF = async () => {
                     onChange={(e) =>
                       handleInputChange("lastName", e.target.value)
                     }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${formData.lastName ? "bg-black" : "bg-transparent"
-                      }`}
+                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+                      formData.lastName ? "bg-black" : "bg-transparent"
+                    }`}
                     placeholder="Enter your last name"
                   />
                 </div>
@@ -758,23 +774,31 @@ const generatePDF = async () => {
           <>
             <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between mb-12">
               {/* Top content */}
-              <div className="flex-1 flex items-start mt-4"> {/* 👈 added mt-4 to bring fields down */}
-                <div className="w-full space-y-8"> {/* 👈 consistent vertical spacing */}
+              <div className="flex-1 flex items-start mt-4">
+                {" "}
+                {/* 👈 added mt-4 to bring fields down */}
+                <div className="w-full space-y-8">
+                  {" "}
+                  {/* 👈 consistent vertical spacing */}
                   {/* Row 1 */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8"> {/* 👈 increased gap for even spacing */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {" "}
+                    {/* 👈 increased gap for even spacing */}
                     <div>
                       <label className="block text-white/90 font-medium mb-2 text-sm">
-                        Your Natural Hair Color <span className="text-red-500">*</span>
+                        Your Natural Hair Color{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={formData.naturalHairColor}
                         onChange={(e) =>
                           handleInputChange("naturalHairColor", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.naturalHairColor === ""
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.naturalHairColor === ""
                             ? "text-gray-300 opacity-60"
                             : "text-white"
-                          }`}
+                        }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select hair color
@@ -785,7 +809,6 @@ const generatePDF = async () => {
                         <option value="Red">Red</option>
                       </select>
                     </div>
-
                     <div>
                       <label className="block text-white/90 font-medium mb-2 text-sm">
                         Skin Color <span className="text-red-500">*</span>
@@ -795,10 +818,11 @@ const generatePDF = async () => {
                         onChange={(e) =>
                           handleInputChange("skinColor", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.skinColor === ""
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.skinColor === ""
                             ? "text-gray-300 opacity-60"
                             : "text-white"
-                          }`}
+                        }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select skin color
@@ -810,7 +834,6 @@ const generatePDF = async () => {
                       </select>
                     </div>
                   </div>
-
                   {/* Row 2 */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
@@ -822,10 +845,11 @@ const generatePDF = async () => {
                         onChange={(e) =>
                           handleInputChange("eyeColor", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.eyeColor === ""
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.eyeColor === ""
                             ? "text-gray-300 opacity-60"
                             : "text-white"
-                          }`}
+                        }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select eye color
@@ -849,10 +873,11 @@ const generatePDF = async () => {
                         onChange={(e) =>
                           handleInputChange("hairTexture", e.target.value)
                         }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${formData.hairTexture === ""
+                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.hairTexture === ""
                             ? "text-gray-300 opacity-60"
                             : "text-white"
-                          }`}
+                        }`}
                       >
                         <option value="" disabled className="opacity-60">
                           Select hair texture
@@ -869,12 +894,13 @@ const generatePDF = async () => {
 
               {/* Duration at the bottom-right */}
               <div className="flex justify-end mt-8">
-                <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
+                <p className="text-white/70 text-sm opacity-0">
+                  Duration 3 minutes
+                </p>
               </div>
             </div>
           </>
         );
-
 
       case 3:
         return (
@@ -1267,9 +1293,7 @@ const generatePDF = async () => {
         return (
           <>
             {/* Scrollable Card Container */}
-            <div
-              className="glass-card mobile-card mb-9 max-w-full md:max-w-6xl w-full p-6 relative overflow-hidden"
-            >
+            <div className="glass-card mobile-card mb-9 max-w-full md:max-w-6xl w-full p-6 relative overflow-hidden">
               {/* Heading */}
               <h3
                 className="mobile-heading font-bold mb-4 text-center sticky top-0 py-2 z-10"
@@ -1302,7 +1326,9 @@ const generatePDF = async () => {
                         name="workType"
                         value={work.value}
                         checked={formData.workType === work.value}
-                        onChange={(e) => handleInputChange("workType", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("workType", e.target.value)
+                        }
                         className="w-5 h-5 text-coral bg-white/10 border-white/30 focus:ring-coral"
                       />
                       <span
@@ -1314,12 +1340,16 @@ const generatePDF = async () => {
                     </label>
 
                     {/* Inline Industry Input (only for specific options) */}
-                    {(formData.workType === work.value &&
-                      ["Corporate", "Work from home", "Entrepreneur"].includes(work.value)) && (
+                    {formData.workType === work.value &&
+                      ["Corporate", "Work from home", "Entrepreneur"].includes(
+                        work.value
+                      ) && (
                         <input
                           type="text"
                           value={formData.workIndustry}
-                          onChange={(e) => handleInputChange("workIndustry", e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("workIndustry", e.target.value)
+                          }
                           className="ml-3 flex-1 min-w-[130px] bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-coral focus:ring-1 focus:ring-coral placeholder-gray-300 placeholder-opacity-60"
                           placeholder="Industry..."
                         />
@@ -1328,9 +1358,7 @@ const generatePDF = async () => {
                 ))}
               </div>
             </div>
-
           </>
-
         );
 
       case 11:
@@ -1509,7 +1537,8 @@ const generatePDF = async () => {
                     !formData.lastName
                   }
                   style={{
-                    background: "linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)",
+                    background:
+                      "linear-gradient(135deg, #ff6347 0%, #ff7f50 100%)",
                     transform: "scale(1.05)",
                     transition: "all 0.3s ease",
                   }}
@@ -1530,42 +1559,43 @@ const generatePDF = async () => {
               </div>
 
               {/* ---- Bottom Buttons ---- */}
-              <div className="w-full px-3 py-3 text-center absolute bottom-6 left-1/2 -translate-x-1/2">
-                <div className="flex flex-row items-end justify-center gap-3 w-full max-w-[500px] mx-auto">
-                  {/* ---- Button 1 ---- */}
-                  <div className="flex flex-col items-center justify-between w-[220px]">
-                    <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
-                      Get Full Hair Color Analysis at a special offer now
-                    </p>
-                    <button
-                      onClick={() =>
-                        window.open("https://example.com/book-now", "_blank")
-                      }
-                      className="bg-white text-black text-sm sm:text-base font-bold px-4 py-[19px] shadow-lg transition-all w-full hover:bg-gray-200"
-                    >
-                      Book Now
-                    </button>
-                  </div>
+           <div className="w-full px-3 py-3 text-center absolute bottom-6 left-1/2 -translate-x-1/2">
+  <div className="flex flex-row items-end justify-center gap-3 w-full max-w-[500px] mx-auto">
+    {/* ---- Button 1 ---- */}
+    <div className="flex flex-col items-center justify-between w-[220px]">
+      <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
+        Get Full Hair Color Analysis at a special offer now
+      </p>
+      <button
+        onClick={() =>
+          window.open("https://www.vagaro.com/mkh-richmond", "_blank")
+        }
+        className="bg-white text-black text-sm sm:text-base font-bold px-4 py-[20px] shadow-lg transition-all w-full hover:bg-gray-200"
+      >
+        Book Now
+      </button>
+    </div>
 
-                  {/* ---- Button 2 ---- */}
-                  <div className="flex flex-col items-center justify-between w-[220px]">
-                    <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
-                      Book hair services now with a special offer
-                    </p>
-                    <button
-                      onClick={() =>
-                        window.open("https://example.com/book-appointment", "_blank")
-                      }
-                      className="bg-white text-black text-xs sm:text-base font-bold px-4 py-[21px] shadow-lg transition-all w-full hover:bg-gray-200"
-                    >
-                      Book Appointment
-                    </button>
-                  </div>
-                </div>
-              </div>
+    {/* ---- Button 2 ---- */}
+    <div className="flex flex-col items-center justify-between w-[220px]">
+      <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
+        Book hair services now with a special offer
+      </p>
+      <button
+        onClick={() =>
+          window.open("https://www.vagaro.com/mkh-richmond", "_blank")
+        }
+        className="bg-white text-black text-sm sm:text-base font-bold px-4 py-[20px] shadow-lg transition-all w-full hover:bg-gray-200"
+      >
+        Book Appointment
+      </button>
+    </div>
+  </div>
+</div>
+
+
             </div>
           </>
-
         );
 
       default:
@@ -1653,7 +1683,6 @@ const generatePDF = async () => {
         <div className="max-w-4xl mx-auto mobile-section relative">
           {/* Slide Content */}
           {renderSlide()}
-
           {/* ---- Navigation Buttons (Fixed to Bottom) ---- */}
           <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
             <div
@@ -1667,7 +1696,9 @@ const generatePDF = async () => {
                 className="btn-secondary w-full sm:w-auto text-xs sm:text-base
         disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
               >
-                {currentSlide === totalSlides ? "← Go back to make any changes" : "← Previous"}
+                {currentSlide === totalSlides
+                  ? "← Go back to make any changes"
+                  : "← Previous"}
               </button>
 
               <button
@@ -1709,7 +1740,8 @@ const generatePDF = async () => {
                 Duration 3 minutes
               </span>
             </div>
-          </div>z
+          </div>
+          z
         </div>
 
         {/* Notification */}
@@ -1725,10 +1757,11 @@ const generatePDF = async () => {
               </div>
               <div className="ml-3 flex-1">
                 <p
-                  className={`text-sm font-medium ${message.includes("successfully")
-                    ? "text-green-100"
-                    : "text-red-100"
-                    }`}
+                  className={`text-sm font-medium ${
+                    message.includes("successfully")
+                      ? "text-green-100"
+                      : "text-red-100"
+                  }`}
                 >
                   {message}
                 </p>

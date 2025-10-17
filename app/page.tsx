@@ -387,7 +387,7 @@ export default function Home() {
           .setFontSize(18)
           .setTextColor(255, 127, 80)
           .setFont("helvetica", "bold");
-        pdf.text("Recommended Style Visuals", margin, yPosition);
+        pdf.text("Hair style choices", margin, yPosition);
 
         pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
         pdf.line(

@@ -234,51 +234,64 @@ const generatePDF = async () => {
     yPosition = 70;
 
     // ===== HELPER FUNCTION =====
-    const addSection = (title: string, content: string[], y: number) => {
-      if (y > pageHeight - margin - 60) {
-        return y; // Don't add new page on first page
-      }
+   const addSection = (
+  title: string,
+  content: (string | { text: string; bold?: boolean; orange?: boolean })[],
+  y: number
+) => {
+  if (y > pageHeight - margin - 60) {
+    return y; // Don't add new page on first page
+  }
 
-      pdf
-        .setFontSize(18)
-        .setTextColor(255, 127, 80)
-        .setFont("helvetica", "bold");
-      pdf.text(title, margin, y);
+  // === Section Title ===
+  pdf.setFontSize(18)
+    .setTextColor(255, 127, 80) // orange
+    .setFont("helvetica", "bold");
+  pdf.text(title, margin, y);
 
-      pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
-      pdf.line(margin, y + 2, margin + pdf.getTextWidth(title), y + 2);
+  pdf.setDrawColor(255, 127, 80).setLineWidth(0.5);
+  pdf.line(margin, y + 2, margin + pdf.getTextWidth(title), y + 2);
 
-      let currentY = y + 12;
+  let currentY = y + 12;
 
-      pdf
-        .setFontSize(12)
-        .setTextColor(255, 255, 255)
-        .setFont("helvetica", "normal");
+  // === Section Content ===
+  content.forEach((line) => {
+    if (currentY > pageHeight - margin - 15) {
+      return currentY; // Stop if reaching bottom
+    }
 
-      content.forEach((line) => {
-        if (currentY > pageHeight - margin - 15) {
-          return currentY; // Stop if reaching bottom
-        }
+    if (typeof line === "string" && line.trim() === "") {
+      currentY += 6;
+      return;
+    }
 
-        if (line.trim() === "") {
-          currentY += 6;
-          return;
-        }
+    // Check if line is styled or plain text
+    const text = typeof line === "string" ? line : line.text;
+    const isBold = typeof line !== "string" && line.bold;
+    const isOrange = typeof line !== "string" && line.orange;
 
-        const lines = pdf.splitTextToSize(line, contentWidth);
-        lines.forEach((textLine: string) => {
-          if (currentY > pageHeight - margin - 10) {
-            return;
-          }
-          pdf.text(textLine, margin, currentY);
-          currentY += 6;
-        });
-        currentY += 2;
-      });
+    // Apply styles dynamically
+    pdf.setFont("helvetica", isBold ? "bold" : "normal");
+    pdf.setFontSize(12);
+    pdf.setTextColor(
+      isOrange ? 255 : 255,
+      isOrange ? 127 : 255,
+      isOrange ? 80 : 255
+    );
 
-      currentY += 10;
-      return currentY;
-    };
+    const lines = pdf.splitTextToSize(text, contentWidth);
+    lines.forEach((textLine: string) => {
+      if (currentY > pageHeight - margin - 10) return;
+      pdf.text(textLine, margin, currentY);
+      currentY += 6;
+    });
+
+    currentY += 2;
+  });
+
+  currentY += 10;
+  return currentY;
+};
 
     // ===== RECOMMENDATIONS =====
     const combination: HairCombination = {
@@ -290,26 +303,25 @@ const generatePDF = async () => {
     const recommendation = getHairRecommendation(combination);
     const images = getAllRecommendationImages(combination);
 
-    if (recommendation) {
-      const recommendationsContent = [
-        // `Recommended Style: ${recommendation.title}`,
-        "",
-        "Recommended Treatments:",
-        recommendation.description,
-        "",
-        "Recommended maintenance schedule:",
-        ...recommendation.maintenanceSchedule.map((schedule) => `• ${schedule}`),
-        "",
-        "Hair Care Routine:",
-        recommendation.hairCare,
-      ];
+   if (recommendation) {
+  const recommendationsContent = [
+    "",
+    recommendation.description,
+    "",
+    { text: "Recommended Maintenance Schedule:", bold: true, orange: true },
+    ...recommendation.maintenanceSchedule.map((schedule) => `• ${schedule}`),
+    "",
+    { text: "Hair Care Routine:", bold: true, orange: true },
+    recommendation.hairCare,
+  ];
 
-      yPosition = addSection(
-        "Professional Recommendations",
-        recommendationsContent,
-        yPosition
-      );
-    }
+  yPosition = addSection(
+    "Professional Recommendations",
+    recommendationsContent,
+    yPosition
+  );
+}
+
 
     // ===== SCHEDULED PERFECT HAIR DAYS (SAME PAGE) =====
     if (formData.selectedDates && formData.selectedDates.length > 0) {
@@ -536,13 +548,13 @@ const generatePDF = async () => {
     );
 
     const hairAnalysisContent = [
-      `Natural Hair Color: ${formData.naturalHairColor || "Not specified"}`,
-      `Skin Tone: ${formData.skinColor || "Not specified"}`,
-      `Eye Color: ${formData.eyeColor || "Not specified"}`,
-      `Hair Texture: ${formData.hairTexture || "Not specified"}`,
-      `Hair Length: ${formData.hairLength || "Not specified"}`,
-      `Personal Style: ${formData.personalStyle || "Not specified"}`,
-      `Maintenance Preference: ${formData.hairMaintenance || "Not specified"}`,
+      `Natural Hair Color : ${formData.naturalHairColor || "Not specified"}`,
+      `Skin Tone : ${formData.skinColor || "Not specified"}`,
+      `Eye Color : ${formData.eyeColor || "Not specified"}`,
+      `Hair Texture : ${formData.hairTexture || "Not specified"}`,
+      `Hair Length : ${formData.hairLength || "Not specified"}`,
+      `Personal Style : ${formData.personalStyle || "Not specified"}`,
+      `Maintenance Preference : ${formData.hairMaintenance || "Not specified"}`,
     ];
 
     addPage3Section("Hair Analysis Profile", hairAnalysisContent, yPosition);
@@ -1256,11 +1268,11 @@ const generatePDF = async () => {
           <>
             {/* Scrollable Card Container */}
             <div
-              className="glass-card mobile-card mb-9 max-w-full md:max-w-xl w-full p-6 relative overflow-hidden"
+              className="glass-card mobile-card mb-9 max-w-full md:max-w-6xl w-full p-6 relative overflow-hidden"
             >
               {/* Heading */}
               <h3
-                className="mobile-heading font-bold mb-4 text-center sticky top-0 bg-black/80 backdrop-blur-sm py-2 z-10"
+                className="mobile-heading font-bold mb-4 text-center sticky top-0 py-2 z-10"
                 style={{ color: "#ff7f50", marginTop: "10px" }}
               >
                 Your Lifestyle
@@ -1316,8 +1328,6 @@ const generatePDF = async () => {
                 ))}
               </div>
             </div>
-
-            {/* Bottom Fixed Buttons (Example) */}
 
           </>
 
@@ -1686,7 +1696,7 @@ const generatePDF = async () => {
                 className={
                   currentSlide === totalSlides
                     ? "hidden"
-                    : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                    : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 transition-all duration-300 shadow-lg hover:shadow-xl"
                 }
               >
                 {currentSlide === totalSlides ? "" : "Next →"}

@@ -654,7 +654,7 @@ export default function Home() {
           files: [],
           selectedDates: [],
         });
-        setCurrentSlide(1);
+        // setCurrentSlide(1);
         setMessage("");
       } else {
         setMessage(data.error || "Failed to submit form. Please try again.");

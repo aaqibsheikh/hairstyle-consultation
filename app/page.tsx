@@ -671,7 +671,7 @@ export default function Home() {
       case 1:
         return (
           <>
-            <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
+            <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32 bg-none">
               {/* Title */}
               <div className="text-center">
                 <p className="mt-0 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed">
@@ -1559,41 +1559,45 @@ export default function Home() {
               </div>
 
               {/* ---- Bottom Buttons ---- */}
-           <div className="w-full px-3 py-3 text-center absolute bottom-6 left-1/2 -translate-x-1/2">
-  <div className="flex flex-row items-end justify-center gap-3 w-full max-w-[500px] mx-auto">
-    {/* ---- Button 1 ---- */}
-    <div className="flex flex-col items-center justify-between w-[220px]">
-      <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
-        Get Full Hair Color Analysis at a special offer now
-      </p>
-      <button
-        onClick={() =>
-          window.open("https://www.vagaro.com/mkh-richmond", "_blank")
-        }
-        className="bg-white text-black text-sm sm:text-base font-bold px-4 py-[20px] shadow-lg transition-all w-full hover:bg-gray-200"
-      >
-        Book Now
-      </button>
-    </div>
+              <div className="w-full px-3 py-3 text-center absolute bottom-6 left-1/2 -translate-x-1/2">
+                <div className="flex flex-row items-end justify-center gap-3 w-full max-w-[500px] mx-auto">
+                  {/* ---- Button 1 ---- */}
+                  <div className="flex flex-col items-center justify-between w-[220px]">
+                    <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
+                      Get Full Hair Color Analysis at a special offer now
+                    </p>
+                    <button
+                      onClick={() =>
+                        window.open(
+                          "https://www.vagaro.com/mkh-richmond",
+                          "_blank"
+                        )
+                      }
+                      className="bg-white text-black text-sm sm:text-base font-bold px-4 py-[20px] shadow-lg transition-all w-full hover:bg-gray-200"
+                    >
+                      Book Now
+                    </button>
+                  </div>
 
-    {/* ---- Button 2 ---- */}
-    <div className="flex flex-col items-center justify-between w-[220px]">
-      <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
-        Book hair services now with a special offer
-      </p>
-      <button
-        onClick={() =>
-          window.open("https://www.vagaro.com/mkh-richmond", "_blank")
-        }
-        className="bg-white text-black text-sm sm:text-base font-bold px-4 py-[20px] shadow-lg transition-all w-full hover:bg-gray-200"
-      >
-        Book Appointment
-      </button>
-    </div>
-  </div>
-</div>
-
-
+                  {/* ---- Button 2 ---- */}
+                  <div className="flex flex-col items-center justify-between w-[220px]">
+                    <p className="text-white text-sm mb-2 leading-tight font-bold text-center">
+                      Book hair services now with a special offer
+                    </p>
+                    <button
+                      onClick={() =>
+                        window.open(
+                          "https://www.vagaro.com/mkh-richmond",
+                          "_blank"
+                        )
+                      }
+                      className="bg-white text-black text-sm sm:text-base font-bold px-4 py-[20px] shadow-lg transition-all w-full hover:bg-gray-200"
+                    >
+                      Book Appointment
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </>
         );
@@ -1604,8 +1608,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden bg-[url('/hca_cover_bg.jpg')] bg-cover bg-center">
       {/* Background decoration */}
+      <div className="absolute inset-0 bg-black/80 z-0">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-coral/10 rounded-full blur-3xl floating-animation mobile-bg-decoration"></div>
         <div
@@ -1775,6 +1780,7 @@ export default function Home() {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

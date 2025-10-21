@@ -669,236 +669,223 @@ export default function Home() {
   const renderSlide = () => {
     switch (currentSlide) {
       case 1:
-        return (
-          <>
-            <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
-              {/* Title */}
-              <div className="text-center">
-                <p className="mt-0 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed">
-                  Get your mini hair color analysis in 3 minutes
-                </p>
+       return (
+  <>
+    <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
+      {/* Title */}
+      <div className="text-center">
+        <p className="mt-0 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed">
+          Get your mini hair color analysis in 3 minutes
+        </p>
 
-                <h3
-                  className="mobile-heading font-bold mb-3"
-                  style={{ color: "#ff7f50" }}
-                >
-                  Tell us a little about yourself
-                </h3>
-              </div>
+        <h3
+          className="mobile-heading font-bold mb-3"
+          style={{ color: "#ff7f50" }}
+        >
+          Tell us a little about yourself
+        </h3>
+      </div>
 
-              {/* Duration at bottom-right */}
-              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
-                Duration 3 minutes
-              </p>
+      {/* Duration at bottom-right */}
+      <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
+        Duration 3 minutes
+      </p>
 
-              {/* First & Last Name */}
-              <div className="form-grid gap-6 mb-6">
-                <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    First Name<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      handleInputChange("firstName", e.target.value)
-                    }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.firstName ? "bg-black" : "bg-transparent"
-                    }`}
-                    placeholder="Enter your first name"
-                  />
-                </div>
+      {/* First & Last Name */}
+      <div className="form-grid gap-6 mb-6">
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            First Name<span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            value={formData.firstName}
+            onChange={(e) =>
+              handleInputChange("firstName", e.target.value)
+            }
+            className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+              formData.firstName ? "bg-neutral-900" : "bg-neutral-800/50"
+            }`}
+            placeholder="Enter your first name"
+          />
+        </div>
 
-                <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Last Name<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) =>
-                      handleInputChange("lastName", e.target.value)
-                    }
-                    className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-                      formData.lastName ? "bg-black" : "bg-transparent"
-                    }`}
-                    placeholder="Enter your last name"
-                  />
-                </div>
-              </div>
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Last Name<span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            value={formData.lastName}
+            onChange={(e) =>
+              handleInputChange("lastName", e.target.value)
+            }
+            className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+              formData.lastName ? "bg-neutral-900" : "bg-neutral-800/50"
+            }`}
+            placeholder="Enter your last name"
+          />
+        </div>
+      </div>
 
-              {/* Email & Phone */}
-              <div className="form-grid gap-4 mb-6">
-                <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Email<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
-                    placeholder="example@example.com"
-                  />
-                </div>
+      {/* Email & Phone */}
+      <div className="form-grid gap-4 mb-6">
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Email<span className="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => handleInputChange("email", e.target.value)}
+            className="input-field placeholder-gray-300 placeholder-opacity-10 bg-neutral-800/50 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+            placeholder="example@example.com"
+          />
+        </div>
 
-                <div>
-                  <label className="block text-white/90 font-medium mb-2 text-sm">
-                    Phone Number <span className="text-red-500">*</span>
-                  </label>
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Phone Number <span className="text-red-500">*</span>
+          </label>
 
-                  <InputMask
-                    mask="+1 (999) 999-9999"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                  >
-                    {(inputProps) => (
-                      <input
-                        {...inputProps}
-                        type="tel"
-                        required
-                        placeholder="+1 (555) 123-4567"
-                        className="input-field placeholder-gray-300 placeholder-opacity-10 bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
-                      />
-                    )}
-                  </InputMask>
-                </div>
-              </div>
-            </div>
-          </>
-        );
+          <InputMask
+            mask="+1 (999) 999-9999"
+            value={formData.phone}
+            onChange={(e) => handleInputChange("phone", e.target.value)}
+          >
+            {(inputProps) => (
+              <input
+                {...inputProps}
+                type="tel"
+                required
+                placeholder="+1 (555) 123-4567"
+                className="input-field placeholder-gray-300 placeholder-opacity-10 bg-neutral-800/50 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+              />
+            )}
+          </InputMask>
+        </div>
+      </div>
+    </div>
+  </>
+);
+
 
       case 2:
         return (
           <>
             <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between mb-12">
-              {/* Top content */}
-              <div className="flex-1 flex items-start mt-4">
-                {" "}
-                {/* 👈 added mt-4 to bring fields down */}
-                <div className="w-full space-y-8">
-                  {" "}
-                  {/* 👈 consistent vertical spacing */}
-                  {/* Row 1 */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {" "}
-                    {/* 👈 increased gap for even spacing */}
-                    <div>
-                      <label className="block text-white/90 font-medium mb-2 text-sm">
-                        Your Natural Hair Color{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={formData.naturalHairColor}
-                        onChange={(e) =>
-                          handleInputChange("naturalHairColor", e.target.value)
-                        }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.naturalHairColor === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
-                        }`}
-                      >
-                        <option value="" disabled className="opacity-60">
-                          Select hair color
-                        </option>
-                        <option value="Black">Black</option>
-                        <option value="Brown">Brown</option>
-                        <option value="Natural Blonde">Natural Blonde</option>
-                        <option value="Red">Red</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-white/90 font-medium mb-2 text-sm">
-                        Skin Color <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={formData.skinColor}
-                        onChange={(e) =>
-                          handleInputChange("skinColor", e.target.value)
-                        }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.skinColor === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
-                        }`}
-                      >
-                        <option value="" disabled className="opacity-60">
-                          Select skin color
-                        </option>
-                        <option value="Dark">Dark</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Fair">Fair</option>
-                        <option value="Light">Light</option>
-                      </select>
-                    </div>
-                  </div>
-                  {/* Row 2 */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                      <label className="block text-white/90 font-medium mb-2 text-sm">
-                        Eye Color <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={formData.eyeColor}
-                        onChange={(e) =>
-                          handleInputChange("eyeColor", e.target.value)
-                        }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.eyeColor === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
-                        }`}
-                      >
-                        <option value="" disabled className="opacity-60">
-                          Select eye color
-                        </option>
-                        <option value="Black">Black</option>
-                        <option value="Dark brown">Dark brown</option>
-                        <option value="Light brown">Light brown</option>
-                        <option value="Hazel">Hazel</option>
-                        <option value="Green">Green</option>
-                        <option value="Blue">Blue</option>
-                        <option value="Grey">Grey</option>
-                      </select>
-                    </div>
+  <div className="flex-1 flex items-start mt-4">
+    <div className="w-full space-y-8">
+      {/* Row 1 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Your Natural Hair Color <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={formData.naturalHairColor}
+            onChange={(e) =>
+              handleInputChange("naturalHairColor", e.target.value)
+            }
+            className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+              formData.naturalHairColor
+                ? "bg-neutral-900 text-white"
+                : "bg-neutral-600 text-gray-300 opacity-60"
+            }`}
+          >
+            <option value="" disabled className="opacity-60">
+              Select hair color
+            </option>
+            <option value="Black">Black</option>
+            <option value="Brown">Brown</option>
+            <option value="Natural Blonde">Natural Blonde</option>
+            <option value="Red">Red</option>
+          </select>
+        </div>
 
-                    <div>
-                      <label className="block text-white/90 font-medium mb-2 text-sm">
-                        Hair Texture <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={formData.hairTexture}
-                        onChange={(e) =>
-                          handleInputChange("hairTexture", e.target.value)
-                        }
-                        className={`input-field w-full bg-transparent border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-                          formData.hairTexture === ""
-                            ? "text-gray-300 opacity-60"
-                            : "text-white"
-                        }`}
-                      >
-                        <option value="" disabled className="opacity-60">
-                          Select hair texture
-                        </option>
-                        <option value="Fine">Fine</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Coarse">Coarse</option>
-                        <option value="Resistant">Resistant</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Skin Color <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={formData.skinColor}
+            onChange={(e) => handleInputChange("skinColor", e.target.value)}
+            className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+              formData.skinColor
+                ? "bg-neutral-900 text-white"
+                : "bg-neutral-800/50 text-gray-300 opacity-60"
+            }`}
+          >
+            <option value="" disabled className="opacity-60">
+              Select skin color
+            </option>
+            <option value="Dark">Dark</option>
+            <option value="Medium">Medium</option>
+            <option value="Fair">Fair</option>
+            <option value="Light">Light</option>
+          </select>
+        </div>
+      </div>
 
-              {/* Duration at the bottom-right */}
-              <div className="flex justify-end mt-8">
-                <p className="text-white/70 text-sm opacity-0">
-                  Duration 3 minutes
-                </p>
-              </div>
-            </div>
+      {/* Row 2 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Eye Color <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={formData.eyeColor}
+            onChange={(e) => handleInputChange("eyeColor", e.target.value)}
+            className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+              formData.eyeColor
+                ? "bg-neutral-900 text-white"
+                : "bg-neutral-800/50 text-gray-300 opacity-60"
+            }`}
+          >
+            <option value="" disabled className="opacity-60">
+              Select eye color
+            </option>
+            <option value="Black">Black</option>
+            <option value="Dark brown">Dark brown</option>
+            <option value="Light brown">Light brown</option>
+            <option value="Hazel">Hazel</option>
+            <option value="Green">Green</option>
+            <option value="Blue">Blue</option>
+            <option value="Grey">Grey</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-white/90 font-medium mb-2 text-sm">
+            Hair Texture <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={formData.hairTexture}
+            onChange={(e) => handleInputChange("hairTexture", e.target.value)}
+            className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+              formData.hairTexture
+                ? "bg-neutral-900 text-white"
+                : "bg-neutral-800/50 text-gray-300 opacity-60"
+            }`}
+          >
+            <option value="" disabled className="opacity-60">
+              Select hair texture
+            </option>
+            <option value="Fine">Fine</option>
+            <option value="Medium">Medium</option>
+            <option value="Coarse">Coarse</option>
+            <option value="Resistant">Resistant</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="flex justify-end mt-8">
+    <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
+  </div>
+</div>
+
           </>
         );
 

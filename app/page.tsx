@@ -1365,7 +1365,7 @@ export default function Home() {
         return (
           <>
             <div
-              className="glass-card mobile-card relative mb-44"
+              className="glass-card mobile-card relative mb-64"
               style={{ overflowY: "auto" }}
             >
               {/* Duration at bottom-right */}
@@ -1685,69 +1685,70 @@ export default function Home() {
         </div> */}
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto mobile-section relative">
-          {/* Slide Content */}
-          {renderSlide()}
-          {/* ---- Navigation Buttons (Fixed to Bottom) ---- */}
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
-            <div
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6
+        <div className="max-w-4xl mx-auto mobile-section relative overflow-y-auto max-h-screen">
+  {/* Slide Content */}
+  {renderSlide()}
+
+  {/* ---- Navigation Buttons (Fixed to Bottom) ---- */}
+  <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
+    <div
+      className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6
       bg-black/40 backdrop-blur-md border border-white/10
       px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-2xl shadow-lg"
-            >
-              <button
-                onClick={prevSlide}
-                disabled={currentSlide === 1}
-                className="btn-secondary w-full sm:w-auto text-xs sm:text-base
+    >
+      <button
+        onClick={prevSlide}
+        disabled={currentSlide === 1}
+        className="btn-secondary w-full sm:w-auto text-xs sm:text-base
         disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
-              >
-                {currentSlide === totalSlides
-                  ? "← Go back to make any changes"
-                  : "← Previous"}
-              </button>
+      >
+        {currentSlide === totalSlides
+          ? "← Go back to make any changes"
+          : "← Previous"}
+      </button>
 
-              <button
-                onClick={nextSlide}
-                disabled={
-                  currentSlide === totalSlides ||
-                  (currentSlide === 1 &&
-                    (!formData.firstName ||
-                      !formData.lastName ||
-                      !formData.email ||
-                      !formData.phone)) ||
-                  (currentSlide === 2 &&
-                    (!formData.naturalHairColor ||
-                      !formData.skinColor ||
-                      !formData.eyeColor ||
-                      !formData.hairTexture)) ||
-                  (currentSlide === 3 && !formData.selectedHairColor) ||
-                  (currentSlide === 4 && !formData.hairLength) ||
-                  (currentSlide === 5 && !formData.personalStyle) ||
-                  (currentSlide === 6 && !formData.hairMaintenance) ||
-                  (currentSlide === 7 &&
-                    formData.specialOccasions?.length === 0) ||
-                  (currentSlide === 8 &&
-                    formData.preferredTreatments?.length === 0)
-                }
-                className={
-                  currentSlide === totalSlides
-                    ? "hidden"
-                    : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 transition-all duration-300 shadow-lg hover:shadow-xl"
-                }
-              >
-                {currentSlide === totalSlides ? "" : "Next →"}
-              </button>
-            </div>
+      <button
+        onClick={nextSlide}
+        disabled={
+          currentSlide === totalSlides ||
+          (currentSlide === 1 &&
+            (!formData.firstName ||
+              !formData.lastName ||
+              !formData.email ||
+              !formData.phone)) ||
+          (currentSlide === 2 &&
+            (!formData.naturalHairColor ||
+              !formData.skinColor ||
+              !formData.eyeColor ||
+              !formData.hairTexture)) ||
+          (currentSlide === 3 && !formData.selectedHairColor) ||
+          (currentSlide === 4 && !formData.hairLength) ||
+          (currentSlide === 5 && !formData.personalStyle) ||
+          (currentSlide === 6 && !formData.hairMaintenance) ||
+          (currentSlide === 7 &&
+            formData.specialOccasions?.length === 0) ||
+          (currentSlide === 8 &&
+            formData.preferredTreatments?.length === 0)
+        }
+        className={
+          currentSlide === totalSlides
+            ? "hidden"
+            : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 transition-all duration-300 shadow-lg hover:shadow-xl"
+        }
+      >
+        {currentSlide === totalSlides ? "" : "Next →"}
+      </button>
+    </div>
 
-            {/* Duration (moved below buttons) */}
-            <div className="flex justify-end mt-2 pr-2">
-              <span className="text-white/70 text-[11px] bg-black/70 px-2 py-0.5 rounded-md">
-                Duration 3 minutes
-              </span>
-            </div>
-          </div>
-          
-        </div>
+    {/* Duration (moved below buttons) */}
+    <div className="flex justify-end mt-2 pr-2">
+      <span className="text-white/70 text-[11px] bg-black/70 px-2 py-0.5 rounded-md">
+        Duration 3 minutes
+      </span>
+    </div>
+  </div>
+</div>
+
 
         {/* Notification */}
         {message && (

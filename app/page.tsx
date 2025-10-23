@@ -693,78 +693,79 @@ export default function Home() {
 
       {/* First & Last Name */}
       <div className="form-grid gap-6 mb-6">
-        <div>
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            First Name<span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={formData.firstName}
-            onChange={(e) =>
-              handleInputChange("firstName", e.target.value)
-            }
-            className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-              formData.firstName ? "bg-neutral-900" : "bg-neutral-800/50"
-            }`}
-            placeholder="Enter your first name"
-          />
-        </div>
+  {/* First Name */}
+  <div>
+    <label className="block text-white/90 font-medium mb-2 text-sm">
+      First Name<span className="text-red-500">*</span>
+    </label>
+    <input
+      type="text"
+      value={formData.firstName}
+      onChange={(e) => handleInputChange("firstName", e.target.value)}
+      className={`input-field placeholder-gray-200 placeholder-opacity-40 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+        formData.firstName ? "bg-neutral-900" : "bg-neutral-800/50"
+      }`}
+      placeholder="Enter your first name"
+    />
+  </div>
 
-        <div>
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Last Name<span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={formData.lastName}
-            onChange={(e) =>
-              handleInputChange("lastName", e.target.value)
-            }
-            className={`input-field placeholder-gray-300 placeholder-opacity-10 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-              formData.lastName ? "bg-neutral-900" : "bg-neutral-800/50"
-            }`}
-            placeholder="Enter your last name"
-          />
-        </div>
-      </div>
+  {/* Last Name */}
+  <div>
+    <label className="block text-white/90 font-medium mb-2 text-sm">
+      Last Name<span className="text-red-500">*</span>
+    </label>
+    <input
+      type="text"
+      value={formData.lastName}
+      onChange={(e) => handleInputChange("lastName", e.target.value)}
+      className={`input-field placeholder-gray-200 placeholder-opacity-40 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
+        formData.lastName ? "bg-neutral-900" : "bg-neutral-800/50"
+      }`}
+      placeholder="Enter your last name"
+    />
+  </div>
+</div>
 
-      {/* Email & Phone */}
-      <div className="form-grid gap-4 mb-6">
-        <div>
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Email<span className="text-red-500">*</span>
-          </label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            className="input-field placeholder-gray-300 placeholder-opacity-10 bg-neutral-800/50 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
-            placeholder="example@example.com"
-          />
-        </div>
+{/* Email & Phone */}
+<div className="form-grid gap-4 mb-6">
+  {/* Email */}
+  <div>
+    <label className="block text-white/90 font-medium mb-2 text-sm">
+      Email<span className="text-red-500">*</span>
+    </label>
+    <input
+      type="email"
+      value={formData.email}
+      onChange={(e) => handleInputChange("email", e.target.value)}
+      className="input-field placeholder-gray-200 placeholder-opacity-40 bg-neutral-800/50 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+      placeholder="example@example.com"
+    />
+  </div>
 
-        <div>
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Phone Number <span className="text-red-500">*</span>
-          </label>
+  {/* Phone */}
+  <div>
+    <label className="block text-white/90 font-medium mb-2 text-sm">
+      Phone Number <span className="text-red-500">*</span>
+    </label>
 
-          <InputMask
-            mask="+1 (999) 999-9999"
-            value={formData.phone}
-            onChange={(e) => handleInputChange("phone", e.target.value)}
-          >
-            {(inputProps) => (
-              <input
-                {...inputProps}
-                type="tel"
-                required
-                placeholder="+1 (555) 123-4567"
-                className="input-field placeholder-gray-300 placeholder-opacity-10 bg-neutral-800/50 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
-              />
-            )}
-          </InputMask>
-        </div>
-      </div>
+    <InputMask
+      mask="+1 (999) 999-9999"
+      value={formData.phone}
+      onChange={(e) => handleInputChange("phone", e.target.value)}
+    >
+      {(inputProps) => (
+        <input
+          {...inputProps}
+          type="tel"
+          required
+          placeholder="+1 (555) 123-4567"
+          className="input-field placeholder-gray-200 placeholder-opacity-40 bg-neutral-800/50 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+        />
+      )}
+    </InputMask>
+  </div>
+</div>
+
     </div>
   </>
 );

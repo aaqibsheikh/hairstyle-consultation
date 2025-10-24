@@ -691,8 +691,7 @@ export default function Home() {
         Duration 3 minutes
       </p>
 
-      {/* First & Last Name */}
-      <div className="form-grid gap-6 mb-6">
+     <div className="form-grid gap-6 mb-6">
   {/* First Name */}
   <div>
     <label className="block text-white/90 font-medium mb-2 text-sm">
@@ -702,8 +701,8 @@ export default function Home() {
       type="text"
       value={formData.firstName}
       onChange={(e) => handleInputChange("firstName", e.target.value)}
-      className={`input-field placeholder-gray-200 placeholder-opacity-40 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-        formData.firstName ? "bg-neutral-900" : "bg-neutral-800/50"
+      className={`input-field placeholder-gray-100 placeholder-opacity-30 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200 ${
+        formData.firstName ? "bg-black/40" : "bg-black/40"
       }`}
       placeholder="Enter your first name"
     />
@@ -718,15 +717,14 @@ export default function Home() {
       type="text"
       value={formData.lastName}
       onChange={(e) => handleInputChange("lastName", e.target.value)}
-      className={`input-field placeholder-gray-200 placeholder-opacity-40 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white ${
-        formData.lastName ? "bg-neutral-900" : "bg-neutral-800/50"
+      className={`input-field placeholder-gray-100 placeholder-opacity-30 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200 ${
+        formData.lastName ? "bg-black/40" : "bg-black/40"
       }`}
       placeholder="Enter your last name"
     />
   </div>
 </div>
 
-{/* Email & Phone */}
 <div className="form-grid gap-4 mb-6">
   {/* Email */}
   <div>
@@ -737,7 +735,7 @@ export default function Home() {
       type="email"
       value={formData.email}
       onChange={(e) => handleInputChange("email", e.target.value)}
-      className="input-field placeholder-gray-200 placeholder-opacity-40 bg-neutral-800/50 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+      className="input-field placeholder-gray-100 placeholder-opacity-30 bg-black/40 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200"
       placeholder="example@example.com"
     />
   </div>
@@ -759,12 +757,17 @@ export default function Home() {
           type="tel"
           required
           placeholder="+1 (555) 123-4567"
-          className="input-field placeholder-gray-200 placeholder-opacity-40 bg-neutral-800/50 border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral text-white"
+          className="input-field placeholder-gray-100 placeholder-opacity-30 bg-black/40 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200"
         />
       )}
     </InputMask>
   </div>
 </div>
+
+
+
+
+
 
     </div>
   </>

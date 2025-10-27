@@ -535,57 +535,58 @@ export default function Home() {
         return currentY;
       };
 
-     // ===== CLIENT SECTIONS =====
-const summaryContent = [
-  `• Name: ${formData.firstName} ${formData.lastName}`,
-  `• Analysis Date: ${format(new Date(), "MMMM d, yyyy")}`,
-  `• Reference: MKH-${Date.now().toString().slice(-6)}`,
-  `• Report generated on: ${format(
-    new Date(),
-    "EEEE, MMMM d, yyyy 'at' h:mm a"
-  )}`,
-];
+      // ===== CLIENT SECTIONS =====
+      const summaryContent = [
+        `• Name: ${formData.firstName} ${formData.lastName}`,
+        `• Analysis Date: ${format(new Date(), "MMMM d, yyyy")}`,
+        `• Reference: MKH-${Date.now().toString().slice(-6)}`,
+        `• Report generated on: ${format(
+          new Date(),
+          "EEEE, MMMM d, yyyy 'at' h:mm a"
+        )}`,
+      ];
 
-yPosition = addPage3Section("Client Summary", summaryContent, yPosition);
+      yPosition = addPage3Section("Client Summary", summaryContent, yPosition);
 
-const personalInfoContent = [
-  `• Full Name: ${formData.firstName} ${formData.lastName}`,
-  `• Email: ${formData.email}`,
-  `• Phone: ${formData.phone || "Not provided"}`,
-];
+      const personalInfoContent = [
+        `• Full Name: ${formData.firstName} ${formData.lastName}`,
+        `• Email: ${formData.email}`,
+        `• Phone: ${formData.phone || "Not provided"}`,
+      ];
 
-yPosition = addPage3Section(
-  "Personal Information",
-  personalInfoContent,
-  yPosition
-);
+      yPosition = addPage3Section(
+        "Personal Information",
+        personalInfoContent,
+        yPosition
+      );
 
-const hairAnalysisContent = [
-  `• Natural Hair Color: ${formData.naturalHairColor || "Not specified"}`,
-  `• Skin Tone: ${formData.skinColor || "Not specified"}`,
-  `• Eye Color: ${formData.eyeColor || "Not specified"}`,
-  `• Hair Texture: ${formData.hairTexture || "Not specified"}`,
-  `• Hair Length: ${formData.hairLength || "Not specified"}`,
-  `• Personal Style: ${formData.personalStyle || "Not specified"}`,
-  `• Maintenance Preference: ${formData.hairMaintenance || "Not specified"}`,
-];
+      const hairAnalysisContent = [
+        `• Natural Hair Color: ${formData.naturalHairColor || "Not specified"}`,
+        `• Skin Tone: ${formData.skinColor || "Not specified"}`,
+        `• Eye Color: ${formData.eyeColor || "Not specified"}`,
+        `• Hair Texture: ${formData.hairTexture || "Not specified"}`,
+        `• Hair Length: ${formData.hairLength || "Not specified"}`,
+        `• Personal Style: ${formData.personalStyle || "Not specified"}`,
+        `• Maintenance Preference: ${
+          formData.hairMaintenance || "Not specified"
+        }`,
+      ];
 
-yPosition = addPage3Section(
-  "Hair Analysis Profile",
-  hairAnalysisContent,
-  yPosition
-);
+      yPosition = addPage3Section(
+        "Hair Analysis Profile",
+        hairAnalysisContent,
+        yPosition
+      );
 
-// ===== DISCLAIMER (Last Page Footer) =====
-const disclaimerContent = [
-  "The information you share is used only to create this mini hair color analysis for you and to contact you for a consultation or appointment as you may need.",
-  "This mini analysis is only a preview of our recommendations that may change after a consultation.",
-  "MKH will provide hair services according to a full hair color analysis after a consultation.",
-];
+      // ===== DISCLAIMER (Last Page Footer) =====
+      const disclaimerContent = [
+        "The information you share is used only to create this mini hair color analysis for you and to contact you for a consultation or appointment as you may need.",
+        "This mini analysis is only a preview of our recommendations that may change after a consultation.",
+        "MKH will provide hair services according to a full hair color analysis after a consultation.",
+      ];
 
-// Add disclaimer just like other sections (without doc)
-yPosition = addPage3Section("Disclaimer", disclaimerContent, yPosition);
-
+      // Add disclaimer just like other sections (without doc)
+      yPosition = addPage3Section("Disclaimer", disclaimerContent, yPosition);
 
       // ===== PAGE 3 FOOTER =====
       const page3FooterY = pageHeight - 15;
@@ -682,38 +683,48 @@ yPosition = addPage3Section("Disclaimer", disclaimerContent, yPosition);
   const renderSlide = () => {
     switch (currentSlide) {
       case 1:
-        return (
-          <>
-            <div className="glass-card mt-28 mobile-card h-[432px] md:h-[432px] flex items-center justify-center overflow-hidden">
-              {/* Title Section */}
-              <div className="flex flex-col sm:flex-row items-center justify-center text-white font-bold text-center sm:text-left">
-                {/* Logo Image */}
-                <div className="mb-4 sm:mb-0 sm:mr-4">
-                  <Image
-                    src="/lgag.png"
-                    alt="MKH Logo"
-                    width={140}
-                    height={140}
-                    className="w-36 h-36 sm:w-40 sm:h-40 object-cover flex-shrink-0"
-                  />
-                </div>
+       return (
+  <>
+    <div className="glass-card mt-28 mobile-card h-[432px] md:h-[432px] flex flex-col items-center justify-center overflow-hidden relative">
+      {/* Title Section */}
+      <div className="flex flex-col sm:flex-row items-center justify-center text-white font-bold text-center sm:text-left">
+        {/* Logo Image */}
+        <div className="mb-4 sm:mb-0 sm:mr-4">
+          <Image
+            src="/lgag.png"
+            alt="MKH Logo"
+            width={140}
+            height={140}
+            className="w-36 h-36 sm:w-40 sm:h-40 object-cover flex-shrink-0"
+          />
+        </div>
 
-                {/* Title Text */}
-                <div className="flex flex-col justify-center">
-                  <span className="text-3xl sm:text-4xl font-bold leading-tight">
-                    HAIR COLOR
-                  </span>
-                  <span
-                    className="text-3xl sm:text-4xl font-extrabold"
-                    style={{ color: "#ff5533", lineHeight: "1.1" }}
-                  >
-                    ANALYSIS
-                  </span>
-                </div>
-              </div>
-            </div>
-          </>
-        );
+        {/* Title Text */}
+        <div className="flex flex-col justify-center">
+          <span className="text-3xl sm:text-4xl font-bold leading-tight">
+            HAIR COLOR
+          </span>
+          <span
+            className="text-3xl sm:text-4xl font-extrabold"
+            style={{ color: "#ff5533", lineHeight: "1.5" }}
+          >
+            ANALYSIS<sup>™</sup>
+          </span>
+        </div>
+      </div>
+
+      {/* Start Button — anchored to bottom */}
+      <button
+  onClick={nextSlide}
+  className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-[80%] sm:w-auto text-sm sm:text-lg mobile-btn py-3 px-8 transition-all duration-300 shadow-lg hover:shadow-xl"
+>
+  Start →
+</button>
+
+    </div>
+  </>
+);
+
 
       case 2:
         return (
@@ -1733,77 +1744,65 @@ yPosition = addPage3Section("Disclaimer", disclaimerContent, yPosition);
           {/* Main Content */}
           <div className="max-w-4xl mx-auto mobile-section relative overflow-y-auto max-h-screen">
             {/* Slide Content */}
-
             {renderSlide()}
 
             {/* ---- Navigation Buttons (Fixed to Bottom) ---- */}
-            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
-              <div
-                className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6
-      bg-black/40 backdrop-blur-md border border-white/10
-      px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-2xl shadow-lg"
-              >
-                {currentSlide === 1 ? (
+            {currentSlide !== 1 && (
+              <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 bg-black/40 backdrop-blur-md border border-white/10 px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-2xl shadow-lg">
+                  {/* Previous Button */}
+                  <button
+                    onClick={prevSlide}
+                    disabled={currentSlide === 1}
+                    className="btn-secondary w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
+                  >
+                    {currentSlide === totalSlides
+                      ? "← Go back to make any changes"
+                      : "← Previous"}
+                  </button>
+
+                  {/* Next Button */}
                   <button
                     onClick={nextSlide}
-                    className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base mobile-btn py-2 px-6 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    disabled={
+                      currentSlide === totalSlides ||
+                      (currentSlide === 2 &&
+                        (!formData.firstName ||
+                          !formData.lastName ||
+                          !formData.email ||
+                          !formData.phone)) ||
+                      (currentSlide === 3 &&
+                        (!formData.naturalHairColor ||
+                          !formData.skinColor ||
+                          !formData.eyeColor ||
+                          !formData.hairTexture)) ||
+                      (currentSlide === 4 && !formData.selectedHairColor) ||
+                      (currentSlide === 5 && !formData.hairLength) ||
+                      (currentSlide === 6 && !formData.personalStyle) ||
+                      (currentSlide === 7 && !formData.hairMaintenance) ||
+                      (currentSlide === 8 &&
+                        formData.specialOccasions?.length === 0) ||
+                      (currentSlide === 9 &&
+                        formData.preferredTreatments?.length === 0)
+                    }
+                    className={
+                      currentSlide === totalSlides
+                        ? "hidden"
+                        : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    }
                   >
-                    Start →
+                    {currentSlide === totalSlides ? "" : "Next →"}
                   </button>
-                ) : (
-                  <>
-                    <button
-                      onClick={prevSlide}
-                      disabled={currentSlide === 1}
-                      className="btn-secondary w-full sm:w-auto text-xs sm:text-base
-        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
-                    >
-                      {currentSlide === totalSlides
-                        ? "← Go back to make any changes"
-                        : "← Previous"}
-                    </button>
-                    <button
-                      onClick={nextSlide}
-                      disabled={
-                        currentSlide === totalSlides ||
-                        (currentSlide === 2 &&
-                          (!formData.firstName ||
-                            !formData.lastName ||
-                            !formData.email ||
-                            !formData.phone)) ||
-                        (currentSlide === 3 &&
-                          (!formData.naturalHairColor ||
-                            !formData.skinColor ||
-                            !formData.eyeColor ||
-                            !formData.hairTexture)) ||
-                        (currentSlide === 4 && !formData.selectedHairColor) ||
-                        (currentSlide === 5 && !formData.hairLength) ||
-                        (currentSlide === 6 && !formData.personalStyle) ||
-                        (currentSlide === 7 && !formData.hairMaintenance) ||
-                        (currentSlide === 8 &&
-                          formData.specialOccasions?.length === 0) ||
-                        (currentSlide === 9 &&
-                          formData.preferredTreatments?.length === 0)
-                      }
-                      className={
-                        currentSlide === totalSlides
-                          ? "hidden"
-                          : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 transition-all duration-300 shadow-lg hover:shadow-xl"
-                      }
-                    >
-                      {currentSlide === totalSlides ? "" : "Next →"}
-                    </button>
-                  </>
-                )}
-              </div>
+                </div>
 
-              {/* Duration (moved below buttons) */}
-              <div className="flex justify-end mt-2 pr-2">
-                <span className="text-white/70 text-[11px] bg-black/70 px-2 py-0.5 rounded-md">
-                  Duration 3 minutes
-                </span>
+                {/* Duration */}
+                <div className="flex justify-end mt-2 pr-2">
+                  <span className="text-white/70 text-[11px] bg-black/70 px-2 py-0.5 rounded-md">
+                    Duration 3 minutes
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Notification */}

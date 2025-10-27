@@ -72,7 +72,7 @@ export default function Home() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [message, setMessage] = useState("");
 
-  const totalSlides = 12;
+  const totalSlides = 13;
 
   const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -535,44 +535,57 @@ export default function Home() {
         return currentY;
       };
 
-      // ===== CLIENT SECTIONS =====
-      const summaryContent = [
-        `• Name: ${formData.firstName} ${formData.lastName}`,
-        `• Analysis Date: ${format(new Date(), "MMMM d, yyyy")}`,
-        `• Reference: MKH-${Date.now().toString().slice(-6)}`,
-        `• Report generated on: ${format(
-          new Date(),
-          "EEEE, MMMM d, yyyy 'at' h:mm a"
-        )}`,
-      ];
+     // ===== CLIENT SECTIONS =====
+const summaryContent = [
+  `• Name: ${formData.firstName} ${formData.lastName}`,
+  `• Analysis Date: ${format(new Date(), "MMMM d, yyyy")}`,
+  `• Reference: MKH-${Date.now().toString().slice(-6)}`,
+  `• Report generated on: ${format(
+    new Date(),
+    "EEEE, MMMM d, yyyy 'at' h:mm a"
+  )}`,
+];
 
-      yPosition = addPage3Section("Client Summary", summaryContent, yPosition);
+yPosition = addPage3Section("Client Summary", summaryContent, yPosition);
 
-      const personalInfoContent = [
-        `• Full Name: ${formData.firstName} ${formData.lastName}`,
-        `• Email: ${formData.email}`,
-        `• Phone: ${formData.phone || "Not provided"}`,
-      ];
+const personalInfoContent = [
+  `• Full Name: ${formData.firstName} ${formData.lastName}`,
+  `• Email: ${formData.email}`,
+  `• Phone: ${formData.phone || "Not provided"}`,
+];
 
-      yPosition = addPage3Section(
-        "Personal Information",
-        personalInfoContent,
-        yPosition
-      );
+yPosition = addPage3Section(
+  "Personal Information",
+  personalInfoContent,
+  yPosition
+);
 
-      const hairAnalysisContent = [
-        `• Natural Hair Color: ${formData.naturalHairColor || "Not specified"}`,
-        `• Skin Tone: ${formData.skinColor || "Not specified"}`,
-        `• Eye Color: ${formData.eyeColor || "Not specified"}`,
-        `• Hair Texture: ${formData.hairTexture || "Not specified"}`,
-        `• Hair Length: ${formData.hairLength || "Not specified"}`,
-        `• Personal Style: ${formData.personalStyle || "Not specified"}`,
-        `• Maintenance Preference: ${
-          formData.hairMaintenance || "Not specified"
-        }`,
-      ];
+const hairAnalysisContent = [
+  `• Natural Hair Color: ${formData.naturalHairColor || "Not specified"}`,
+  `• Skin Tone: ${formData.skinColor || "Not specified"}`,
+  `• Eye Color: ${formData.eyeColor || "Not specified"}`,
+  `• Hair Texture: ${formData.hairTexture || "Not specified"}`,
+  `• Hair Length: ${formData.hairLength || "Not specified"}`,
+  `• Personal Style: ${formData.personalStyle || "Not specified"}`,
+  `• Maintenance Preference: ${formData.hairMaintenance || "Not specified"}`,
+];
 
-      addPage3Section("Hair Analysis Profile", hairAnalysisContent, yPosition);
+yPosition = addPage3Section(
+  "Hair Analysis Profile",
+  hairAnalysisContent,
+  yPosition
+);
+
+// ===== DISCLAIMER (Last Page Footer) =====
+const disclaimerContent = [
+  "The information you share is used only to create this mini hair color analysis for you and to contact you for a consultation or appointment as you may need.",
+  "This mini analysis is only a preview of our recommendations that may change after a consultation.",
+  "MKH will provide hair services according to a full hair color analysis after a consultation.",
+];
+
+// Add disclaimer just like other sections (without doc)
+yPosition = addPage3Section("Disclaimer", disclaimerContent, yPosition);
+
 
       // ===== PAGE 3 FOOTER =====
       const page3FooterY = pageHeight - 15;
@@ -669,231 +682,270 @@ export default function Home() {
   const renderSlide = () => {
     switch (currentSlide) {
       case 1:
-       return (
-  <>
-    <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
-      {/* Title */}
-      <div className="text-center">
-        <p className="mt-0 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed">
-          Get your mini hair color analysis in 3 minutes
-        </p>
+        return (
+          <>
+            <div className="glass-card mt-20 mobile-card h-[432px] md:h-[432px] flex items-center justify-center overflow-hidden">
+              {/* Title Section */}
+              <div className="flex flex-col sm:flex-row items-center justify-center text-white font-bold text-center sm:text-left">
+                {/* Logo Image */}
+                <div className="mb-4 sm:mb-0 sm:mr-4">
+                  <Image
+                    src="/lgag.png"
+                    alt="MKH Logo"
+                    width={140}
+                    height={140}
+                    className="w-36 h-36 sm:w-40 sm:h-40 object-cover flex-shrink-0"
+                  />
+                </div>
 
-        <h3
-          className="mobile-heading font-bold mb-3"
-          style={{ color: "#ff7f50" }}
-        >
-          Tell us a little about yourself
-        </h3>
-      </div>
-
-      {/* Duration at bottom-right */}
-      <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
-        Duration 3 minutes
-      </p>
-
-     <div className="form-grid gap-6 mb-6">
-  {/* First Name */}
-  <div>
-    <label className="block text-white/90 font-medium mb-2 text-sm">
-      First Name<span className="text-red-500">*</span>
-    </label>
-    <input
-      type="text"
-      value={formData.firstName}
-      onChange={(e) => handleInputChange("firstName", e.target.value)}
-      className={`input-field placeholder-gray-100 placeholder-opacity-30 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200 ${
-        formData.firstName ? "bg-black/40" : "bg-black/40"
-      }`}
-      placeholder="Enter your first name"
-    />
-  </div>
-
-  {/* Last Name */}
-  <div>
-    <label className="block text-white/90 font-medium mb-2 text-sm">
-      Last Name<span className="text-red-500">*</span>
-    </label>
-    <input
-      type="text"
-      value={formData.lastName}
-      onChange={(e) => handleInputChange("lastName", e.target.value)}
-      className={`input-field placeholder-gray-100 placeholder-opacity-30 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200 ${
-        formData.lastName ? "bg-black/40" : "bg-black/40"
-      }`}
-      placeholder="Enter your last name"
-    />
-  </div>
-</div>
-
-<div className="form-grid gap-4 mb-6">
-  {/* Email */}
-  <div>
-    <label className="block text-white/90 font-medium mb-2 text-sm">
-      Email<span className="text-red-500">*</span>
-    </label>
-    <input
-      type="email"
-      value={formData.email}
-      onChange={(e) => handleInputChange("email", e.target.value)}
-      className="input-field placeholder-gray-100 placeholder-opacity-30 bg-black/40 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200"
-      placeholder="example@example.com"
-    />
-  </div>
-
-  {/* Phone */}
-  <div>
-    <label className="block text-white/90 font-medium mb-2 text-sm">
-      Phone Number <span className="text-red-500">*</span>
-    </label>
-
-    <InputMask
-      mask="+1 (999) 999-9999"
-      value={formData.phone}
-      onChange={(e) => handleInputChange("phone", e.target.value)}
-    >
-      {(inputProps) => (
-        <input
-          {...inputProps}
-          type="tel"
-          required
-          placeholder="+1 (555) 123-4567"
-          className="input-field placeholder-gray-100 placeholder-opacity-30 bg-black/40 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200"
-        />
-      )}
-    </InputMask>
-  </div>
-</div>
-
-
-
-
-
-
-    </div>
-  </>
-);
-
+                {/* Title Text */}
+                <div className="flex flex-col justify-center">
+                  <span className="text-3xl sm:text-4xl font-bold leading-tight">
+                    HAIR COLOR
+                  </span>
+                  <span
+                    className="text-3xl sm:text-4xl font-extrabold"
+                    style={{ color: "#ff5533", lineHeight: "1.1" }}
+                  >
+                    ANALYSIS
+                  </span>
+                </div>
+              </div>
+            </div>
+          </>
+        );
 
       case 2:
         return (
           <>
-            <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between mb-12">
-  <div className="flex-1 flex items-start mt-4">
-    <div className="w-full space-y-8">
-      {/* Row 1 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Your Natural Hair Color <span className="text-red-500">*</span>
-          </label>
-          <select
-            value={formData.naturalHairColor}
-            onChange={(e) =>
-              handleInputChange("naturalHairColor", e.target.value)
-            }
-            className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-              formData.naturalHairColor
-                ? "bg-neutral-900 text-white"
-                : "bg-neutral-600 text-gray-300 opacity-60"
-            }`}
-          >
-            <option value="" disabled className="opacity-60">
-              Select hair color
-            </option>
-            <option value="Black">Black</option>
-            <option value="Brown">Brown</option>
-            <option value="Natural Blonde">Natural Blonde</option>
-            <option value="Red">Red</option>
-          </select>
-        </div>
+            <div className="glass-card mobile-card mt-0 md:h-[432px] relative mb-32">
+              {/* Title */}
+              <div className="text-center">
+                <p className="mt-0 pb-4 flex justify-center text-sm sm:text-base text-white/90 max-w-md mx-auto leading-relaxed">
+                  Get your mini hair color analysis in 3 minutes
+                </p>
 
-        <div>
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Skin Color <span className="text-red-500">*</span>
-          </label>
-          <select
-            value={formData.skinColor}
-            onChange={(e) => handleInputChange("skinColor", e.target.value)}
-            className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-              formData.skinColor
-                ? "bg-neutral-900 text-white"
-                : "bg-neutral-800/50 text-gray-300 opacity-60"
-            }`}
-          >
-            <option value="" disabled className="opacity-60">
-              Select skin color
-            </option>
-            <option value="Dark">Dark</option>
-            <option value="Medium">Medium</option>
-            <option value="Fair">Fair</option>
-            <option value="Light">Light</option>
-          </select>
-        </div>
-      </div>
+                <h3
+                  className="mobile-heading font-bold mb-3"
+                  style={{ color: "#ff7f50" }}
+                >
+                  Tell us a little about yourself
+                </h3>
+              </div>
 
-      {/* Row 2 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Eye Color <span className="text-red-500">*</span>
-          </label>
-          <select
-            value={formData.eyeColor}
-            onChange={(e) => handleInputChange("eyeColor", e.target.value)}
-            className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-              formData.eyeColor
-                ? "bg-neutral-900 text-white"
-                : "bg-neutral-800/50 text-gray-300 opacity-60"
-            }`}
-          >
-            <option value="" disabled className="opacity-60">
-              Select eye color
-            </option>
-            <option value="Black">Black</option>
-            <option value="Dark brown">Dark brown</option>
-            <option value="Light brown">Light brown</option>
-            <option value="Hazel">Hazel</option>
-            <option value="Green">Green</option>
-            <option value="Blue">Blue</option>
-            <option value="Grey">Grey</option>
-          </select>
-        </div>
+              {/* Duration at bottom-right */}
+              <p className="absolute bottom-4 right-4 text-white/70 text-sm opacity-0">
+                Duration 3 minutes
+              </p>
 
-        <div>
-          <label className="block text-white/90 font-medium mb-2 text-sm">
-            Hair Texture <span className="text-red-500">*</span>
-          </label>
-          <select
-            value={formData.hairTexture}
-            onChange={(e) => handleInputChange("hairTexture", e.target.value)}
-            className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
-              formData.hairTexture
-                ? "bg-neutral-900 text-white"
-                : "bg-neutral-800/50 text-gray-300 opacity-60"
-            }`}
-          >
-            <option value="" disabled className="opacity-60">
-              Select hair texture
-            </option>
-            <option value="Fine">Fine</option>
-            <option value="Medium">Medium</option>
-            <option value="Coarse">Coarse</option>
-            <option value="Resistant">Resistant</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
+              <div className="form-grid gap-6 mb-6">
+                {/* First Name */}
+                <div>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    First Name<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.firstName}
+                    onChange={(e) =>
+                      handleInputChange("firstName", e.target.value)
+                    }
+                    className={`input-field placeholder-gray-100 placeholder-opacity-30 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200 ${
+                      formData.firstName ? "bg-black/40" : "bg-black/40"
+                    }`}
+                    placeholder="Enter your first name"
+                  />
+                </div>
 
-  <div className="flex justify-end mt-8">
-    <p className="text-white/70 text-sm opacity-0">Duration 3 minutes</p>
-  </div>
-</div>
+                {/* Last Name */}
+                <div>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Last Name<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.lastName}
+                    onChange={(e) =>
+                      handleInputChange("lastName", e.target.value)
+                    }
+                    className={`input-field placeholder-gray-100 placeholder-opacity-30 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200 ${
+                      formData.lastName ? "bg-black/40" : "bg-black/40"
+                    }`}
+                    placeholder="Enter your last name"
+                  />
+                </div>
+              </div>
 
+              <div className="form-grid gap-4 mb-6">
+                {/* Email */}
+                <div>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Email<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    className="input-field placeholder-gray-100 placeholder-opacity-30 bg-black/40 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200"
+                    placeholder="example@example.com"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="block text-white/90 font-medium mb-2 text-sm">
+                    Phone Number <span className="text-red-500">*</span>
+                  </label>
+
+                  <InputMask
+                    mask="+1 (999) 999-9999"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                  >
+                    {(inputProps) => (
+                      <input
+                        {...inputProps}
+                        type="tel"
+                        required
+                        placeholder="+1 (555) 123-4567"
+                        className="input-field placeholder-gray-100 placeholder-opacity-30 bg-black/40 border border-[#ff6b3d]/60 rounded-lg focus:border-[#ff6b3d] focus:ring-1 focus:ring-[#ff6b3d] text-white transition-all duration-200"
+                      />
+                    )}
+                  </InputMask>
+                </div>
+              </div>
+            </div>
           </>
         );
 
       case 3:
+        return (
+          <>
+            <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between mb-12">
+              <div className="flex-1 flex items-start mt-4">
+                <div className="w-full space-y-8">
+                  {/* Row 1 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <label className="block text-white/90 font-medium mb-2 text-sm">
+                        Your Natural Hair Color{" "}
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={formData.naturalHairColor}
+                        onChange={(e) =>
+                          handleInputChange("naturalHairColor", e.target.value)
+                        }
+                        className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.naturalHairColor
+                            ? "bg-neutral-900 text-white"
+                            : "bg-neutral-600 text-gray-300 opacity-60"
+                        }`}
+                      >
+                        <option value="" disabled className="opacity-60">
+                          Select hair color
+                        </option>
+                        <option value="Black">Black</option>
+                        <option value="Brown">Brown</option>
+                        <option value="Natural Blonde">Natural Blonde</option>
+                        <option value="Red">Red</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-white/90 font-medium mb-2 text-sm">
+                        Skin Color <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={formData.skinColor}
+                        onChange={(e) =>
+                          handleInputChange("skinColor", e.target.value)
+                        }
+                        className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.skinColor
+                            ? "bg-neutral-900 text-white"
+                            : "bg-neutral-800/50 text-gray-300 opacity-60"
+                        }`}
+                      >
+                        <option value="" disabled className="opacity-60">
+                          Select skin color
+                        </option>
+                        <option value="Dark">Dark</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Light">Light</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Row 2 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <label className="block text-white/90 font-medium mb-2 text-sm">
+                        Eye Color <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={formData.eyeColor}
+                        onChange={(e) =>
+                          handleInputChange("eyeColor", e.target.value)
+                        }
+                        className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.eyeColor
+                            ? "bg-neutral-900 text-white"
+                            : "bg-neutral-800/50 text-gray-300 opacity-60"
+                        }`}
+                      >
+                        <option value="" disabled className="opacity-60">
+                          Select eye color
+                        </option>
+                        <option value="Black">Black</option>
+                        <option value="Dark brown">Dark brown</option>
+                        <option value="Light brown">Light brown</option>
+                        <option value="Hazel">Hazel</option>
+                        <option value="Green">Green</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Grey">Grey</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-white/90 font-medium mb-2 text-sm">
+                        Hair Texture <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={formData.hairTexture}
+                        onChange={(e) =>
+                          handleInputChange("hairTexture", e.target.value)
+                        }
+                        className={`input-field w-full border border-gray-400 rounded-lg focus:border-coral focus:ring-1 focus:ring-coral ${
+                          formData.hairTexture
+                            ? "bg-neutral-900 text-white"
+                            : "bg-neutral-800/50 text-gray-300 opacity-60"
+                        }`}
+                      >
+                        <option value="" disabled className="opacity-60">
+                          Select hair texture
+                        </option>
+                        <option value="Fine">Fine</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Coarse">Coarse</option>
+                        <option value="Resistant">Resistant</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end mt-8">
+                <p className="text-white/70 text-sm opacity-0">
+                  Duration 3 minutes
+                </p>
+              </div>
+            </div>
+          </>
+        );
+
+      case 4:
         return (
           <>
             <div className="glass-card mobile-card mb-9 max-w-full md:max-w-4xl w-full min-h-[500px] md:h-[432px] p-6 flex flex-col justify-start">
@@ -946,7 +998,7 @@ export default function Home() {
             </div>
           </>
         );
-      case 4:
+      case 5:
         return (
           <>
             <div className="glass-card mobile-card max-w-full mb-12 md:max-w-4xl w-full h-auto min-h-[500px] p-6 md:h-[442px] flex flex-col justify-between">
@@ -995,7 +1047,7 @@ export default function Home() {
           </>
         );
 
-      case 5:
+      case 6:
         return (
           <>
             <div className="glass-card mb-12 mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
@@ -1044,7 +1096,7 @@ export default function Home() {
           </>
         );
 
-      case 6:
+      case 7:
         return (
           <>
             <div className="mb-12 glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[432px] flex flex-col justify-between">
@@ -1095,7 +1147,7 @@ export default function Home() {
           </>
         );
 
-      case 7:
+      case 8:
         return (
           <>
             <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between relative">
@@ -1148,7 +1200,7 @@ export default function Home() {
           </>
         );
 
-      case 8:
+      case 9:
         return (
           <>
             <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-auto p-6 md:h-[442px] flex flex-col justify-between relative mb-32">
@@ -1203,7 +1255,7 @@ export default function Home() {
           </>
         );
 
-      case 9:
+      case 10:
         return (
           <>
             <div className="glass-card mobile-card max-w-full md:max-w-4xl w-full h-[500px] p-6 flex flex-col overflow-y-auto relative">
@@ -1280,7 +1332,7 @@ export default function Home() {
           </>
         );
 
-      case 10:
+      case 11:
         return (
           <>
             {/* Scrollable Card Container */}
@@ -1352,7 +1404,7 @@ export default function Home() {
           </>
         );
 
-      case 11:
+      case 12:
         return (
           <>
             <div
@@ -1496,7 +1548,7 @@ export default function Home() {
             </div>
           </>
         );
-      case 12:
+      case 13:
         return (
           <>
             <div
@@ -1602,51 +1654,54 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden bg-[url('/hca_cover_bg.jpg')] bg-cover bg-center">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-black/80 z-0">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-coral/10 rounded-full blur-3xl floating-animation mobile-bg-decoration"></div>
-        <div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-black/20 rounded-full blur-3xl floating-animation mobile-bg-decoration"
-          style={{ animationDelay: "2s" }}
-        ></div>
-        <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl floating-animation mobile-bg-decoration"
-          style={{ animationDelay: "4s" }}
-        ></div>
-      </div>
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-coral/10 rounded-full blur-3xl floating-animation mobile-bg-decoration"></div>
+          <div
+            className="absolute -bottom-40 -left-40 w-80 h-80 bg-black/20 rounded-full blur-3xl floating-animation mobile-bg-decoration"
+            style={{ animationDelay: "2s" }}
+          ></div>
+          <div
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl floating-animation mobile-bg-decoration"
+            style={{ animationDelay: "4s" }}
+          ></div>
+        </div>
 
-      <div className="relative z-10 container mx-auto mobile-container px-4 py-0 sm:py-0 lg:py-0">
-        <header className="mobile-header mt-4 mb-0">
-          <div className="w-full max-w-sm mx-auto bg-black/40 backdrop-blur-sm border border-coral/30 p-0">
-            <div className="mobile-heading font-bold text-white flex items-center">
-              {/* Image */}
-              <div className="bg-black/40 backdrop-blur-sm ">
-                <Image
-                  src="/lgag.png"
-                  alt="MKH Logo"
-                  width={80}
-                  height={80}
-                  className="w-28 h-28 sm:w-28 sm:h-28 object-cover flex-shrink-0"
-                />
+        <div className="relative z-10 container mx-auto mobile-container px-4 py-0 sm:py-0 lg:py-0">
+          {/* Header – only show when currentSlide !== 1 */}
+          {currentSlide !== 1 && (
+            <header className="mobile-header mt-4 mb-0">
+              <div className="w-full max-w-sm mx-auto bg-black/40 backdrop-blur-sm border border-coral/30 p-0">
+                <div className="mobile-heading font-bold text-white flex items-center">
+                  {/* Image */}
+                  <div className="bg-black/40 backdrop-blur-sm ">
+                    <Image
+                      src="/lgag.png"
+                      alt="MKH Logo"
+                      width={80}
+                      height={80}
+                      className="w-28 h-28 sm:w-28 sm:h-28 object-cover flex-shrink-0"
+                    />
+                  </div>
+
+                  {/* Text stacked vertically */}
+                  <div className="flex flex-col justify-center flex-1 text-left pl-3 sm:pl-5">
+                    <span className="text-3xl sm:text-4xl font-bold leading-tight text-left">
+                      HAIR COLOR
+                    </span>
+                    <span
+                      className="text-3xl sm:text-4xl font-extrabold text-left"
+                      style={{ color: "#ff5533", lineHeight: "1.1" }}
+                    >
+                      ANALYSIS
+                    </span>
+                  </div>
+                </div>
               </div>
+            </header>
+          )}
 
-              {/* Text stacked vertically */}
-              <div className="flex flex-col justify-center flex-1 text-left pl-3 sm:pl-5">
-                <span className="text-3xl sm:text-4xl font-bold leading-tight text-left">
-                  HAIR COLOR
-                </span>
-                <span
-                  className="text-3xl sm:text-4xl font-extrabold text-left"
-                  style={{ color: "#ff5533", lineHeight: "1.1" }}
-                >
-                  ANALYSIS
-                </span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Progress Bar */}
-        {/* <div className="max-w-4xl mx-auto mb-8">
+          {/* Progress Bar */}
+          {/* <div className="max-w-4xl mx-auto mb-8">
           <div className="glass-card p-4">
             <div className="flex items-center justify-between mb-4">
               <span className="text-white font-semibold">Progress</span>
@@ -1675,104 +1730,114 @@ export default function Home() {
           </div>
         </div> */}
 
-        {/* Main Content */}
-        <div className="max-w-4xl mx-auto mobile-section relative overflow-y-auto max-h-screen">
-  {/* Slide Content */}
-  {renderSlide()}
+          {/* Main Content */}
+          <div className="max-w-4xl mx-auto mobile-section relative overflow-y-auto max-h-screen">
+            {/* Slide Content */}
 
-  {/* ---- Navigation Buttons (Fixed to Bottom) ---- */}
-  <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
-    <div
-      className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6
+            {renderSlide()}
+
+            {/* ---- Navigation Buttons (Fixed to Bottom) ---- */}
+            <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 sm:bottom-6">
+              <div
+                className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6
       bg-black/40 backdrop-blur-md border border-white/10
       px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-2xl shadow-lg"
-    >
-      <button
-        onClick={prevSlide}
-        disabled={currentSlide === 1}
-        className="btn-secondary w-full sm:w-auto text-xs sm:text-base
-        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
-      >
-        {currentSlide === totalSlides
-          ? "← Go back to make any changes"
-          : "← Previous"}
-      </button>
-
-      <button
-        onClick={nextSlide}
-        disabled={
-          currentSlide === totalSlides ||
-          (currentSlide === 1 &&
-            (!formData.firstName ||
-              !formData.lastName ||
-              !formData.email ||
-              !formData.phone)) ||
-          (currentSlide === 2 &&
-            (!formData.naturalHairColor ||
-              !formData.skinColor ||
-              !formData.eyeColor ||
-              !formData.hairTexture)) ||
-          (currentSlide === 3 && !formData.selectedHairColor) ||
-          (currentSlide === 4 && !formData.hairLength) ||
-          (currentSlide === 5 && !formData.personalStyle) ||
-          (currentSlide === 6 && !formData.hairMaintenance) ||
-          (currentSlide === 7 &&
-            formData.specialOccasions?.length === 0) ||
-          (currentSlide === 8 &&
-            formData.preferredTreatments?.length === 0)
-        }
-        className={
-          currentSlide === totalSlides
-            ? "hidden"
-            : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 transition-all duration-300 shadow-lg hover:shadow-xl"
-        }
-      >
-        {currentSlide === totalSlides ? "" : "Next →"}
-      </button>
-    </div>
-
-    {/* Duration (moved below buttons) */}
-    <div className="flex justify-end mt-2 pr-2">
-      <span className="text-white/70 text-[11px] bg-black/70 px-2 py-0.5 rounded-md">
-        Duration 3 minutes
-      </span>
-    </div>
-  </div>
-</div>
-
-
-        {/* Notification */}
-        {message && (
-          <div className="fixed bottom-6 right-6 notification p-6 max-w-sm z-50">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                {message.includes("successfully") ? (
-                  <div className="text-green-400 text-xl">✅</div>
+              >
+                {currentSlide === 1 ? (
+                  <button
+                    onClick={nextSlide}
+                    className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base mobile-btn py-2 px-6 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  >
+                    Start →
+                  </button>
                 ) : (
-                  <div className="text-red-400 text-xl">⚠️</div>
+                  <>
+                    <button
+                      onClick={prevSlide}
+                      disabled={currentSlide === 1}
+                      className="btn-secondary w-full sm:w-auto text-xs sm:text-base
+        disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-1"
+                    >
+                      {currentSlide === totalSlides
+                        ? "← Go back to make any changes"
+                        : "← Previous"}
+                    </button>
+                    <button
+                      onClick={nextSlide}
+                      disabled={
+                        currentSlide === totalSlides ||
+                        (currentSlide === 2 &&
+                          (!formData.firstName ||
+                            !formData.lastName ||
+                            !formData.email ||
+                            !formData.phone)) ||
+                        (currentSlide === 3 &&
+                          (!formData.naturalHairColor ||
+                            !formData.skinColor ||
+                            !formData.eyeColor ||
+                            !formData.hairTexture)) ||
+                        (currentSlide === 4 && !formData.selectedHairColor) ||
+                        (currentSlide === 5 && !formData.hairLength) ||
+                        (currentSlide === 6 && !formData.personalStyle) ||
+                        (currentSlide === 7 && !formData.hairMaintenance) ||
+                        (currentSlide === 8 &&
+                          formData.specialOccasions?.length === 0) ||
+                        (currentSlide === 9 &&
+                          formData.preferredTreatments?.length === 0)
+                      }
+                      className={
+                        currentSlide === totalSlides
+                          ? "hidden"
+                          : "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-full sm:w-auto text-xs sm:text-base disabled:opacity-50 disabled:cursor-not-allowed mobile-btn py-2 px-6 transition-all duration-300 shadow-lg hover:shadow-xl"
+                      }
+                    >
+                      {currentSlide === totalSlides ? "" : "Next →"}
+                    </button>
+                  </>
                 )}
               </div>
-              <div className="ml-3 flex-1">
-                <p
-                  className={`text-sm font-medium ${
-                    message.includes("successfully")
-                      ? "text-green-100"
-                      : "text-red-100"
-                  }`}
-                >
-                  {message}
-                </p>
+
+              {/* Duration (moved below buttons) */}
+              <div className="flex justify-end mt-2 pr-2">
+                <span className="text-white/70 text-[11px] bg-black/70 px-2 py-0.5 rounded-md">
+                  Duration 3 minutes
+                </span>
               </div>
-              <button
-                onClick={() => setMessage("")}
-                className="ml-4 text-white/70 hover:text-white transition-colors"
-              >
-                ✕
-              </button>
             </div>
           </div>
-        )}
-      </div>
+
+          {/* Notification */}
+          {message && (
+            <div className="fixed bottom-6 right-6 notification p-6 max-w-sm z-50">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  {message.includes("successfully") ? (
+                    <div className="text-green-400 text-xl">✅</div>
+                  ) : (
+                    <div className="text-red-400 text-xl">⚠️</div>
+                  )}
+                </div>
+                <div className="ml-3 flex-1">
+                  <p
+                    className={`text-sm font-medium ${
+                      message.includes("successfully")
+                        ? "text-green-100"
+                        : "text-red-100"
+                    }`}
+                  >
+                    {message}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setMessage("")}
+                  className="ml-4 text-white/70 hover:text-white transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

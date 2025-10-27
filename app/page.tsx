@@ -684,7 +684,7 @@ yPosition = addPage3Section("Disclaimer", disclaimerContent, yPosition);
       case 1:
         return (
           <>
-            <div className="glass-card mt-20 mobile-card h-[432px] md:h-[432px] flex items-center justify-center overflow-hidden">
+            <div className="glass-card mt-28 mobile-card h-[432px] md:h-[432px] flex items-center justify-center overflow-hidden">
               {/* Title Section */}
               <div className="flex flex-col sm:flex-row items-center justify-center text-white font-bold text-center sm:text-left">
                 {/* Logo Image */}

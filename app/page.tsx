@@ -683,7 +683,7 @@ export default function Home() {
   const renderSlide = () => {
     switch (currentSlide) {
       case 1:
-       return (
+      return (
   <>
     <div className="glass-card mt-28 mobile-card h-[432px] md:h-[432px] flex flex-col items-center justify-center overflow-hidden relative">
       {/* Title Section */}
@@ -705,25 +705,36 @@ export default function Home() {
             HAIR COLOR
           </span>
           <span
-            className="text-3xl sm:text-4xl font-extrabold"
+            className="text-3xl sm:text-4xl font-extrabold flex items-baseline"
             style={{ color: "#ff5533", lineHeight: "1.5" }}
           >
-            ANALYSIS<sup>™</sup>
+            ANALYSIS
+            <sup
+              style={{
+                fontSize: "1.3em", // increased size
+                verticalAlign: "baseline",
+                marginLeft: "3px",
+                position: "relative",
+                top: "0.2em", // adjusted for alignment
+              }}
+            >
+              ™
+            </sup>
           </span>
         </div>
       </div>
 
       {/* Start Button — anchored to bottom */}
       <button
-  onClick={nextSlide}
-  className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold w-[80%] sm:w-auto text-sm sm:text-lg mobile-btn py-3 px-8 transition-all duration-300 shadow-lg hover:shadow-xl"
->
-  Start →
-</button>
-
+        onClick={nextSlide}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold w-[80%] sm:w-auto text-lg sm:text-xl py-3 px-10 transition-all duration-300 shadow-lg hover:shadow-xl uppercase tracking-wide"
+      >
+        START →
+      </button>
     </div>
   </>
 );
+
 
 
       case 2:
